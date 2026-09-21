@@ -1,0 +1,114 @@
+
+=== Frame 8971  (414:2985) ===
+Frame 8971  393x883  fill:#FFFFFF
+  Container  392.99x743  col pad:0 0 180 0
+    Container  392.99x125.99  col gap:12 pad:16 16 0 16
+      CartItemCard  360.99x109.99  col  r:16  fill:#FFFFFF  shadow:0 1 4 #000000@0.06
+        Container  361x110  row gap:12 pad:12
+          Container  71.99x71.99  r:12  fill:linear(#FFB900 0% -> #FF6900 100%)
+            Image (Chicken Kottu)  71.99x71.99  fill:image(6a681283 FILL)
+          Container  253x86  col
+            Container  253x21  row gap:8 justify:space_between
+              Paragraph  87x21  col
+                "Chicken Kottu"  87x21  text:Urbanist 700 14/21 #1F2937
+              Button - Remove item  20x20  row justify:center align:center
+                Icon  14x14
+                  Vector  10.5x0  border:#9CA3AF/1.17
+                  Vector  3.5x1.17  border:#9CA3AF/1.17
+                  Vector  9.34x8.17  border:#9CA3AF/1.17
+            Container  253x23  row gap:4 pad:4 0 0 0
+              Text  46x19  col pad:2 6  r:6  fill:#F3F4F6
+                "Regular"  34x15  text:Urbanist 500 10/15 #6B7280
+              Text  61x19  col pad:2 6  r:6  fill:#F3F4F6
+                "Medium 🌶️"  49x15  text:Urbanist 500 10/15 #6B7280
+              Text  61x19  col pad:2 6  r:6  fill:#FFF1F1
+                "+Extra egg"  49x15  text:Urbanist 500 10/15 #D42B2B
+            Container  253x42  row pad:8 0 0 0 justify:space_between align:center
+              Paragraph  45x21  col
+                "Rs. 550"  45x21  text:Urbanist 700 14/21 #D42B2B
+              Container  99.99x34  row gap:10 pad:3 4 align:center  r:10  fill:#F3F4F6
+                Button  28x28  row justify:center align:center
+                  Icon  14x14
+                    Vector  8.16x0  border:#1F2937/1.17
+                Paragraph  16x21  col align:center
+                  "1"  5x21  text:Urbanist 700 14/21 #1F2937 center
+                Button  28x28  row justify:center align:center
+                  Icon  14x14
+                    Vector  8.16x0  border:#1F2937/1.17
+                    Vector  0x8.16  border:#1F2937/1.17
+    Container:margin  393x141.5  col pad:16 16 0 16
+      Container  361x125.5  col pad:16  r:16  fill:#FFFFFF  shadow:0 1 4 #000000@0.06
+        Paragraph  329x21  col
+          "Promo Code"  77x21  text:Urbanist 600 14/21 #1F2937
+        Container  329x49.5  row gap:8 pad:10 0 0 0
+          Text Input  254x39.5  col pad:10 14 justify:center  r:10  fill:#F3F4F6
+            "Enter promo code"  226x16  text:Urbanist 500 13/15.6 #9CA3AF
+          Button  67x39.5  col pad:10 16 justify:center  r:10  fill:#E5E7EB
+            "Apply"  35x20  text:Urbanist 600 13/19.5 #FFFFFF center
+        Paragraph  329x23  col pad:6 0 0 0
+          "Try \"MAMA20\" for 20% off your first order"  197x17  text:Urbanist 400 11/16.5 #9CA3AF
+    Container:margin  393x180.51  col pad:12 16 0 16
+      Container  361x168.51  col pad:16  r:16  fill:#FFFFFF  shadow:0 1 4 #000000@0.06
+        Paragraph  329x21  col
+          "Order Summary"  103x21  text:Urbanist 600 14/21 #1F2937
+        SummaryRow  329x42  row pad:17 0 5 0 justify:space_between align:center
+          Paragraph  49x20  col
+            "Subtotal"  49x20  text:Urbanist 400 13/19.5 #6B7280
+          Paragraph  42x20  col
+            "Rs. 550"  42x20  text:Urbanist 600 13/19.5 #6B7280
+        SummaryRow  329x30  row pad:5 0 justify:space_between align:center
+          Paragraph  69x20  col
+            "Delivery Fee"  69x20  text:Urbanist 400 13/19.5 #6B7280
+          Paragraph  34x20  col
+            "Rs. 80"  34x20  text:Urbanist 600 13/19.5 #6B7280
+        Container:margin  329x43.51  col pad:10 0 0 0 align:center
+          Container  329x33.51  row pad:10 0 0 0 justify:space_between align:center  border:#F3F4F6/1
+            Paragraph  35x23  col
+              "Total"  35x23  text:Urbanist 700 15/22.5 #1F2937
+            Paragraph  48x23  col
+              "Rs. 630"  48x23  text:Urbanist 700 15/22.5 #D42B2B
+    Container:margin  393x115  col pad:12 16 0 16
+      Container  361x103  col pad:16  r:16  fill:#FFFFFF  shadow:0 1 4 #000000@0.06
+        Paragraph  329x21  col
+          "Delivery Details"  97x21  text:Urbanist 600 14/21 #1F2937
+        Container  329x50  row gap:10 pad:12 0 0 0
+          Container:margin  36x37  row pad:1 0 0 0
+            Container  36x36  row justify:center align:center  r:8  fill:#FFF1F1
+              Icon  16x16
+                Vector  9x13  fill:#D42B2B
+          Container  230x38  col
+            Paragraph  230x20  col
+              "123 Galle Road, Colombo 03"  161x20  text:Urbanist 600 13/19.5 #1F2937
+            Paragraph  230x18  col
+              "20–30 min estimated delivery"  157x18  text:Urbanist 400 12/18 #6B7280
+          Button  43x18  col align:center
+            "Change"  43x18  text:Urbanist 600 12/18 #D42B2B center
+  Container  392.99x73.51  row gap:14 pad:14 16 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Button - Back  36x36  row justify:center align:center  r:pill  fill:#F3F4F6
+      Icon  18x18
+        Vector  10.5x0  border:#1A1A1A/1.5
+        Vector  4.5x9  border:#1A1A1A/1.5
+    Container  275x45  col
+      Paragraph  275x27  col
+        "Your Cart"  77x27  text:Urbanist 700 18/27 #1F2937
+      Paragraph  275x18  col
+        "Mama's Kitchen"  83x18  text:Urbanist 400 12/18 #6B7280
+    Container  22x22  row pad:0 6 justify:center align:center  r:pill  fill:#D42B2B
+      Paragraph  4x17  col
+        "1"  4x17  text:Urbanist 700 11/16.5 #FFFFFF
+  Frame 8981  393.5x126.54  col
+    Container  393.5x47  row pad:14 16 justify:space_between align:center  fill:#D42B2B
+      "Subtotal"  58x23  text:Urbanist 700 15/22.5 #FFFFFF center
+      "Rs. 630"  48x23  text:Urbanist 700 15/22.5 #FFFFFF center
+    Container  393.5x79.54  col pad:14 16  fill:#FFFFFF  border:#F3F4F6/1
+      Button  371x51  row gap:8 pad:14 0 justify:center align:center  r:14  fill:#D42B2B
+        Paragraph  104x23  col align:center
+          "Go to Checkout"  104x23  text:Urbanist 700 15/22.5 #FFFFFF center
+        Icon  16x16
+          Vector  4x8  border:#FFFFFF/1.5
+  Top Bar  393x50  row gap:250 pad:0 25 align:center
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937

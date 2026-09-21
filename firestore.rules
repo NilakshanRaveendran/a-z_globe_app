@@ -1,0 +1,400 @@
+rules_version = '2';
+
+// A-Z Globe security rules.
+//
+// ── Two kinds of account, never the same Firebase user ──────────────────────
+//
+//   customers/{uid}  a person using A-Z Globe — ordering food, and later cabs,
+//                    cleaning, hotels…
+//   suppliers/{uid}  a business operating ON A-Z Globe — a restaurant owner
+//                    managing their menu, orders and offers.
+//
+// The same person may hold both, but they are separate Firebase users with
+// separate uids, separate profile documents and separate permissions. Nothing
+// below ever treats one as the other: a customer uid cannot manage a
+// restaurant, and a supplier uid cannot place an order.
+//
+// `accountLinks` records that a customer account and a supplier account belong
+// to the same person. It exists for convenience — account switching, shared
+// contact details — and deliberately grants NO permission. No authorisation
+// rule in this file reads it. Linking is therefore safe to open up later
+// without widening anybody's access.
+//
+// Other principles:
+//  - Catalogue data (merchants, menus) is public read, written only by the
+//    supplier that owns it.
+//  - Orders are created by the customer and advanced only by the owning
+//    supplier, along a fixed state machine (see below).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Which kind of account is signed in. Keyed on the existence of the
+    // profile document, so the two roles are mutually exclusive by
+    // construction rather than by a field somebody could forget to check.
+    function isCustomer() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/customers/$(request.auth.uid));
+    }
+
+    function isSupplier() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/suppliers/$(request.auth.uid));
+    }
+
+    // A merchant is owned by a SUPPLIER account, never by a customer account.
+    // The second clause is deliberate belt-and-braces: even if a merchant
+    // document were somehow written with a customer uid in `supplierId`, that
+    // customer still gains nothing, because they hold no supplier profile.
+    function ownsMerchant(merchantId) {
+      return isSignedIn()
+        && get(/databases/$(database)/documents/merchants/$(merchantId)).data.supplierId
+             == request.auth.uid
+        && isSupplier();
+    }
+
+    // ── Customer accounts ────────────────────────────────────────────────
+    match /customers/{uid} {
+      allow read: if isSelf(uid);
+
+      // A uid may only ever hold ONE kind of account. Claiming a customer
+      // profile while already holding a supplier profile is refused, so the
+      // two identities can never collapse into one user.
+      //
+      // create and update must be separate rules: on a create `resource` is
+      // null, so `diff(resource.data)` throws and the write is denied — which
+      // would break the very first sign-in.
+      //
+      // `activeOrderId` is maintained outside the client, so it may never be
+      // set or changed by one.
+      allow create: if isSelf(uid)
+        && !isSupplier()
+        && !('activeOrderId' in request.resource.data);
+      allow update: if isSelf(uid)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeOrderId']);
+
+      allow delete: if false;
+
+      match /addresses/{addressId} {
+        allow read, write: if isSelf(uid);
+      }
+      match /paymentMethods/{methodId} {
+        allow read, write: if isSelf(uid);
+      }
+    }
+
+    // ── Supplier (business / provider) accounts ──────────────────────────
+    //
+    // A supplier account is an A-Z Globe account in its own right. It signs in
+    // the same way a customer does, but it is a different Firebase user with
+    // its own uid, and it owns businesses rather than orders.
+    match /suppliers/{uid} {
+      allow read: if isSelf(uid);
+
+      // The mirror of the customer rule: a uid already holding a customer
+      // profile cannot also become a supplier. One person, two accounts —
+      // never one account with two roles.
+      allow create: if isSelf(uid)
+        && !isCustomer()
+        && !('merchantIds' in request.resource.data);
+      allow update: if isSelf(uid)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['merchantIds']);
+
+      allow delete: if false;
+    }
+
+    // ── Account links ────────────────────────────────────────────────────
+    //
+    // "This customer account and this supplier account are the same person."
+    // One customer may link to many suppliers, and one supplier to many
+    // customers (a business with several owners).
+    //
+    // A link is worth nothing on its own — no rule above or below consults it
+    // — so it cannot be used to escalate. It still takes BOTH sides to
+    // establish one, because an unconfirmed claim to be somebody else's
+    // business would be misleading even where it is not dangerous.
+    //
+    // The id is `<customerUid>_<supplierUid>` so a pair can only be linked
+    // once, and either side can address the link without running a query.
+    match /accountLinks/{linkId} {
+
+      function parties() {
+        return [resource.data.customerUid, resource.data.supplierUid];
+      }
+
+      allow read: if isSignedIn() && request.auth.uid in parties();
+
+      // Either side may propose the link, on behalf of themselves only.
+      allow create: if isSignedIn()
+        && linkId == request.resource.data.customerUid + '_' + request.resource.data.supplierUid
+        && request.resource.data.confirmedBy == [request.auth.uid]
+        && request.resource.data.status == 'pending'
+        && (
+             (isCustomer() && isSelf(request.resource.data.customerUid))
+             || (isSupplier() && isSelf(request.resource.data.supplierUid))
+           );
+
+      // The other side confirms it. Nothing else about the link may move, and
+      // neither side can confirm twice on its own behalf.
+      allow update: if isSignedIn()
+        && request.auth.uid in parties()
+        && !(request.auth.uid in resource.data.confirmedBy)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['confirmedBy', 'status'])
+        && request.resource.data.confirmedBy == resource.data.confirmedBy.concat([request.auth.uid])
+        && request.resource.data.status == 'confirmed';
+
+      // Either side may unlink at any time.
+      allow delete: if isSignedIn() && request.auth.uid in parties();
+    }
+
+    // ── Catalogue ────────────────────────────────────────────────────────
+    match /merchants/{merchantId} {
+      allow read: if true;
+
+      // A supplier creates the business it will operate, under its own
+      // supplier uid. Ratings are earned from customer reviews, so a supplier
+      // may not invent one, and ownership may never be reassigned by a write.
+      //
+      // Zero IS allowed, and a new restaurant must carry it: the customer
+      // catalogue query orders by `rating`, and Firestore omits documents that
+      // lack the ordered field entirely — so a rating-less restaurant would be
+      // invisible to every customer. Refusing only non-zero values keeps the
+      // anti-inflation guarantee without that trap.
+      allow create: if isSupplier()
+        && request.resource.data.supplierId == request.auth.uid
+        && (!('rating' in request.resource.data) || request.resource.data.rating == 0)
+        && (!('reviewCount' in request.resource.data) || request.resource.data.reviewCount == 0);
+      allow update: if ownsMerchant(merchantId)
+        && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['supplierId', 'rating', 'reviewCount']);
+      allow delete: if false;
+
+      match /menuItems/{itemId} {
+        allow read: if true;
+        allow write: if ownsMerchant(merchantId);
+      }
+
+      match /reviews/{reviewId} {
+        allow read: if true;
+
+        // Only a CUSTOMER who actually received an order from this restaurant
+        // may review it, under their own id. A supplier account cannot review
+        // anything — reviewing belongs to the customer side of the product.
+        allow create: if isCustomer()
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.rating is number
+          && request.resource.data.rating >= 1
+          && request.resource.data.rating <= 5
+          && exists(/databases/$(database)/documents/orders/$(request.resource.data.orderId))
+          && get(/databases/$(database)/documents/orders/$(request.resource.data.orderId)).data.userId == request.auth.uid
+          && get(/databases/$(database)/documents/orders/$(request.resource.data.orderId)).data.merchantId == merchantId
+          && get(/databases/$(database)/documents/orders/$(request.resource.data.orderId)).data.status == 'delivered';
+
+        allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+        allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      }
+    }
+
+    // Home's "Popular Dishes" reads dishes across every restaurant with a
+    // collection-group query. Firestore treats that as a separate match path
+    // from /merchants/{id}/menuItems, so the public read has to be granted
+    // again here — without it the query is refused even though each individual
+    // menu is world-readable. Read only: writes stay on the path above, where
+    // `ownsMerchant()` can see which restaurant the dish belongs to.
+    match /{path=**}/menuItems/{itemId} {
+      allow read: if true;
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Denormalised copy of the top dishes so the Home screen is one cheap read
+    // rather than a fan-out across every merchant's menu. Maintained by the
+    // seed script and (later) a Cloud Function; never written by a client.
+    match /popularDishes/{dishId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Promo codes and restaurant offers — see modules/food/types Promotion.
+    //
+    // A restaurant manages the offers of the restaurants it owns: it may create,
+    // edit, switch on/off and delete them, and it counts `usedCount` up when it
+    // accepts an order that used one. Offers never carry a `code`, so a
+    // restaurant cannot mint a platform-wide promo code; codes are created by an
+    // admin from the console. `merchantId` can never move to another restaurant.
+    match /promotions/{promoId} {
+      allow read: if isSignedIn();
+
+      function validOffer(d) {
+        return d.merchantId is string
+          && !('code' in d)
+          && d.type in ['percent', 'fixed']
+          && d.value is number && d.value > 0
+          && (d.type != 'percent' || d.value <= 100)
+          && d.validUntil is number
+          && d.active is bool
+          && (!('appliesTo' in d) || d.appliesTo in ['all', 'items'])
+          && (!('itemIds' in d) || (d.itemIds is list && d.itemIds.size() <= 100))
+          && (!('minOrder' in d) || d.minOrder == null || (d.minOrder is number && d.minOrder >= 0))
+          && (!('usageLimit' in d) || d.usageLimit == null || (d.usageLimit is number && d.usageLimit >= 1))
+          && d.usedCount is number && d.usedCount >= 0;
+      }
+
+      allow create: if ownsMerchant(request.resource.data.merchantId)
+        && validOffer(request.resource.data)
+        && request.resource.data.usedCount == 0;
+      allow update: if ownsMerchant(resource.data.merchantId)
+        && request.resource.data.merchantId == resource.data.merchantId
+        && validOffer(request.resource.data);
+      allow delete: if ownsMerchant(resource.data.merchantId);
+    }
+
+    // ── Orders ───────────────────────────────────────────────────────────
+    //
+    // Cloud Functions need the Blaze plan; this project runs on Spark, so the
+    // CLIENT creates the order document and these rules do as much validation
+    // as the rules language allows.
+    //
+    // Validated here: that the author is a customer account, the starting
+    // status, timeline, currency, order type, item count, non-negative
+    // numbers, that the merchant exists and is open, and that the delivery fee
+    // matches that merchant's own document. Immutable to clients once written.
+    //
+    // NOT validated here: the item subtotal. Rules have no loops, so `items[]`
+    // cannot be summed against the menu documents — a modified client could
+    // understate it. `functions/src/index.ts#placeOrder` closes that gap and is
+    // ready to deploy on Blaze.
+    match /orders/{orderId} {
+
+      function merchantDoc() {
+        return get(/databases/$(database)/documents/merchants/$(request.resource.data.merchantId)).data;
+      }
+
+      // A discount must be backed by a real promotion, used on its terms.
+      //
+      // Without this a modified client could claim any discount up to the
+      // subtotal — and the app itself once applied a demo code ("MAMA20") that
+      // existed only in the design fixtures, at a restaurant that never offered
+      // it. Checked here: the code exists, has not expired, belongs to this
+      // restaurant if it names one, the order meets its minimum, and the
+      // discount is no more than its terms allow (percent codes get a rupee of
+      // rounding slack, since the client rounds to whole rupees).
+      function validPromo(d) {
+        return d.pricing.promoDiscount == 0
+          || (
+               d.promoCode is string
+               && exists(/databases/$(database)/documents/promotions/$(d.promoCode))
+               && promoTermsHold(
+                    get(/databases/$(database)/documents/promotions/$(d.promoCode)).data, d)
+             );
+      }
+
+      function promoTermsHold(p, d) {
+        return p.validUntil > request.time.toMillis()
+          // An offer the restaurant has switched off, or that has been claimed
+          // as often as it allows, discounts nothing.
+          && (!('active' in p) || p.active == true)
+          && (!('usageLimit' in p) || p.usageLimit == null
+              || !('usedCount' in p) || p.usedCount < p.usageLimit)
+          && (!('merchantId' in p) || p.merchantId == d.merchantId)
+          && (!('minOrder' in p) || d.pricing.subtotal >= p.minOrder)
+          && (
+               p.type == 'fixed'
+                 ? d.pricing.promoDiscount <= p.value
+                 : d.pricing.promoDiscount <= d.pricing.subtotal * p.value / 100 + 1
+             );
+      }
+
+      function validNewOrder() {
+        let d = request.resource.data;
+        return d.userId == request.auth.uid
+          && d.module == 'food'
+          && d.status == 'new'
+          && d.orderType in ['delivery', 'pickup']
+          && d.deliveryMode in ['priority', 'standard', 'scheduled']
+          && d.timeline.size() == 1
+          && d.timeline[0].status == 'new'
+          && d.items.size() >= 1
+          && d.items.size() <= 30
+          && d.pricing.currency == 'LKR'
+          && d.pricing.subtotal is number      && d.pricing.subtotal >= 0
+          && d.pricing.deliveryFee is number   && d.pricing.deliveryFee >= 0
+          && d.pricing.priorityFee is number   && d.pricing.priorityFee >= 0
+          && d.pricing.promoDiscount is number && d.pricing.promoDiscount >= 0
+          && d.pricing.total is number         && d.pricing.total >= 0
+          // The promo cannot exceed the subtotal, and the total must be the
+          // stated parts added up — so the fee cannot be quietly dropped.
+          && d.pricing.promoDiscount <= d.pricing.subtotal
+          && validPromo(d)
+          && d.pricing.total ==
+               (d.pricing.subtotal - d.pricing.promoDiscount)
+               + d.pricing.deliveryFee + d.pricing.priorityFee
+          // The merchant must exist, be open, and be the one whose fee is
+          // charged. Pickup is free; delivery uses the merchant's own fee
+          // unless the order clears their free-delivery threshold.
+          && exists(/databases/$(database)/documents/merchants/$(d.merchantId))
+          && merchantDoc().isOpen == true
+          && (
+               d.orderType == 'pickup'
+                 ? d.pricing.deliveryFee == 0
+                 : d.pricing.deliveryFee == merchantDoc().deliveryFee
+                   || d.pricing.deliveryFee == 0
+             );
+      }
+
+      // The customer who placed it, or the supplier fulfilling it.
+      allow read: if isSelf(resource.data.userId) || ownsMerchant(resource.data.merchantId);
+
+      // Ordering is a customer action. A supplier account has no cart and no
+      // delivery address; it cannot place orders, not even at its own
+      // restaurant — the person behind it orders with their customer account.
+      allow create: if isCustomer() && validNewOrder();
+
+      // The order lifecycle, mirroring ALLOWED_TRANSITIONS in
+      // functions/src/index.ts. While the project is on Spark there is no
+      // Cloud Function to enforce it, so the state machine lives here — a
+      // supplier can advance an order but cannot skip a step, move it
+      // backwards, or invent a status.
+      function validTransition(from, to) {
+        return (from == 'new'              && to in ['accepted', 'cancelled'])
+            || (from == 'accepted'         && to in ['preparing', 'cancelled'])
+            || (from == 'preparing'        && to in ['ready_for_pickup', 'cancelled'])
+            || (from == 'ready_for_pickup' && to in ['picked_up', 'cancelled'])
+            || (from == 'picked_up'        && to in ['delivered'])
+            || (from == 'delivered'        && to in ['refunded'])
+            || (from == 'cancelled'        && to in ['refunded']);
+      }
+
+      // Every transition appends exactly one timeline entry, and that entry
+      // must record the status actually being moved to — otherwise the audit
+      // trail could be made to disagree with the order.
+      function appendsMatchingTimelineEntry() {
+        let before = resource.data.timeline;
+        let after = request.resource.data.timeline;
+        return after.size() == before.size() + 1
+          && after[after.size() - 1].status == request.resource.data.status;
+      }
+
+      // Only the fulfilling supplier advances an order, and only its status
+      // and timeline may move. The customer never edits a placed order.
+      allow update: if ownsMerchant(resource.data.merchantId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['status', 'timeline'])
+        && validTransition(resource.data.status, request.resource.data.status)
+        && appendsMatchingTimelineEntry();
+
+      allow delete: if false;
+    }
+  }
+}

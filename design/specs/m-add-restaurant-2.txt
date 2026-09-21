@@ -1,0 +1,51 @@
+
+=== AddRestaurantSheet  (385:4261) ===
+AddRestaurantSheet  393.66x451.04  col  r:24 24 0 0  fill:#FFFFFF
+  Container  393.66x16  row pad:12 0 0 0 justify:center
+    Container  36x4  r:pill  fill:#E5E7EB
+  Container  393.66x72  row pad:14 20 justify:space_between align:center
+    Container  119.78x44  col
+      Paragraph  119.78x26  col
+        "Add Restaurant"  120x26  text:Urbanist 700 17/25.5 #1F2937
+      Paragraph  119.78x18  col
+        "Step 2 of 4 · Location"  111x18  text:Urbanist 500 12/18 #9CA3AF
+    Button  30x30  row justify:center align:center  r:pill  fill:#F3F4F6
+      Icon  14x14
+        Vector  10x10  border:#6B7280/1.6
+  Container  393.66x20  row gap:6 pad:0 20 16 20 align:center
+    Container  8x4  r:pill  fill:#D42B2B  opacity:0.4
+    Container  24x4  r:pill  fill:#D42B2B
+    Container  8x4  r:pill  fill:#E5E7EB
+    Container  8x4  r:pill  fill:#E5E7EB
+  Container  393.66x250.53  col pad:0 20 24 20
+    Container  353.66x227.04  col gap:14
+      Field  353.66x69.01  col
+        Paragraph:margin  353.66x23  col pad:0 0 8 0
+          Paragraph  353.66x15  col
+            "Address"  48x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        AddRestaurantSheet  353.66x46.01  col pad:12 14 justify:center  r:12  border:#E5E7EB/0.51
+          "e.g. 42, Main Street, Trincomalee"  324.64x17  text:Urbanist 600 14/16.8 #1F2937@0.50
+      Field  353.66x69.01  col
+        Paragraph:margin  353.66x23  col pad:0 0 8 0
+          Paragraph  353.66x15  col
+            "Phone Number"  81x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        AddRestaurantSheet  353.66x46.01  col pad:12 14 justify:center  r:12  border:#E5E7EB/0.51
+          "e.g. +94 26 222 3456"  324.64x17  text:Urbanist 600 14/16.8 #1F2937@0.50
+      Container  353.66x61.02  row gap:10 pad:12  r:12  fill:#F0FDF4  border:#BBF7D0/0.51
+        Icon:margin  16x17  row pad:1 0 0 0
+          Icon  16x16
+            Vector  10.66x13.34  border:#16A34A/1.33
+            Vector  3x3  border:#16A34A/1.33
+        Paragraph  303x36  col
+          "Map pin can be set after creation from Resta"  303x36  text:Urbanist 400 12/18 #166534
+  Container  393.66x92.51  row gap:10 pad:10 20 32 20  border:#F3F4F6/1
+    Button  115.91x50  row gap:6 justify:center align:center  r:14  border:#E5E7EB/0.51
+      Icon  16x16
+        Vector  4x8  border:#374151/1.5
+      Text  31x21  col align:center
+        "Back"  31x21  text:Urbanist 600 14/21 #374151 center
+    Button  227.75x50  row gap:6 justify:center align:center  r:14  fill:#D42B2B
+      Text  32x23  col align:center
+        "Next"  32x23  text:Urbanist 700 15/22.5 #FFFFFF center
+      Icon  16x16
+        Vector  4x8  border:#FFFFFF/1.5

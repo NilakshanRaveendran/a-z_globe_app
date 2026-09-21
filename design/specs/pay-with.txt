@@ -1,0 +1,59 @@
+
+=== Container  (416:3862) ===
+Container  394x558.04  col  r:24 24 0 0  fill:#FFFFFF
+  Container  394x20  row pad:12 0 4 0 justify:center
+    Container  40x4  r:pill  fill:#E5E7EB
+  Container  394x64.51  row pad:14 20 justify:space_between align:center  border:#F3F4F6/1
+    Button  36x36  row justify:center align:center
+      Icon  18x18
+        Vector  9x9  border:#1F2937/1.6
+    Paragraph  67x26  col
+      "Pay with"  67x26  text:Urbanist 700 17/25.5 #1F2937
+    Container  36x0
+  Container  394x473.53  col pad:4 20 36 20
+    Paragraph  354x43  col pad:20 0 0 0
+      "Payment methods"  123x23  text:Urbanist 700 15/22.5 #1F2937
+    Container  354x209.53  col pad:4 0 0 0
+      Button  354x68.51  row pad:14 0 justify:space_between align:center  border:#F3F4F6/1
+        Container  128x40  row gap:14 align:center
+          MethodIcon  40x40  row justify:center align:center  r:10  fill:#1A1F71
+            Icon  28x10
+              "VISA"  26x13  text:Arial 700 11/12.65 #FFFFFF
+          Paragraph  74x21  col align:center
+            "Visa ••••7309"  74x21  text:Urbanist 600 14/21 #1F2937 center
+        Container  22x22  row justify:center align:center  r:pill  fill:#D42B2B  border:#D42B2B/1.53
+          Icon  11x11
+            Vector  7x5  border:#FFFFFF/1.6
+      Button  354x68.51  row pad:14 0 justify:space_between align:center  border:#F3F4F6/1
+        Container  158x40  row gap:14 align:center
+          MethodIcon  40x40  row justify:center align:center  r:10  fill:#DCFCE7
+            Icon  22x22
+              Vector  18x12  border:#16A34A/1.5
+              Vector  6x6  border:#16A34A/1.5
+              Vector  18x5  border:#16A34A/1
+          Paragraph  104x21  col align:center
+            "Cash on delivery"  104x21  text:Urbanist 600 14/21 #1F2937 center
+        Container  22x22  r:pill  border:#D1D5DB/1.53
+      Button  354x68.51  row gap:14 pad:14 0 align:center  border:#F3F4F6/1
+        Container  40x40  row justify:center align:center  r:10  fill:#F3F4F6
+          Icon  18x18
+            Vector  10.5x10.5  border:#6B7280/1.6
+        Paragraph  139x21  col align:center
+          "Add payment method"  139x21  text:Urbanist 600 14/21 #6B7280 center
+    Container  354x120  col pad:20 0 0 0
+      Container  354x28  row justify:space_between align:center
+        Paragraph  62x23  col
+          "Vouchers"  62x23  text:Urbanist 700 15/22.5 #1F2937
+        Button  84x28  col pad:5 12 justify:center  r:pill  fill:#F3F4F6
+          Paragraph  60x18  col align:center
+            "See details"  60x18  text:Urbanist 600 12/18 #6B7280 center
+      Button  354x72  row gap:14 pad:18 0 14 0 align:center
+        Container  40x40  row justify:center align:center  r:10  fill:#F3F4F6
+          Icon  18x18
+            Vector  10.5x10.5  border:#6B7280/1.6
+        Paragraph  114x21  col align:center
+          "Add voucher code"  114x21  text:Urbanist 600 14/21 #6B7280 center
+    Button:margin  354x61  col pad:8 0 0 0 align:center
+      Button  354x53  row pad:15 0 justify:center align:center  r:14  fill:#D42B2B
+        Paragraph  55x23  col align:center
+          "Confirm"  55x23  text:Urbanist 700 15/22.5 #FFFFFF center

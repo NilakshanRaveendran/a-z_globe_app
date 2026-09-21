@@ -1,0 +1,40 @@
+
+=== Container  (426:3202) ===
+Container  393.66x483.14  col pad:12 20 36 20  r:28 28 0 0  fill:#FFFFFF
+  Container:margin  353.66x4  col align:center
+    Container  40x4  r:pill  fill:#E5E7EB
+  Paragraph  353.66x47  col pad:20 0 0 0
+    "Write a Review"  122x27  text:Urbanist 700 18/27 #101828
+  Paragraph  353.66x24  col pad:4 0 0 0
+    "Share your experience at Mama's Kitchen"  236x20  text:Urbanist 400 13/19.5 #6B7280
+  Container  353.66x86  col pad:20 0 0 0
+    Paragraph  353.66x20  col
+      "Your Rating"  67x20  text:Urbanist 600 13/19.5 #374151
+    Container  353.66x46  row gap:8 pad:10 0 0 0
+      Button  36x36  col pad:2 justify:center
+        Icon  32x32
+          Vector  26x24.5  fill:#E5E7EB  border:#E5E7EB/1.5
+      Button  36x36  col pad:2 justify:center
+        Icon  32x32
+          Vector  26x24.5  fill:#E5E7EB  border:#E5E7EB/1.5
+      Button  36x36  col pad:2 justify:center
+        Icon  32x32
+          Vector  26x24.5  fill:#E5E7EB  border:#E5E7EB/1.5
+      Button  36x36  col pad:2 justify:center
+        Icon  32x32
+          Vector  26x24.5  fill:#E5E7EB  border:#E5E7EB/1.5
+      Button  36x36  col pad:2 justify:center
+        Icon  32x32
+          Vector  26x24.5  fill:#E5E7EB  border:#E5E7EB/1.5
+  Container  353.66x197.15  col pad:20 0 0 0
+    Paragraph  353.66x30  col pad:0 0 10 0
+      "Your Review"  71x20  text:Urbanist 600 13/19.5 #374151
+    Container  353.66x126.15
+      Text Area  353.66x120  col pad:12 14  r:16  fill:#F9FAFB  border:#E5E7EB/0.51
+        "Tell others about your experience — food qua"  324.64x40  text:Urbanist 400 13/20 #9CA3AF
+    Paragraph  353.66x21  col pad:4 0 0 0 align:max
+      "0/300"  29x17  text:Urbanist 400 11/16.5 #9CA3AF right
+  Button:margin  353.66x77  col pad:24 0 0 0 align:center
+    Button  353.66x53  row pad:15 0 justify:center align:center  r:16  fill:#D42B2B  opacity:0.4
+      Paragraph  102x23  col align:center
+        "Submit Review"  102x23  text:Urbanist 700 15/22.5 #FFFFFF center

@@ -1,0 +1,68 @@
+
+=== Frame 8962  (147:4611) ===
+Frame 8962  393x852  fill:#FFFFFF
+  Frame 8968  393x802  col align:center
+    Header  393x85  col  fill:#FFFFFF
+      Container  393x85  col pad:12 16 16 16
+        Paragraph  361.46x36  col
+          "Business Profile"  164x36  text:Urbanist 700 24/36 #D42B2B
+        Paragraph  361.46x21  col
+          "Manage your Business profile in here."  227x21  text:Urbanist 500 14/21 #6B7280
+    Frame 8972  393x652  col gap:183
+      Frame 8969  393x435  col
+        Button  393x97  row gap:16 pad:16 align:center  border:#F3F4F6/1
+          Avatar  56x56  row justify:center align:center  r:pill  fill:#D42B2B  shadow:0 2 2 #000000@0.10  shadow:0 4 3 #000000@0.10
+            Text  17x23  col align:center
+          Container  255x64  col
+            Paragraph  255x24  col
+            Paragraph  255x20  col
+            Paragraph  255x20  col
+          Icon  18x18
+            Vector  4.5x9  border:#D1D5DB/1.13
+        Container  393x76  col
+          SettingsRow  393x76  row gap:16 pad:16 align:center  border:#F3F4F6/1
+            Icon  20x20
+            Container  291x43  col
+            Icon  18x18
+        SectionHeader  393x58  col pad:24 16 8 16
+          "App Preferences"  127x26  text:Urbanist 700 17/25.5 #1F2937
+        Container  393x76  col  border:#F3F4F6/1
+          SettingsRow  393x75  row gap:16 pad:16 align:center
+            Icon  20x20
+            Container  291x43  col
+            Icon  18x18
+        Container:margin  393x128  col pad:16 0 0 0
+          Container  393x112  col
+            Button  393x56  row pad:16 align:center  border:#F3F4F6/1
+            Button  393x55  row pad:16 align:center
+      Paragraph  393x34  col pad:16 16 0 16
+        "v1.0.0"  28x18  text:Urbanist 400 12/18 #9CA3AF
+  Top Bar  393x50  row gap:250 pad:0 25 align:center  fill:#FFFFFF
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937
+  BottomNav  393x66  row pad:5 8 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Frame 8955  377x56  row justify:space_between align:center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  17.42x17.42  border:#9CA3AF/1.65
+        "Messages"  45x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x55  col gap:3 pad:8 0 justify:center align:center
+        Button  22x39  col gap:2 align:center
+          Icon  22x22
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  18.37x12.83  border:#9CA3AF/1.47
+          "Cart"  20x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  5.5x8.25  border:#9CA3AF/2.02
+          Vector  16.5x17.42  border:#9CA3AF/2.02
+        "Home"  27x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  12.83x5.5  border:#D42B2B/1.65
+          Vector  7.33x7.33  border:#D42B2B/1.65
+        "Profile"  28x15  text:Urbanist 500 10/15 #D42B2B center

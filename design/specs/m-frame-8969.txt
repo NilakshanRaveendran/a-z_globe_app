@@ -1,0 +1,132 @@
+
+=== Frame 8969  (385:5072) ===
+Frame 8969  393x944  fill:#FFFFFF
+  Container  393.66x452.53  col pad:16 16 0 16 justify:center align:center
+    Paragraph  361.66x17  col pad:0 4
+      "Manage Restaurant"  127x17  text:Urbanist 700 11/16.5 ls0.55 #9CA3AF
+    Container:margin  361.66x419.53  col pad:8 0 0 0
+      Container  361.66x411.53  col  r:16  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 3 #000000@0.06
+        Button  360.64x68.51  row gap:14 pad:14 16 align:center  border:#F3F4F6/1
+          Container  40x40  row justify:center align:center  r:12  fill:#FFF0F0
+            Icon  20x20
+          Container  253.65x38  col
+            Paragraph  253.65x21  col
+            Paragraph  253.65x17  col
+          Icon  7x12
+            Vector  5x9.99  border:#D1D5DB/1.5
+        Button  360.64x68.51  row gap:14 pad:14 16 align:center  border:#F3F4F6/1
+          Container  40x40  row justify:center align:center  r:12  fill:#FFF0F0
+            Icon  20x20
+          Container  253.65x38  col
+            Paragraph  253.65x21  col
+            Paragraph  253.65x17  col
+          Icon  7x12
+            Vector  5x9.99  border:#D1D5DB/1.5
+        Button  360.64x68.51  row gap:14 pad:14 16 align:center  border:#F3F4F6/1
+          Container  40x40  row justify:center align:center  r:12  fill:#FFF0F0
+            Icon  20x20
+          Container  253.65x38  col
+            Paragraph  253.65x21  col
+            Paragraph  253.65x17  col
+          Icon  7x12
+            Vector  5x9.99  border:#D1D5DB/1.5
+        Button  360.64x68.51  row gap:14 pad:14 16 align:center  border:#F3F4F6/1
+          Container  40x40  row justify:center align:center  r:12  fill:#FFF0F0
+            Icon  20x20
+          Container  253.65x38  col
+            Paragraph  253.65x21  col
+            Paragraph  253.65x17  col
+          Icon  7x12
+            Vector  5x9.99  border:#D1D5DB/1.5
+        Button  360.64x68.51  row gap:14 pad:14 16 align:center  border:#F3F4F6/1
+          Container  40x40  row justify:center align:center  r:12  fill:#FFF0F0
+            Icon  20x20
+          Container  253.65x38  col
+            Paragraph  253.65x21  col
+            Paragraph  253.65x17  col
+          Icon  7x12
+            Vector  5x9.99  border:#D1D5DB/1.5
+        Button  360.64x68  row gap:14 pad:14 16 align:center
+          Container  40x40  row justify:center align:center  r:12  fill:#FFF0F0
+            Icon  20x20
+          Container  253.65x38  col
+            Paragraph  253.65x21  col
+            Paragraph  253.65x17  col
+          Icon  7x12
+            Vector  5x9.99  border:#D1D5DB/1.5
+  Frame 8978  393x194.53  col gap:12
+    Container  393x105.5  col pad:16 16 0 16
+      Container  358x89.5  col
+        Container  114x89.5  col gap:6 pad:12  r:16  fill:#FFF0F0
+          Icon  16x16
+            Vector  12x13.33  border:#D42B2B/1.33
+            Vector  0x6.67  border:#D42B2B/1.33
+            Vector  11.61x3.33  border:#D42B2B/1.33
+            Vector  6x3.43  border:#D42B2B/1.33
+          Paragraph  90x23  col
+            "6"  9x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  90x15  col
+            "Orders Today"  61x15  text:Urbanist 500 10/15 #6B7280
+        Container  114x89.5  col gap:6 pad:12  r:16  fill:#F0F4FF
+          Icon  16x16
+            Vector  13.33x6.67  border:#112D4E/1.33
+            Vector  4x4  border:#112D4E/1.33
+          Paragraph  90x23  col
+            "Rs.2.2k"  48x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  90x15  col
+            "Revenue"  38x15  text:Urbanist 500 10/15 #6B7280
+        Container  114x89.5  col gap:6 pad:12  r:16  fill:#FFFBEB
+          Container  90x14  row align:center
+            StarIcon  14x14
+          Paragraph  90x23  col
+            "4.8"  21x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  90x15  col
+            "Avg Rating"  48x15  text:Urbanist 500 10/15 #6B7280
+    Container:margin  393x77.03  col pad:16 16 0 16
+      Container  361x61.03  row gap:10 pad:12 align:center  r:14  fill:#FFF0F0  border:#D42B2B@0.20/0.52
+        Container  36x36  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  18x18
+            Vector  14x12  border:#FFFFFF/1.5
+            Vector  0x5.5  border:#FFFFFF/1.5
+        Container  289.97x20  col
+          Paragraph  289.97x20  col
+            "5 Active Orders Awaiting"  147x20  text:Urbanist 700 13/19.5 #D42B2B
+  Container  393x125  col pad:0 0 21 0
+    Container  393x124.51  col pad:4 16 16 16  fill:#FFFFFF  border:#E5E7EB/1
+      Container  361.66x36  row justify:space_between align:center
+        Button  36x36  row justify:center align:center  r:pill  fill:#F3F4F6
+          Icon  18x18
+            Vector  5x10  border:#374151/1.8
+      Paragraph  361.66x46  col pad:10 0 0 0
+        "Mama’s Kitchen"  172x36  text:Urbanist 700 24/36 #D42B2B
+      Paragraph  361.66x22  col pad:2 0 0 0
+        "Sri Lankan · Authentic"  112x18  text:Urbanist 400 12/18 #6B7280
+  Top Bar  393x50  row gap:250 pad:0 25 align:center  fill:#FFFFFF
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937
+  BottomNav  393x66  row pad:5 8 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Frame 8955  377x56  row justify:space_between align:center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  17.42x17.42  border:#9CA3AF/1.65
+        "Messages"  45x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x55  col gap:3 pad:8 0 justify:center align:center
+        Button  22x39  col gap:2 align:center
+          Icon  22x22
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  18.37x12.83  border:#9CA3AF/1.47
+          "Cart"  20x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  5.5x8.25  border:#D42B2B/2.02
+          Vector  16.5x17.42  border:#D42B2B/2.02
+        "Home"  27x15  text:Urbanist 500 10/15 #D42B2B center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  12.83x5.5  border:#9CA3AF/1.65
+          Vector  7.33x7.33  border:#9CA3AF/1.65
+        "Profile"  28x15  text:Urbanist 500 10/15 #9CA3AF center

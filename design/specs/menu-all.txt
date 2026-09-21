@@ -1,0 +1,232 @@
+
+=== Order Food - Menu Page  (26:10198) ===
+Order Food - Menu Page  393x957  fill:#FFFFFF
+  Container  393x727.5  col pad:0 16
+    Frame 8957  361.46x673.26  col
+      Button  361.46x97.04  row gap:12 pad:14 0 align:center  border:#F9FAFB/1
+        Container  61.6x61.6  r:15.4
+          Image (Chicken Kottu)  61.6x61.6
+            Image (Pol Sambol Rice)  73x64  fill:image(ff5a0bbd FILL)
+              Image (Chicken Kottu)  63x64  fill:image(a74c2863 FILL)
+        Container  247.87x68.5  col
+          Paragraph  247.87x23  col
+            "Chicken Kottu"  92x23  text:Urbanist 600 15/22.5 #1F2937
+          Paragraph:margin  247.87x18.5  col pad:2 0 0 0
+            Paragraph  247.87x16.5  col
+              "Classic kottu with tender chicken, eggs & ve"  278x17  text:Urbanist 500 12/16.5 #6B7280
+          Paragraph  247x27  row gap:24 pad:6 0 0 0 align:center
+            "Rs. 450"  46x21  text:Urbanist 700 14/21 #D42B2B
+            StarRow  57.96x9.99  row gap:2 align:center
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+        Container  28x28  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  16x16
+            Vector  9.33x0  border:#FFFFFF/1.33
+            Vector  0x9.33  border:#FFFFFF/1.33
+      Button  361.46x95.04  row gap:12 pad:14 0 align:center  border:#F9FAFB/1
+        Container  61.6x61.6  r:15.4
+          Image (Chicken Kottu)  61.6x61.6
+            Image (Pol Sambol Rice)  73x64  fill:image(ff5a0bbd FILL)
+              Image (Chicken Kottu)  63x64  fill:image(a74c2863 FILL)
+                Image (Chicken Kottu)  80x80  fill:image(6c3613b0 FILL)
+        Container  247.87x66.5  col
+          Paragraph  247.87x21  col
+            "Samosa"  52x21  text:Urbanist 700 14/21 #101828
+          Paragraph:margin  247.87x18.5  col pad:2 0 0 0
+            Paragraph  247.87x16.5  col
+              "Classic kottu with tender chicken, eggs & ve"  278x17  text:Urbanist 500 12/16.5 #6B7280
+          Paragraph  247x27  row gap:24 pad:6 0 0 0 align:center
+            "Rs. 450"  46x21  text:Urbanist 700 14/21 #D42B2B
+            StarRow  57.96x9.99  row gap:2 align:center
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+        Container  28x28  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  16x16
+            Vector  9.33x0  border:#FFFFFF/1.33
+            Vector  0x9.33  border:#FFFFFF/1.33
+      Button  361.46x97.04  row gap:12 pad:14 0 align:center  border:#F9FAFB/1
+        Container  61.6x61.6  r:15.4
+          Image (Chicken Kottu)  61.6x61.6
+            Image (Pol Sambol Rice)  73x64  fill:image(ff5a0bbd FILL)
+        Container  247.87x68.5  col
+          Paragraph  247.87x23  col
+            "Rotty Set"  62x23  text:Urbanist 600 15/22.5 #1F2937
+          Paragraph:margin  247.87x18.5  col pad:2 0 0 0
+            Paragraph  247.87x16.5  col
+              "Steamed string hoppers with coconut sambol &"  309x17  text:Urbanist 500 12/16.5 #6B7280
+          Paragraph  245.48x27  row gap:24 pad:6 0 0 0 align:center
+            "Rs. 380"  45x21  text:Urbanist 700 14/21 #D42B2B
+            StarRow  57.96x9.99  row gap:2 align:center
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+        Container  28x28  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  16x16
+            Vector  9.33x0  border:#FFFFFF/1.33
+            Vector  0x9.33  border:#FFFFFF/1.33
+      Button  361.46x97.04  row gap:12 pad:14 0 align:center  border:#F9FAFB/1
+        Container  61.6x61.6  r:15.4
+          Image (Chicken Kottu)  61.6x61.6
+            Image (Pol Sambol Rice)  73x64  fill:image(ff5a0bbd FILL)
+              Image (Chicken Kottu)  63x64  fill:image(a74c2863 FILL)
+        Container  247.87x68.5  col
+          Paragraph  247.87x23  col
+            "Classic Kottu"  85x23  text:Urbanist 600 15/22.5 #1F2937
+          Paragraph:margin  247.87x18.5  col pad:2 0 0 0
+            Paragraph  247.87x16.5  col
+              "Classic kottu with tender chicken, eggs & ve"  278x17  text:Urbanist 500 12/16.5 #6B7280
+          Paragraph  247x27  row gap:24 pad:6 0 0 0 align:center
+            "Rs. 450"  46x21  text:Urbanist 700 14/21 #D42B2B
+            StarRow  57.96x9.99  row gap:2 align:center
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+        Container  28x28  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  16x16
+            Vector  9.33x0  border:#FFFFFF/1.33
+            Vector  0x9.33  border:#FFFFFF/1.33
+      Button  361.46x95.04  row gap:12 pad:14 0 align:center  border:#F9FAFB/1
+        Container  61.6x61.6  r:15.4
+          Image (Chicken Kottu)  61.6x61.6
+            Image (Pol Sambol Rice)  73x64  fill:image(a4354a82 FILL)
+        Container  247.87x66.5  col
+          Paragraph  247.87x21  col
+            "Lime Juice"  66x21  text:Urbanist 700 14/21 #101828
+          Paragraph:margin  247.87x18.5  col pad:2 0 0 0
+            Paragraph  247.87x16.5  col
+              "Steamed string hoppers with coconut sambol &"  309x17  text:Urbanist 500 12/16.5 #6B7280
+          Paragraph  245.48x27  row gap:24 pad:6 0 0 0 align:center
+            "Rs. 380"  45x21  text:Urbanist 700 14/21 #D42B2B
+            StarRow  57.96x9.99  row gap:2 align:center
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+        Container  28x28  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  16x16
+            Vector  9.33x0  border:#FFFFFF/1.33
+            Vector  0x9.33  border:#FFFFFF/1.33
+      Button  361.46x95.04  row gap:12 pad:14 0 align:center  border:#F9FAFB/1
+        Container  61.6x61.6  r:15.4
+          Image (Chicken Kottu)  61.6x61.6
+            Image (Pol Sambol Rice)  73x64  fill:image(c58f5d24 FILL)
+        Container  247.87x66.5  col
+          Paragraph  247.87x21  col
+            "Wood Apple Juice"  113x21  text:Urbanist 700 14/21 #101828
+          Paragraph:margin  247.87x18.5  col pad:2 0 0 0
+            Paragraph  247.87x16.5  col
+              "Steamed string hoppers with coconut sambol &"  309x17  text:Urbanist 500 12/16.5 #6B7280
+          Paragraph  245.48x27  row gap:24 pad:6 0 0 0 align:center
+            "Rs. 380"  45x21  text:Urbanist 700 14/21 #D42B2B
+            StarRow  57.96x9.99  row gap:2 align:center
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+        Container  28x28  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  16x16
+            Vector  9.33x0  border:#FFFFFF/1.33
+            Vector  0x9.33  border:#FFFFFF/1.33
+      Button  361.46x97.04  row gap:12 pad:14 0 align:center  border:#F9FAFB/1
+        Container  61.6x61.6  r:15.4
+          Image (Chicken Kottu)  61.6x61.6
+            Image (Pol Sambol Rice)  73x64  fill:image(ff5a0bbd FILL)
+        Container  247.87x68.5  col
+          Paragraph  247.87x23  col
+            "Rotty Set"  62x23  text:Urbanist 600 15/22.5 #1F2937
+          Paragraph:margin  247.87x18.5  col pad:2 0 0 0
+            Paragraph  247.87x16.5  col
+              "Steamed string hoppers with coconut sambol &"  309x17  text:Urbanist 500 12/16.5 #6B7280
+          Paragraph  245.48x27  row gap:24 pad:6 0 0 0 align:center
+            "Rs. 380"  45x21  text:Urbanist 700 14/21 #D42B2B
+            StarRow  57.96x9.99  row gap:2 align:center
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+              StarIcon  9.99x9.99
+                Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+        Container  28x28  row justify:center align:center  r:pill  fill:#D42B2B
+          Icon  16x16
+            Vector  9.33x0  border:#FFFFFF/1.33
+            Vector  0x9.33  border:#FFFFFF/1.33
+  Frame 8961  393x217.96  col  fill:#FFFFFF
+    Top Bar  393x50  row gap:250 pad:0 25 align:center  fill:#FFFFFF
+      time  39x20  r:0
+        "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+      Mask group  63x11
+        status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+        Status Bar Background  63x11  fill:#1F2937
+    Container  393x167.96  col pad:16 16 12 16  fill:#FFFFFF  shadow:0 1 2 -1 #000000@0.10
+      Container  361.46x46  row gap:12 align:center
+        Icon  17.99x17.99
+          Vector  4x8  border:#1A1A1A/2
+        Container  331.47x46  col justify:center
+          Heading 1  331.47x26  col
+            "All Menu Items"  148x26  text:Urbanist 700 22/25.5 #101828
+          "Mama's Kitchen"  83x20  text:Urbanist 400 12/19.5 #6B7280
+      Container:margin  361.46x51.48  col pad:12 0 0 0
+        Container  361.46x39.48  row gap:10 pad:9 14 justify:space_between align:center
+          Text Input  361.46x39.48  col pad:10 36 justify:center  r:14  fill:#F3F4F6
+            "Search dishes…"  289.46x16  text:Urbanist 400 13/15.6 #99A1AF
+          Icon  14x14
+            Vector  9.33x9.33  border:#99A1AF/1.17
+            Vector  2.51x2.51  border:#99A1AF/1.17
+      Container:margin  361.46x42.48  col pad:12 0 0 0
+        Container  361.46x30.48  row gap:8 pad:0 0 2 0
+          Button  42x28.48  col pad:6 14 justify:center align:center  r:pill  fill:#D42B2B  shadow:0 1 2 -1 #FFC9C9  shadow:0 1 3 #FFC9C9
+            "All"  14x17  text:Urbanist 700 11/16.5 #FFFFFF center
+          Button  66x28.48  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "Popular"  38x17  text:Urbanist 700 11/16.5 #6A7282 center
+          Button  90x28.48  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "Rice & Curry"  62x17  text:Urbanist 700 11/16.5 #6A7282 center
+          Button  64x28.48  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "Snacks"  36x17  text:Urbanist 700 11/16.5 #6A7282 center
+          Button  59x28.48  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "Drinks"  31x17  text:Urbanist 700 11/16.5 #6A7282 center

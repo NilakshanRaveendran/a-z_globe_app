@@ -1,0 +1,56 @@
+
+=== iPhone 16 - 4  (352:6743) ===
+iPhone 16 - 4  393x966  fill:#FFFFFF
+  Frame 8977  361.66x435.06  col gap:12
+    Container  361.66x211.53  col pad:20 0 0 0
+      SectionLabel  361.66x17  row gap:8 pad:0 4 align:center
+        Paragraph  42x17  col
+          "Active"  42x17  text:Urbanist 700 11/16.5 ls0.55 #9CA3AF
+        Container  303.66x0.49  fill:#E5E7EB
+      Container:margin  361.66x174.53  col pad:10 0 0 0
+        OfferListItem  361.66x164.53  col  r:16  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 3 #000000@0.07
+          Container  360.64x83.99  col pad:12 12 0 12
+            OfferCardPreview  336.64x71.99  r:10  fill:linear(#E53E3E 0% -> #F97316 100%)
+          Container  360.64x30.02  row gap:6 pad:8 12 0 12 align:center
+            Text  61.02x22.02  row pad:2 8 align:center  r:pill  fill:#FFF0F0  border:#D42B2B@0.15/0.51
+            Text  56x17  col
+          Container  360.64x50  row pad:10 12 align:center
+            Container  178.65x17  row gap:6 align:center
+            Container  157.99x30  row gap:6 pad:0 0 0 10 justify:max align:center
+    Container  361.66x211.53  col pad:20 0 0 0
+      SectionLabel  361.66x17  row gap:8 pad:0 4 align:center
+        Paragraph  54x17  col
+          "Inactive"  54x17  text:Urbanist 700 11/16.5 ls0.55 #9CA3AF
+        Container  291.66x0.49  fill:#E5E7EB
+      Container:margin  361.66x174.53  col pad:10 0 0 0
+        OfferListItem  361.66x164.53  col  r:16  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 3 #000000@0.07  opacity:0.7
+          Container  360.64x83.99  col pad:12 12 0 12
+            OfferCardPreview  336.64x71.99  r:10  fill:linear(#7C3AED 0% -> #EC4899 100%)
+          Container  360.64x30.02  row gap:6 pad:8 12 0 12 align:center
+            Text  61.02x22.02  row pad:2 8 align:center  r:pill  fill:#FFF0F0  border:#D42B2B@0.15/0.51
+            Text  56x17  col
+          Container  360.64x50  row pad:10 12 align:center
+            Container  178.65x17  row gap:6 align:center
+            Container  157.99x30  row gap:6 pad:0 0 0 10 justify:max align:center
+  Frame 8974  393x260  col align:center  fill:#FFFFFF
+    Top Bar  393x50  row gap:250 pad:0 25 align:center  fill:#FFFFFF
+      time  39x20  r:0
+        "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+      Mask group  63x11
+        status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+        Status Bar Background  63x11  fill:#1F2937
+    Container  393x142  col pad:23 16 16 16  fill:#FFFFFF
+      Container  361.46x36  row justify:space_between align:center
+        BackButton  36x36  col justify:center align:center  r:pill  fill:#F3F4F6
+          Icon  7.99x14
+            Vector  6x11.99  border:#1F2937/1.8
+      Heading 1  361.46x45  col pad:12 0 0 0
+        "Offers & Discounts"  183x33  text:Urbanist 700 22/33 #1F2937
+      Paragraph  361.46x22  col pad:2 0 0 0
+        "Mama’s Kitchen"  90x20  text:Urbanist 400 13/19.5 #D42B2B
+    Button  361.66x56  row gap:8 justify:center align:center  r:14  fill:#D42B2B
+      Icon  18x18
+        Vector  16x16  border:#FFFFFF/1.5
+        Vector  8x8  border:#FFFFFF/1.8
+      Text  158x23  col align:center
+        "Create New Offer Card"  158x23  text:Urbanist 700 15/22.5 #FFFFFF center

@@ -1,0 +1,41 @@
+rules_version = '2';
+
+// Menu and cover photography is world-readable; only the owning SUPPLIER
+// account may upload it. Delivery instruction photos belong to the customer who
+// took them.
+//
+// Ownership mirrors firestore.rules#ownsMerchant: the merchant document must
+// name this uid AND the uid must hold a supplier profile, so a customer uid
+// sitting in `supplierId` grants nothing here either. See the header of
+// firestore.rules for why the two account kinds are separate.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isImage() {
+      return request.resource.contentType.matches('image/.*')
+        && request.resource.size < 8 * 1024 * 1024;
+    }
+
+    function isSupplier() {
+      return isSignedIn()
+        && firestore.exists(/databases/(default)/documents/suppliers/$(request.auth.uid));
+    }
+
+    match /merchants/{merchantId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSignedIn()
+        && firestore.get(/databases/(default)/documents/merchants/$(merchantId)).data.supplierId
+             == request.auth.uid
+        && isSupplier()
+        && isImage();
+    }
+
+    match /customers/{uid}/{allPaths=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid && isImage();
+    }
+  }
+}

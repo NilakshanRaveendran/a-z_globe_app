@@ -1,0 +1,129 @@
+
+=== iPhone 16 - 1  (176:2923) ===
+iPhone 16 - 1  393x1166  fill:#FFFFFF
+  Container  393x912  col pad:12 16 112 16
+    MenuItemCard  174.73x207.87  col  r:16  fill:#FFFFFF  border:#D42B2B@0.15/0.54  shadow:0 2 8 #D42B2B@0.07
+      Container  173.64x100  fill:image(cb89216d FILL)
+      Container  173.64x108.24  col pad:10 12 12 12
+        Paragraph  149.65x16.24  col
+          "Grilled Chicken Burger"  131x17  text:Urbanist 700 13/16.25 #1F2937
+        Container:margin  149.64x23  col pad:2 0 0 0 align:center
+          Container  149.65x21  row justify:space_between align:center
+            Text  45x21  col pad:2 6  r:6  fill:#F3F4F6
+            Text  42x21  col
+        Container:margin  149.64x47  col pad:12 0 0 0 align:center
+          Container  149.65x35  row gap:8 align:center
+            Button  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#FFF1F0  border:#D42B2B@0.07/1
+            Button  31.99x31.99  row justify:center align:center  r:10  fill:#F3F4F6
+    MenuItemCard  174.73x207.87  col  r:16  fill:#FFFFFF  border:#D42B2B@0.15/0.54  shadow:0 2 8 #D42B2B@0.07
+      Container  173.64x100  fill:image(62485822 FILL)
+      Container  173.64x108.24  col pad:10 12 12 12
+        Paragraph  149.65x16.24  col
+          "Margherita Pizza"  101x17  text:Urbanist 700 13/16.25 #1F2937
+        Container:margin  149.64x23  col pad:2 0 0 0 align:center
+          Container  149.65x21  row justify:space_between align:center
+            Text  38x21  col pad:2 6  r:6  fill:#F3F4F6
+            Text  48x21  col
+        Container:margin  149.64x47  col pad:12 0 0 0 align:center
+          Container  149.65x35  row gap:8 align:center
+            Button  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#FFF1F0  border:#D42B2B@0.07/1
+            Button  31.99x31.99  row justify:center align:center  r:10  fill:#F3F4F6
+    MenuItemCard  174.73x207.87  col  r:16  fill:#FFFFFF  border:#D42B2B@0.15/0.54  shadow:0 2 8 #D42B2B@0.07
+      Container  173.64x100  fill:image(82542065 FILL)
+      Container  173.64x108.24  col pad:10 12 12 12
+        Paragraph  149.65x16.24  col
+          "Spicy Tuna Roll"  89x17  text:Urbanist 700 13/16.25 #1F2937
+        Container:margin  149.64x23  col pad:2 0 0 0 align:center
+          Container  149.65x21  row justify:space_between align:center
+            Text  38x21  col pad:2 6  r:6  fill:#F3F4F6
+            Text  42x21  col
+        Container:margin  149.64x47  col pad:12 0 0 0 align:center
+          Container  149.65x35  row gap:8 align:center
+            Button  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#FFF1F0  border:#D42B2B@0.07/1
+            Button  31.99x31.99  row justify:center align:center  r:10  fill:#F3F4F6
+    MenuItemCard  174.73x207.87  col  r:16  fill:#FFFFFF  border:#D42B2B@0.15/0.54  shadow:0 2 8 #D42B2B@0.07
+      Container  173.64x100  fill:image(ec5207cb FILL)
+      Container  173.64x108.24  col pad:10 12 12 12
+        Paragraph  149.65x16.24  col
+          "Caesar Salad"  80x17  text:Urbanist 700 13/16.25 #1F2937
+        Container:margin  149.64x23  col pad:2 0 0 0 align:center
+          Container  149.65x21  row justify:space_between align:center
+            Text  46x21  col pad:2 6  r:6  fill:#F3F4F6
+            Text  43x21  col
+        Container:margin  149.64x47  col pad:12 0 0 0 align:center
+          Container  149.65x35  row gap:8 align:center
+            Button  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#FFF1F0  border:#D42B2B@0.07/1
+            Button  31.99x31.99  row justify:center align:center  r:10  fill:#F3F4F6
+    MenuItemCard  174.73x207.87  r:16  fill:#FFFFFF  border:#D42B2B@0.15/0.54  shadow:0 2 8 #D42B2B@0.07
+      MenuItemCard  173.64x206.79  col  r:16  fill:#FFFFFF  border:#F3F4F6/0.54  shadow:0 1 3 #000000@0.05
+        Container  172.56x100  fill:image(ff12bb2f FILL)
+        Container  172.56x108.24  col pad:10 12 12 12
+          Paragraph  149.65x16.24  col
+            "Mix Nasi Goreng"  98x17  text:Urbanist 700 13/16.25 #1F2937
+          Container:margin  148.56x23  col pad:2 0 0 0 align:center
+            Container  149.65x21  row justify:space_between align:center
+          Container:margin  148.56x47  col pad:12 0 0 0 align:center
+            Container  149.65x35  row gap:8 align:center
+    MenuItemCard  174.73x207.87  col  r:16  fill:#FFFFFF  border:#D42B2B@0.15/0.54  shadow:0 2 8 #D42B2B@0.07
+      Container  173.64x100  fill:image(849a9afb STRETCH)
+      Container  173.64x108.24  col pad:10 12 12 12
+        Paragraph  149.65x16.24  col
+          "Mango Lassi"  73x17  text:Urbanist 700 13/16.25 #1F2937
+        Container:margin  149.64x23  col pad:2 0 0 0 align:center
+          Container  149.65x21  row justify:space_between align:center
+            Text  42x21  col pad:2 6  r:6  fill:#F3F4F6
+            Text  42x21  col
+        Container:margin  149.64x47  col pad:12 0 0 0 align:center
+          Container  149.65x35  row gap:8 align:center
+            Button  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#FFF1F0  border:#D42B2B@0.07/1
+            Button  31.99x31.99  row justify:center align:center  r:10  fill:#F3F4F6
+    MenuItemCard  174.73x207.87  col  r:16  fill:#FFFFFF  border:#D42B2B@0.15/0.54  shadow:0 2 8 #D42B2B@0.07
+      Container  173.64x100  fill:image(f3fd5ba0 STRETCH)
+      Container  173.64x108.24  col pad:10 12 12 12
+        Paragraph  149.65x16.24  col
+          "Chocolate Lava Cake"  125x17  text:Urbanist 700 13/16.25 #1F2937
+        Container:margin  149.64x23  col pad:2 0 0 0 align:center
+          Container  149.65x21  row justify:space_between align:center
+            Text  54x21  col pad:2 6  r:6  fill:#F3F4F6
+            Text  43x21  col
+        Container:margin  149.64x47  col pad:12 0 0 0 align:center
+          Container  149.65x35  row gap:8 align:center
+            Button  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#FFF1F0  border:#D42B2B@0.07/1
+            Button  31.99x31.99  row justify:center align:center  r:10  fill:#F3F4F6
+  Frame 8974  393x241.98  col
+    Top Bar  393x50  row gap:250 pad:0 25 align:center  fill:#FFFFFF
+      time  39x20  r:0
+        "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+      Mask group  63x11
+        status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+        Status Bar Background  63x11  fill:#1F2937
+    Container  393x142  col pad:23 16 16 16  fill:#FFFFFF
+      Container  361.46x36  row justify:space_between align:center
+        BackButton  36x36  col justify:center align:center  r:pill  fill:#F3F4F6
+          Icon  7.99x14
+            Vector  6x11.99  border:#1F2937/1.8
+        Button  97x34  row gap:6 pad:8 14 align:center  r:pill  fill:#D42B2B
+          Icon  12x12
+            Vector  7x0  border:#FFFFFF/1.5
+            Vector  0x7  border:#FFFFFF/1.5
+          "Add Item"  51x18  text:Urbanist 700 12/18 #FFFFFF center
+      Heading 1  361.46x45  col pad:12 0 0 0
+        "Menu Management"  196x33  text:Urbanist 700 22/33 #1F2937
+      Paragraph  361.46x22  col pad:2 0 0 0
+        "Manage your Mama’s Kitchen menu in here."  251x20  text:Urbanist 400 13/19.5 #6B7280
+    Container  393x49.98  col pad:12 16 4 16  fill:#FFFFFF
+      Container  361.46x33.98  row gap:8 pad:0 0 4 0
+        Button  42x29.98  col pad:6 14 justify:center align:center  r:pill  fill:#D42B2B
+          "All"  14x18  text:Urbanist 600 12/18 #FFFFFF center
+        Button  69x29.98  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+          "Burgers"  41x18  text:Urbanist 600 12/18 #6B7280 center
+        Button  57x29.98  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+          "Pizza"  29x18  text:Urbanist 600 12/18 #6B7280 center
+        Button  57x29.98  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+          "Sushi"  29x18  text:Urbanist 600 12/18 #6B7280 center
+        Button  65x29.98  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+          "Salads"  37x18  text:Urbanist 600 12/18 #6B7280 center
+        Button  74x29.98  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+          "Desserts"  46x18  text:Urbanist 600 12/18 #6B7280 center
+        Button  61x29.98  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+          "Drinks"  33x18  text:Urbanist 600 12/18 #6B7280 center

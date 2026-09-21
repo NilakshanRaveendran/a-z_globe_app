@@ -1,0 +1,99 @@
+
+=== Create Order History Page  (346:2826) ===
+Create Order History Page  393x852  col  fill:#FFFFFF
+  App  393.66x852.58  col
+    OrderHistoryPage  393.66x1324.55  col  fill:#F9FAFB
+      Container  393.66x50  row pad:0 25 justify:space_between align:center  fill:#FFFFFF
+        Paragraph  39x20  col
+          "05:29"  39x20  text:Roboto 500 15/19.58 #1F2937
+        Container  68x12  row gap:5 align:center
+          Icon  16x12
+            Vector  3x6  fill:#1F2937
+            Vector  3x8  fill:#1F2937
+            Vector  3x10  fill:#1F2937
+            Vector  3x12  fill:#1F2937
+          Icon  16x12
+            Vector  2.4x2.4  fill:#1F2937
+            Vector  3.68x1.52  border:#1F2937/1.12
+            Vector  7.36x1.52  border:#1F2937/1.12
+            Vector  12.8x2.64  border:#1F2937/1.12
+          Icon  26x12
+            Vector  22x11  border:#1F2937@0.35/1
+            Vector  17x8  fill:#1F2937
+            Vector  1.5x4  fill:#1F2937@0.40
+      Container  393.66x125.51  col pad:4 16 16 16  fill:#FFFFFF  border:#E5E7EB/1
+        Button  36x36  row justify:center align:center  r:pill  fill:#F3F4F6
+          Icon  18x18
+            Vector  5x10  border:#374151/1.8
+        Paragraph  361.66x48  col pad:12 0 0 0
+          "Order History"  146x36  text:Urbanist 700 24/36 #1F2937
+        Paragraph  361.66x21  col
+          "Mama's Kitchen"  97x21  text:Urbanist 500 14/21 #6B7280
+      Container  393.66x56.01  row gap:8 pad:12 16 align:center  fill:#FFFFFF  border:#F3F4F6/1
+        Container  279.66x31.5  row gap:8 align:center
+          Button  44x32  col pad:6 14 justify:center align:center  r:pill  fill:#D42B2B
+            "All"  16x20  text:Urbanist 700 13/19.5 #FFFFFF center
+          Button  65x32  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "Today"  37x20  text:Urbanist 500 13/19.5 #374151 center
+          Button  86x32  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "Yesterday"  58x20  text:Urbanist 500 13/19.5 #374151 center
+          Button  86x32  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "This Week"  58x20  text:Urbanist 500 13/19.5 #374151 center
+          Button  92x32  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+            "This Month"  64x20  text:Urbanist 500 13/19.5 #374151 center
+        Container  1x22  fill:#E5E7EB
+        Button  65x30  row gap:5 pad:6 10 align:center  r:pill  fill:#F3F4F6
+          Icon  14x14
+            Vector  11.37x10.06  border:#374151/1.14
+            Vector  11.37x4.81  border:#374151/1.14
+          Text  26x18  col align:center
+            "Date"  26x18  text:Urbanist 500 12/18 #374151 center
+      Container  393.66x44.51  row gap:6 pad:10 16 align:center  fill:#FFFFFF  border:#F3F4F6/1
+        Container  52x20  row gap:5 align:center
+          Text  13x20  col
+            "10"  13x20  text:Urbanist 700 13/19.5 #1F2937
+          Text  34x18  col
+            "orders"  34x18  text:Urbanist 500 12/18 #6B7280
+        Text  5x24  col
+          "·"  5x24  text:Inter 400 16/24 ls-0.31 #E5E7EB
+        Container  69x18  row gap:4 align:center
+          Text  6x6  r:pill  fill:#16A34A
+          Text  59x18  col
+            "7 delivered"  59x18  text:Urbanist 500 12/18 #6B7280
+        Text  5x24  col
+          "·"  5x24  text:Inter 400 16/24 ls-0.31 #E5E7EB
+        Container  70x18  row gap:4 align:center
+          Text  6x6  r:pill  fill:#D42B2B
+          Text  60x18  col
+            "3 cancelled"  60x18  text:Urbanist 500 12/18 #6B7280
+      Container  393.66x1048.53  col pad:12 16 80 16
+        Container  361.66x959.06  col gap:16
+          Container  361.66x260.02  col
+            Container  361.66x17  row gap:8 pad:0 4 align:center
+            Container:margin  361.66x243.02  col pad:8 0 0 0
+          Container  361.66x260.02  col
+            Container  361.66x17  row gap:8 pad:0 4 align:center
+            Container:margin  361.66x243.02  col pad:8 0 0 0
+          Container  361.66x179.01  col
+            Container  361.66x17  row gap:8 pad:0 4 align:center
+            Container:margin  361.66x162.01  col pad:8 0 0 0
+          Container  361.66x98.01  col
+            Container  361.66x17  row gap:8 pad:0 4 align:center
+            Container:margin  361.66x81.01  col pad:8 0 0 0
+          Container  361.66x98.01  col
+            Container  361.66x17  row gap:8 pad:0 4 align:center
+            Container:margin  361.66x81.01  col pad:8 0 0 0
+      Container  393.66x66.51  col  fill:#FFFFFF  border:#F3F4F6/1
+        Container  393.66x66  row pad:5 8 justify:space_between align:center
+          Button  73x56  col gap:3 pad:8 0 justify:center align:center
+            Icon  22x22
+            "Messages"  45x15  text:Urbanist 500 10/15 #9CA3AF center
+          Button  73x56  col gap:3 pad:8 0 justify:center align:center
+            Icon  22x22
+            "Cart"  20x15  text:Urbanist 500 10/15 #9CA3AF center
+          Button  73x56  col gap:3 pad:8 0 justify:center align:center
+            Icon  22x22
+            "Home"  27x15  text:Urbanist 500 10/15 #9CA3AF center
+          Button  73x56  col gap:3 pad:8 0 justify:center align:center
+            Icon  22x22
+            "Profile"  28x15  text:Urbanist 500 10/15 #9CA3AF center

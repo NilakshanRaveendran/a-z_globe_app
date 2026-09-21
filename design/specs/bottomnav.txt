@@ -1,0 +1,95 @@
+
+=== BottomNav  (31:12072) ===
+BottomNav  433x364  r:5  border:#9747FF/1
+  Property 1=Default  393x66  row pad:5 8 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Frame 8955  377x56  row justify:space_between align:center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  17.42x17.42  border:#9CA3AF/1.65
+        "Messages"  45x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x55  col gap:3 pad:8 0 justify:center align:center
+        Button  22x39  col gap:2 align:center
+          Icon  22x22
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  18.37x12.83  border:#9CA3AF/1.47
+          "Cart"  20x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  5.5x8.25  border:#D42B2B/2.02
+          Vector  16.5x17.42  border:#D42B2B/2.02
+        "Home"  27x15  text:Urbanist 500 10/15 #D42B2B center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  12.83x5.5  border:#9CA3AF/1.65
+          Vector  7.33x7.33  border:#9CA3AF/1.65
+        "Profile"  28x15  text:Urbanist 500 10/15 #9CA3AF center
+  Property 1=Variant2  393x66  row pad:5 8 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Frame 8955  377x56  row justify:space_between align:center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  17.42x17.42  border:#9CA3AF/1.65
+        "Messages"  45x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x55  col gap:3 pad:8 0 justify:center align:center
+        Button  22x39  col gap:2 align:center
+          Icon  22x22
+            Vector  1.83x1.83  border:#D42B2B/1.47
+            Vector  1.83x1.83  border:#D42B2B/1.47
+            Vector  18.37x12.83  border:#D42B2B/1.47
+          "Cart"  20x15  text:Urbanist 500 10/15 #D42B2B center
+      Button  73.59x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  5.5x8.25  border:#9CA3AF/2.02
+          Vector  16.5x17.42  border:#9CA3AF/2.02
+        "Home"  27x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  12.83x5.5  border:#9CA3AF/1.65
+          Vector  7.33x7.33  border:#9CA3AF/1.65
+        "Profile"  28x15  text:Urbanist 500 10/15 #9CA3AF center
+  Property 1=Variant3  393x66  row pad:5 8 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Frame 8955  377x56  row justify:space_between align:center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  17.42x17.42  border:#D42B2B/1.65
+        "Messages"  45x15  text:Urbanist 500 10/15 #D42B2B center
+      Button  73.59x55  col gap:3 pad:8 0 justify:center align:center
+        Button  22x39  col gap:2 align:center
+          Icon  22x22
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  18.37x12.83  border:#9CA3AF/1.47
+          "Cart"  20x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  5.5x8.25  border:#9CA3AF/2.02
+          Vector  16.5x17.42  border:#9CA3AF/2.02
+        "Home"  27x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  12.83x5.5  border:#9CA3AF/1.65
+          Vector  7.33x7.33  border:#9CA3AF/1.65
+        "Profile"  28x15  text:Urbanist 500 10/15 #9CA3AF center
+  Property 1=Variant4  393x66  row pad:5 8 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Frame 8955  377x56  row justify:space_between align:center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  17.42x17.42  border:#9CA3AF/1.65
+        "Messages"  45x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x55  col gap:3 pad:8 0 justify:center align:center
+        Button  22x39  col gap:2 align:center
+          Icon  22x22
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  18.37x12.83  border:#9CA3AF/1.47
+          "Cart"  20x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  5.5x8.25  border:#9CA3AF/2.02
+          Vector  16.5x17.42  border:#9CA3AF/2.02
+        "Home"  27x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  12.83x5.5  border:#D42B2B/1.65
+          Vector  7.33x7.33  border:#D42B2B/1.65
+        "Profile"  28x15  text:Urbanist 500 10/15 #D42B2B center

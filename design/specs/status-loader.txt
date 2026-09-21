@@ -1,0 +1,189 @@
+
+=== Status Loader  (91:3780) ===
+Status Loader  368.38x481.98  r:5  border:#9747FF/1
+  Property 1=Default  328.38x57  row align:center
+    Container  143.19x57  row align:center
+      Stop  48x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+          icons/rest  19.99x19.99  col justify:center align:center
+            RestaurantIcon  19.99x19.99
+              Vector  10x16.66  fill:#FFFFFF
+        "Restaurant"  48x15  text:Urbanist 500 10/15 #9CA3AF
+      Container:margin  95.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  0x3  r:pill  fill:#22C55E
+    Container  143.19x57  row align:center
+      Stop  42x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+          icons/pick  19.99x19.99  col
+            DriverIcon  19.99x19.99
+              Vector  6.66x6.66  fill:#FFFFFF
+              Vector  10x6.66  border:#FFFFFF/1.67
+        "Picked up"  42x15  text:Urbanist 500 10/15 #9CA3AF
+      Container:margin  101.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  0x3  r:pill  fill:#22C55E
+    Stop  42x57  col gap:6 align:center
+      Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+        icons/deliver  19.99x19.99  col
+          HomeIcon  19.99x19.99
+            Vector  14.99x7.5  border:#FFFFFF/1.67
+            Vector  11.66x8.33  border:#FFFFFF/1.67
+      "Delivered"  42x15  text:Urbanist 500 10/15 #9CA3AF
+  Property 1=Variant2  328.38x57  row align:center
+    Container  143.19x57  row align:center
+      Stop  48x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/rest  19.99x19.99  col justify:center align:center
+            RestaurantIcon  19.99x19.99
+              Vector  10x16.66  fill:#FFFFFF
+        "Restaurant"  48x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  95.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  0x3  r:pill  fill:#22C55E
+    Container  143.19x57  row align:center
+      Stop  42x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+          icons/pick  19.99x19.99  col
+            DriverIcon  19.99x19.99
+              Vector  6.66x6.66  fill:#FFFFFF
+              Vector  10x6.66  border:#FFFFFF/1.67
+        "Picked up"  42x15  text:Urbanist 500 10/15 #9CA3AF
+      Container:margin  101.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  0x3  r:pill  fill:#22C55E
+    Stop  42x57  col gap:6 align:center
+      Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+        icons/deliver  19.99x19.99  col
+          HomeIcon  19.99x19.99
+            Vector  14.99x7.5  border:#FFFFFF/1.67
+            Vector  11.66x8.33  border:#FFFFFF/1.67
+      "Delivered"  42x15  text:Urbanist 500 10/15 #9CA3AF
+  Property 1=Variant3  328.38x57  row align:center
+    Container  143.19x57  row align:center
+      Stop  48x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/rest  19.99x19.99  col justify:center align:center
+            RestaurantIcon  19.99x19.99
+              Vector  10x16.66  fill:#FFFFFF
+        "Restaurant"  48x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  95.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  87x3  r:pill  fill:#22C55E
+    Container  143.19x57  row align:center
+      Stop  42x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+          icons/pick  19.99x19.99  col
+            DriverIcon  19.99x19.99
+              Vector  6.66x6.66  fill:#FFFFFF
+              Vector  10x6.66  border:#FFFFFF/1.67
+        "Picked up"  42x15  text:Urbanist 500 10/15 #9CA3AF
+      Container:margin  101.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  0x3  r:pill  fill:#22C55E
+    Stop  42x57  col gap:6 align:center
+      Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+        icons/deliver  19.99x19.99  col
+          HomeIcon  19.99x19.99
+            Vector  14.99x7.5  border:#FFFFFF/1.67
+            Vector  11.66x8.33  border:#FFFFFF/1.67
+      "Delivered"  42x15  text:Urbanist 500 10/15 #9CA3AF
+  Property 1=Variant4  328.38x57  row align:center
+    Container  143.19x57  row align:center
+      Stop  48x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/rest  19.99x19.99  col justify:center align:center
+            RestaurantIcon  19.99x19.99
+              Vector  10x16.66  fill:#FFFFFF
+        "Restaurant"  48x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  95.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  87x3  r:pill  fill:#22C55E
+    Container  143.19x57  row align:center
+      Stop  42x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/pick  19.99x19.99  col
+            DriverIcon  19.99x19.99
+              Vector  6.66x6.66  fill:#FFFFFF
+              Vector  10x6.66  border:#FFFFFF/1.67
+        "Picked up"  42x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  101.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  0x3  r:pill  fill:#22C55E
+    Stop  42x57  col gap:6 align:center
+      Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+        icons/deliver  19.99x19.99  col
+          HomeIcon  19.99x19.99
+            Vector  14.99x7.5  border:#FFFFFF/1.67
+            Vector  11.66x8.33  border:#FFFFFF/1.67
+      "Delivered"  42x15  text:Urbanist 500 10/15 #9CA3AF
+  Property 1=Variant5  328.38x57  row align:center
+    Container  143.19x57  row align:center
+      Stop  48x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/rest  19.99x19.99  col justify:center align:center
+            RestaurantIcon  19.99x19.99
+              Vector  10x16.66  fill:#FFFFFF
+        "Restaurant"  48x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  95.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  87x3  r:pill  fill:#22C55E
+    Container  143.19x57  row align:center
+      Stop  42x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/pick  19.99x19.99  col
+            DriverIcon  19.99x19.99
+              Vector  6.66x6.66  fill:#FFFFFF
+              Vector  10x6.66  border:#FFFFFF/1.67
+        "Picked up"  42x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  101.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  87x3  r:pill  fill:#22C55E
+    Stop  42x57  col gap:6 align:center
+      Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+        icons/deliver  19.99x19.99  col
+          HomeIcon  19.99x19.99
+            Vector  14.99x7.5  border:#FFFFFF/1.67
+            Vector  11.66x8.33  border:#FFFFFF/1.67
+      "Delivered"  42x15  text:Urbanist 500 10/15 #9CA3AF
+  Property 1=Variant6  328.38x57  row align:center
+    Container  143.19x57  row align:center
+      Stop  48x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/rest  19.99x19.99  col justify:center align:center
+            RestaurantIcon  19.99x19.99
+              Vector  10x16.66  fill:#FFFFFF
+        "Restaurant"  48x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  95.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  87x3  r:pill  fill:#22C55E
+    Container  143.19x57  row align:center
+      Stop  42x57  col gap:6 align:center
+        Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+          icons/pick  19.99x19.99  col
+            DriverIcon  19.99x19.99
+              Vector  6.66x6.66  fill:#FFFFFF
+              Vector  10x6.66  border:#FFFFFF/1.67
+        "Picked up"  42x15  text:Urbanist 500 10/15 #22C55E
+      Container:margin  101.19x21  row pad:0 4 18 4
+        Status Bar  87.64x3
+          Container  87.64x3  r:pill  fill:#E5E7EB
+            Container  87x3  r:pill  fill:#22C55E
+    Stop  42x57  col gap:6 align:center
+      Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+        icons/deliver  19.99x19.99  col
+          HomeIcon  19.99x19.99
+            Vector  14.99x7.5  border:#FFFFFF/1.67
+            Vector  11.66x8.33  border:#FFFFFF/1.67
+      "Delivered"  42x15  text:Urbanist 500 10/15 #22C55E

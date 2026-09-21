@@ -1,0 +1,342 @@
+
+=== Order Food - Landing Page  (31:11648) ===
+Order Food - Landing Page  393x1272  fill:#FFFFFF
+  App  393.46x1232  r:28  fill:#FFFFFF
+    RestaurantListScreen  393.46x1232  col  fill:#FFFFFF
+      Container  393.46x58  row pad:10 16 justify:space_between align:center
+        Button  132.99x33  row gap:3 align:center
+          Icon  17.99x17.99
+            Vector  4x8  border:#1A1A1A/2
+          Paragraph  112x33  col align:center
+            "Order Food"  112x33  text:Urbanist 700 22/33 #1A1A1A center
+        Button  38x38  row justify:center align:center
+          Icon  22x22
+            Vector  3.18x0.92  border:#1A1A1A/1.65
+            Vector  16.5x13.75  border:#1A1A1A/1.65
+      Container  393.46x1174  col
+        Container  393.46x41.07  row gap:8 pad:2 16 0 16
+          Button  67.08x39.07  row gap:6 pad:5 12 5 5 align:center  r:pill  fill:#D42B2B  border:#D42B2B/0.54
+            Container  28x28  row justify:center align:center  r:7
+              ChipIconAll  17.99x17.99
+                Vector  6x6  fill:#4CAF50
+                Vector  6x6  fill:#FF9800
+                Vector  6x6  fill:#2196F3
+                Vector  6x6  fill:#FBBF24
+            Paragraph  15x20  col align:center
+              "All"  15x20  text:Urbanist 600 13/19.5 #FFFFFF center
+          Button  113.08x39.07  row gap:6 pad:5 12 5 5 align:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.54
+            Container  28x28  row justify:center align:center  r:30  fill:#F3F4F6
+              ChipIconSriLankan  17.99x17.99
+                Vector  14x14  fill:#FF8F00
+                Vector  10x10  fill:#FFF9C4
+                Vector  8x8  fill:#FF6F00
+            Paragraph  61x20  col align:center
+              "Sri Lankan"  61x20  text:Urbanist 600 13/19.5 #1A1A1A center
+          Button  81.08x39.07  row gap:6 pad:5 12 5 5 align:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.54
+            Container  28x28  row justify:center align:center  r:30  fill:#F3F4F6
+              ChipIconCafe  17.99x17.99
+                Vector  10x7  fill:#BCAAA4
+                Vector  10x0  border:#8D6E63/1.5
+                Vector  2x4  border:#795548/1.5
+                Vector  4x2.33  border:#90A4AE/1
+            Paragraph  29x20  col align:center
+              "Cafe"  29x20  text:Urbanist 600 13/19.5 #1A1A1A center
+          Button  102.08x39.07  row gap:6 pad:5 12 5 5 align:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.54
+            Container  28x28  row justify:center align:center  r:30  fill:#F3F4F6
+              ChipIconSeafoodSmall  17.99x17.99
+                Vector  10x10  fill:#81D4FA
+                Vector  3x4  fill:#0288D1
+                Vector  2x2  fill:#0288D1
+            Paragraph  50x20  col align:center
+              "Seafood"  50x20  text:Urbanist 600 13/19.5 #1A1A1A center
+        Container  393.46x92.99  row gap:2 pad:12 12 6 12 align:center
+          Button  67.99x74.99  col gap:6 pad:0 8 align:center
+            IconDineOut  51.99x51.99
+              Vector  47.99x47.99  fill:#FFF3E0
+              Vector  28x20  fill:#FFB74D
+              Vector  26x18  fill:#FFCC80
+              Vector  24x6  fill:#FFF8E1
+              Vector  2x13  fill:#F57C00
+              Vector  2x10  fill:#F57C00
+              Vector  2x10  fill:#F57C00
+              Vector  14x2  border:#F57C00/1.5
+            "Dine Out"  43x17  text:Urbanist 500 11/16.5 #1A1A1A center
+          Button  77x74.99  col gap:6 pad:0 8 align:center
+            IconRiceCurry  51.99x51.99
+              Vector  47.99x47.99  fill:#E8F5E9
+              Vector  30x18  fill:#A5D6A7
+              Vector  28x16  fill:#C8E6C9
+              Vector  22x10  fill:#FFF9C4
+              Vector  20x8  fill:#FFFDE7
+              Vector  6x6  fill:#EF9A9A
+              Vector  7x7  fill:#FFCC80
+              Vector  6x6  fill:#80DEEA
+              Vector  8x2  border:#66BB6A/1.5
+            "Rice & Curry"  61x17  text:Urbanist 500 11/16.5 #1A1A1A center
+          Button  67.99x74.99  col gap:6 pad:0 8 align:center
+            IconKottu  51.99x51.99
+              Vector  47.99x47.99  fill:#FBE9E7
+              Vector  24x12  fill:#BCAAA4
+              Vector  22x10  fill:#D7CCC8
+              Vector  5x8  fill:#FF8A65
+              Vector  5x8  fill:#AED581
+              Vector  5x8  fill:#FFD54F
+              Vector  20x3  fill:#8D6E63
+              Vector  16x7  border:#6D4C41/1.5
+            "Kottu"  26x17  text:Urbanist 500 11/16.5 #1A1A1A center
+          Button  67.99x74.99  col gap:6 pad:0 8 align:center
+            IconSeafood  51.99x51.99
+              Vector  47.99x47.99  fill:#E3F2FD
+              Vector  24x20  fill:#81D4FA
+              Vector  12x10  border:#29B6F6/2
+              Vector  6x8  fill:#0288D1
+              Vector  3x3  fill:#0288D1
+              Vector  12x2  border:#0288D1/1.5
+              Vector  4x4  fill:#B3E5FC
+            "Seafood"  42x17  text:Urbanist 500 11/16.5 #1A1A1A center
+          Button  67.99x74.99  col gap:6 pad:0 8 align:center
+            IconDrinks  51.99x51.99
+              Vector  47.99x47.99  fill:#F3E5F5
+              Vector  14x20  fill:#CE93D8
+              Vector  14x0  border:#AB47BC/2
+              Vector  12x0  border:#E1BEE7/1
+              Vector  10x6  fill:#F8BBD9  opacity:0.6
+              Vector  2x8  fill:#EC407A
+              Vector  4x4  fill:#F48FB1
+              Vector  8x1.5  border:#7B1FA2/1
+            "Drinks"  30x17  text:Urbanist 500 11/16.5 #1A1A1A center
+          Button  67.99x74.99  col gap:6 pad:0 8 align:center
+            IconDesserts  51.99x51.99
+              Vector  47.99x47.99  fill:#FCE4EC
+              Vector  14x12  fill:#F48FB1
+              Vector  12x10  fill:#FCE4EC
+              Vector  16x10  fill:#F06292
+              Vector  8x8  fill:#FFB74D
+              Vector  4x4  fill:#FF8F00
+              Vector  2x2  fill:#F06292
+              Vector  2x2  fill:#F06292
+              Vector  2x2  fill:#F06292
+            "Desserts"  42x17  text:Urbanist 500 11/16.5 #1A1A1A center
+          Button  70x74.99  col gap:6 pad:0 8 align:center
+            IconQuickBites  51.99x51.99
+              Vector  47.99x47.99  fill:#FFFDE7
+              Vector  24x4  fill:#8D6E63
+              Vector  24x5  fill:#AED581
+              Vector  24x5  fill:#FFCC80
+              Vector  24x6  fill:#F9A825
+              Vector  24x6  fill:#F57F17
+              Vector  4x4  fill:#EF5350
+              Vector  4x4  fill:#FFEB3B
+              Vector  4x4  fill:#EF5350
+            "Quick Bites"  54x17  text:Urbanist 500 11/16.5 #1A1A1A center
+          Button  67.99x74.99  col gap:6 pad:0 8 align:center
+            IconPizza  51.99x51.99
+              Vector  47.99x47.99  fill:#FFF8E1
+              Vector  28x24  fill:#FFCC80
+              Vector  28x24  border:#F9A825/1.5
+              Vector  20x18  fill:#EF5350  opacity:0.7
+              Vector  5x5  fill:#F44336
+              Vector  4x4  fill:#F44336
+              Vector  4x4  fill:#F44336
+              Vector  28x4  fill:#BCAAA4
+            "Pizza"  26x17  text:Urbanist 500 11/16.5 #1A1A1A center
+        Container  393.46x54  row gap:8 pad:0 16 align:center
+          Frame 8956  287.24x33.06
+            Button  78.08x33.06  row gap:5 pad:7 12 align:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.54
+              Icon  14x14
+                Vector  6x6  border:#1A1A1A/1.2
+                Vector  8x3  fill:#1A1A1A
+              Paragraph  34x18  col align:center
+                "Pickup"  34x18  text:Urbanist 500 12/18 #1A1A1A center
+            Button  78.08x33.06  row gap:5 pad:7 12 align:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.54
+              Icon  14x14
+                Vector  4x4  border:#1A1A1A/1.2
+                Vector  4x4  border:#1A1A1A/1.2
+                Vector  8x8  border:#1A1A1A/1.2
+              Paragraph  34x18  col align:center
+                "Offers"  34x18  text:Urbanist 500 12/18 #1A1A1A center
+            Button  115.08x33.06  row gap:5 pad:7 12 align:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.54
+              Icon  14x14
+                "₨"  11x11  text:Inter 700 9/10.89 #1A1A1A center
+              Paragraph  71x18  col align:center
+                "Under Rs.500"  71x18  text:Urbanist 500 12/18 #1A1A1A center
+        Container  393.46x65.54  fill:#FFFFFF
+          Button  361.46x45  row gap:10 pad:12 16 align:center  r:pill  fill:#F3F4F6
+            Icon  16x16
+              Vector  10.66x10.66  border:#9CA3AF/1.33
+              Vector  2.87x2.87  border:#9CA3AF/1.33
+            Paragraph  175x21  col align:center
+              "Search restaurants or dishes"  175x21  text:Urbanist 500 14/21 #9CA3AF center
+        Container  393.46x500.95  col
+          Container  393.46x29.99  row pad:0 16 justify:space_between align:center
+            Paragraph  187x27  col
+              "Featured on A-Z Globe"  187x27  text:Urbanist 700 18/27 #1A1A1A
+            Button  29.99x29.99  row justify:center align:center  r:pill  fill:#F3F4F6
+              Icon  15x15
+                Vector  3.75x7.5  border:#4B5563/1.25
+          Container:margin  393.46x224  col pad:14 16 0 16
+            Container  361.46x210  col  r:18
+              Image (Mama's Kitchen)  361.46x210  fill:image(889817cb FILL)
+              Container  361.46x210  fill:linear(#000000@0.75 0% -> #000000@0.20 50% -> #000000@0.00 100%)
+              Container  361.47x110.63  col pad:14
+                Container  333.47x29.63
+                  Container  81x23  row gap:4 pad:3 8 align:center  r:pill  fill:#FFFFFF@0.20
+                    Icon  11x11
+                      Vector  9.17x8.74  fill:#FBBF24  border:#FBBF24/0.92
+                    Paragraph  15x17  col
+                      "4.8"  15x17  text:Urbanist 600 11/16.5 #FFFFFF
+                    Paragraph  31x17  col
+                      "(234+)"  31x17  text:Urbanist 400 11/16.5 #FFFFFF@0.70
+                Paragraph  333.47x25  col
+                  "Mama's Kitchen"  142x25  text:Urbanist 700 20/25 #FFFFFF
+                Container  333.47x28  row gap:6 pad:4 0 0 0 align:center
+                  Container  13x13  row gap:3 align:center
+                    Container  13x13  row justify:center align:center  r:3  fill:#D42B2B
+                      Paragraph  9x6  col
+                        "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                  Paragraph  57x18  col
+                    "20–30 min"  57x18  text:Urbanist 400 12/18 #FFFFFF@0.80
+                  Text  5x24  col
+                    "·"  5x24  text:Inter 400 16/24 ls-0.31 #FFFFFF@0.30
+                  Paragraph  75x18  col
+                    "Rs. 80 delivery"  75x18  text:Urbanist 400 12/18 #FFFFFF@0.80
+          Container:margin  393.46x246.96  col pad:10 0 0 0
+            Container  393.46x236.96  col pad:0 16
+              Container  175.74x236.96  col
+                Container  175.74x175.74  col  r:14
+                  Image (Yaal Angaadi)  175.74x175.74  fill:image(1aea2829 FILL)
+                  Container  175.74x175.74  fill:linear(#000000@0.40 0% -> #000000@0.00 100%)
+                  Container  63x21  col pad:3 7  r:6  fill:#D42B2B
+                    "Buy 1, get 1"  49x15  text:Urbanist 700 10/15 #FFFFFF
+                  Container  37.99x19  row gap:3 pad:2 6 align:center  r:pill  fill:#000000@0.40
+                    Icon  8.99x8.99
+                      Vector  7.49x7.15  fill:#FBBF24  border:#FBBF24/0.75
+                    Paragraph  14x15  col
+                      "4.9"  14x15  text:Urbanist 600 10/15 #FFFFFF
+                Container  175.74x62  col pad:8 0 2 0
+                  Paragraph  175.74x17  col
+                    "Yaal Angaadi"  80x17  text:Urbanist 700 13/16.25 #1A1A1A
+                  Container  175.74x18  row gap:3 pad:3 0 0 0 align:center
+                    Container  11x11  row justify:center align:center  r:3  fill:#D42B2B
+                      Paragraph  9x6  col
+                        "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                    Paragraph  47x15  col
+                      "25–35 min"  47x15  text:Urbanist 400 10/15 #6B7280
+                  Container  175.74x17  row gap:2 pad:2 0 0 0 align:center
+                    Paragraph  26x15  col
+                      "(512+)"  26x15  text:Urbanist 400 10/15 #9CA3AF
+                    Text  5x15  col pad:0 1
+                      "·"  3x15  text:Inter 400 10/15 ls0.12 #E5E7EB
+                    Paragraph  40x15  col
+                      "#2 North"  40x15  text:Urbanist 400 10/15 #6B7280
+                    Icon:margin  9.99x8.99  row pad:0 0 0 1
+                      Icon  8.99x8.99
+                        Vector  2.25x4.5  border:#1A1A1A/0.75
+              Container  175.74x236.96  col
+                Container  175.74x175.74  col  r:14
+                  Image (Namma Ooru Cafe)  175.74x175.74  fill:image(9c57cdb5 FILL)
+                  Container  175.74x175.74  fill:linear(#000000@0.40 0% -> #000000@0.00 100%)
+                  Container  37.99x19  row gap:3 pad:2 6 align:center  r:pill  fill:#000000@0.40
+                    Icon  8.99x8.99
+                      Vector  7.49x7.15  fill:#FBBF24  border:#FBBF24/0.75
+                    Paragraph  14x15  col
+                      "4.4"  14x15  text:Urbanist 600 10/15 #FFFFFF
+                Container  175.74x62  col pad:8 0 2 0
+                  Paragraph  175.74x17  col
+                    "Namma Ooru Cafe"  111x17  text:Urbanist 700 13/16.25 #1A1A1A
+                  Container  175.74x18  row gap:3 pad:3 0 0 0 align:center
+                    Container  11x11  row justify:center align:center  r:3  fill:#D42B2B
+                      Paragraph  9x6  col
+                        "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                    Paragraph  45x15  col
+                      "15–20 min"  45x15  text:Urbanist 400 10/15 #6B7280
+                  Container  175.74x17  row gap:2 pad:2 0 0 0 align:center
+                    Paragraph  23x15  col
+                      "(89+)"  23x15  text:Urbanist 400 10/15 #9CA3AF
+                    Text  5x15  col pad:0 1
+                      "·"  3x15  text:Inter 400 10/15 ls0.12 #E5E7EB
+                    Paragraph  37x15  col
+                      "#3 Cafe"  37x15  text:Urbanist 400 10/15 #6B7280
+                    Icon:margin  9.99x8.99  row pad:0 0 0 1
+                      Icon  8.99x8.99
+                        Vector  2.25x4.5  border:#1A1A1A/0.75
+        Container  393.46x384.58  col pad:28 0 24 0
+          Container  393.46x45  row pad:0 16 justify:space_between align:center
+            Container  158.83x45  col
+              Paragraph  158.83x27  col
+                "Top Spots Near You"  159x27  text:Urbanist 700 18/27 #1A1A1A
+              Paragraph  158.83x18  col
+                "Most ordered this week"  124x18  text:Urbanist 400 12/18 #9CA3AF
+            Button  29.99x29.99  row justify:center align:center  r:pill  fill:#F3F4F6
+              Icon  15x15
+                Vector  3.75x7.5  border:#4B5563/1.25
+          Container:margin  393.46x287.58  col pad:14 0 0 0
+            Container  393.46x273.58  col pad:0 16
+              Button  175.74x131.8  col justify:center  r:14
+                Image (Mama's Kitchen)  175.74x131.8  fill:image(889817cb FILL)
+                Container  175.74x131.8  fill:linear(#000000@0.65 0% -> #000000@0.10 50% -> #000000@0.00 100%)
+                Container  175.75x56  col pad:10
+                  Paragraph  155.75x17  col
+                    "Mama's Kitchen"  93x17  text:Urbanist 700 13/16.25 #FFFFFF center
+                  Container  155.75x19  row gap:3 pad:2 0 0 0 align:center
+                    Icon  9.99x9.99
+                      Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                    Paragraph  15x17  col align:center
+                      "4.8"  15x17  text:Urbanist 600 11/16.5 #FFFFFF center
+                    Text  3x15  col align:center
+                      "·"  3x15  text:Inter 500 10/15 ls0.12 #FFFFFF@0.40 center
+                    Paragraph  48x15  col align:center
+                      "20–30 min"  48x15  text:Urbanist 500 10/15 #FFFFFF@0.80 center
+              Button  175.74x131.8  col justify:center  r:14
+                Image (Yaal Angaadi)  175.74x131.8  fill:image(1aea2829 FILL)
+                Container  175.74x131.8  fill:linear(#000000@0.65 0% -> #000000@0.10 50% -> #000000@0.00 100%)
+                Container  175.75x56  col pad:10
+                  Paragraph  155.75x17  col
+                    "Yaal Angaadi"  80x17  text:Urbanist 700 13/16.25 #FFFFFF center
+                  Container  155.75x19  row gap:3 pad:2 0 0 0 align:center
+                    Icon  9.99x9.99
+                      Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                    Paragraph  15x17  col align:center
+                      "4.9"  15x17  text:Urbanist 600 11/16.5 #FFFFFF center
+                    Text  3x15  col align:center
+                      "·"  3x15  text:Inter 500 10/15 ls0.12 #FFFFFF@0.40 center
+                    Paragraph  47x15  col align:center
+                      "25–35 min"  47x15  text:Urbanist 500 10/15 #FFFFFF@0.80 center
+              Button  175.74x131.8  col justify:center  r:14
+                Image (Namma Ooru Cafe)  175.74x131.8  fill:image(9c57cdb5 FILL)
+                Container  175.74x131.8  fill:linear(#000000@0.65 0% -> #000000@0.10 50% -> #000000@0.00 100%)
+                Container  175.75x56  col pad:10
+                  Paragraph  155.75x17  row
+                    "Namma Ooru Cafe"  111x17  text:Urbanist 700 13/16.25 #FFFFFF center
+                  Container  155.75x19  row gap:3 pad:2 0 0 0 align:center
+                    Icon  9.99x9.99
+                      Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                    Paragraph  15x17  col align:center
+                      "4.4"  15x17  text:Urbanist 600 11/16.5 #FFFFFF center
+                    Text  3x15  col align:center
+                      "·"  3x15  text:Inter 500 10/15 ls0.12 #FFFFFF@0.40 center
+                    Paragraph  45x15  col align:center
+                      "15–20 min"  45x15  text:Urbanist 500 10/15 #FFFFFF@0.80 center
+              Button  175.74x131.8  col justify:center  r:14  opacity:0.5
+                Image (Trinco Blu Restaurant)  175.74x131.8  fill:image(71ec4131 FILL)
+                Container  175.74x131.8  fill:linear(#000000@0.65 0% -> #000000@0.10 50% -> #000000@0.00 100%)
+                Container  45x21  col pad:3 7  r:pill  fill:#000000@0.60
+                  "Closed"  31x15  text:Urbanist 600 10/15 #FFFFFF center
+                Container  175.75x56  col pad:10
+                  Paragraph  155.75x17  col
+                    "Trinco Blu Restaurant"  124x17  text:Urbanist 700 13/16.25 #FFFFFF center
+                  Container  155.75x19  row gap:3 pad:2 0 0 0 align:center
+                    Icon  9.99x9.99
+                      Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                    Paragraph  15x17  col align:center
+                      "4.6"  15x17  text:Urbanist 600 11/16.5 #FFFFFF center
+                    Text  3x15  col align:center
+                      "·"  3x15  text:Inter 500 10/15 ls0.12 #FFFFFF@0.40 center
+                    Paragraph  48x15  col align:center
+                      "30–40 min"  48x15  text:Urbanist 500 10/15 #FFFFFF@0.80 center
+  Top Bar  393.46x50  row gap:250 pad:0 25 align:center  fill:#FFFFFF
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937

@@ -1,0 +1,99 @@
+
+=== Order Food - Restaurant Page  (116:3078) ===
+Order Food - Restaurant Page  393x915  fill:#FFFFFF
+  App  393x915  fill:#FFFFFF
+    Container  393.46x634.82  col pad:0 0 100 0
+      Container  393.46x497.62  col pad:16 16 20 16
+        Container  361.46x33  row
+          Paragraph  296.46x33  col
+            "Chicken Kottu"  136x33  text:Urbanist 700 22/33 #1F2937
+          Paragraph  65x30  col
+            "Rs. 450"  65x30  text:Urbanist 700 20/30 #D42B2B
+        Paragraph  361.46x29  col pad:6 0 0 0
+          "Classic kottu with tender chicken, eggs & ve"  321x23  text:Urbanist 400 14/22.75 #6B7280
+        Container  361.46x115.74  col pad:20 0 0 0
+          Paragraph  361.46x23  col
+            "Size"  29x23  text:Urbanist 700 15/22.5 #1F2937
+          Container:margin  361.46x72.74  col pad:10 0 0 0
+            Container  361.46x62.74  row gap:10
+              Button  175.73x62.74  col pad:11 0 justify:center  r:12  fill:#FFF1F1  border:#D42B2B/1.63
+                Paragraph  172.48x21  col align:center
+                  "Regular"  48x21  text:Urbanist 600 14/21 #D42B2B center
+              Button  175.73x62.74  col pad:11 0 justify:center  r:12  fill:#FFFFFF  border:#E5E7EB/1.63
+                Paragraph  172.48x21  col align:center
+                  "Large"  36x21  text:Urbanist 600 14/21 #4B5563 center
+                Paragraph  172.48x17  col align:center
+                  "+Rs. 400"  41x17  text:Urbanist 500 11/16.5 #9CA3AF center
+        Container  361.46x94.25  col pad:20 0 0 0
+          Paragraph  361.46x23  col
+            "Spice Level"  77x23  text:Urbanist 700 15/22.5 #1F2937
+          Container  361.46x51.25  row gap:8 pad:10 0 0 0
+            Button  115.15x41.25  col pad:10 0 justify:center  r:12  fill:#FFFFFF  border:#E5E7EB/1.63
+              Paragraph  111.9x18  col align:center
+                "Mild 🌿"  39x18  text:Urbanist 600 12/18 #4B5563 center
+            Button  115.16x41.25  col pad:10 0 justify:center  r:12  fill:#FFF1F1  border:#D42B2B/1.63
+              Paragraph  111.91x18  col align:center
+                "Medium 🌶️"  59x18  text:Urbanist 600 12/18 #D42B2B center
+            Button  115.15x41.25  col pad:10 0 justify:center  r:12  fill:#FFFFFF  border:#E5E7EB/1.63
+              Paragraph  111.9x18  col align:center
+                "Hot 🔥"  34x18  text:Urbanist 600 12/18 #4B5563 center
+        Container  361.46x189.63  col pad:20 0 0 0
+          Paragraph  361.46x23  col
+            "Add-ons (Optional)"  120x23  text:Urbanist 700 15/22.5 #1F2937
+          Button:margin  361.46x55.54  col pad:10 0 0 0 align:center
+            Button  361.46x45.54  row pad:12 0 justify:space_between align:center  border:#F3F4F6/1
+              Container  90.99x21  row gap:10 align:center
+                Container  19.99x19.99  r:5  border:#D1D5DB/1.63
+                Paragraph  61x21  col align:center
+                  "Extra egg"  61x21  text:Urbanist 500 14/21 #1F2937 center
+              Paragraph  46x20  col align:center
+                "+Rs. 100"  46x20  text:Urbanist 500 13/19.5 #6B7280 center
+          Button  361.46x45.54  row pad:12 0 justify:space_between align:center  border:#F3F4F6/1
+            Container  101.99x21  row gap:10 align:center
+              Container  19.99x19.99  r:5  border:#D1D5DB/1.63
+              Paragraph  72x21  col align:center
+                "Extra gravy"  72x21  text:Urbanist 500 14/21 #1F2937 center
+            Paragraph  41x20  col align:center
+              "+Rs. 30"  41x20  text:Urbanist 500 13/19.5 #6B7280 center
+          Button  361.46x45.54  row pad:12 0 justify:space_between align:center  border:#F3F4F6/1
+            Container  88.99x21  row gap:10 align:center
+              Container  19.99x19.99  r:5  border:#D1D5DB/1.63
+              Paragraph  59x21  col align:center
+                "Extra rice"  59x21  text:Urbanist 500 14/21 #1F2937 center
+            Paragraph  45x20  col align:center
+              "+Rs. 150"  45x20  text:Urbanist 500 13/19.5 #6B7280 center
+    Container  393x282
+      Image (Mama's Kitchen)  393x282  fill:image(fa7b8e68 STRETCH)
+      Container  394x282  fill:linear(#000000@0.50 0% -> #000000@0.10 50% -> #3D3D3D@0.13 52% -> #646464@0.16 53% -> #939393@0.21 56% -> #C0C0C0@0.32 63% -> #D6D6D6@0.44 69% -> #E3E3E3@0.55 75% -> #F2F2F2@0.77 88% -> #FAFAFA 100%)
+        Frame 8960  393.29x108  col
+  Container  393.46x79.54  col pad:14 16  fill:#FFFFFF  border:#F3F4F6/1
+    Container  361.46x51  row gap:12 align:center
+      Container  115.98x39.99  row gap:12 pad:4 align:center  r:12  fill:#F3F4F6
+        Button  31.99x31.99  row justify:center align:center
+          Icon  16x16
+            Vector  9.33x0  border:#1F2937/1.33
+        Paragraph  19.99x24  col align:center
+          "1"  6x24  text:Urbanist 700 16/24 #1F2937 center
+        Button  31.99x31.99  row justify:center align:center
+          Icon  16x16
+            Vector  9.33x0  border:#1F2937/1.33
+            Vector  0x9.33  border:#1F2937/1.33
+      Button  233.49x51  row gap:8 pad:14 0 justify:center align:center  r:14  fill:#D42B2B
+        Icon  16x16
+          Vector  1.33x1.33  border:#FFFFFF/1.33
+          Vector  1.33x1.33  border:#FFFFFF/1.33
+          Vector  13.36x9.33  border:#FFFFFF/1.33
+        Paragraph  151x23  col align:center
+          "Add to Cart — Rs. 450"  151x23  text:Urbanist 700 15/22.5 #FFFFFF center
+  Frame 8965  393.29x108  col
+    Top Bar  393.29x50  row gap:250 pad:0 25 align:center
+      time  39x20  r:0
+        "05:29"  39x20  text:Roboto 500 15/19.57 #FFFFFF center
+      Mask group  63x11
+        status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+        Status Bar Background  63x11  fill:#FFFFFF
+    Container  393.29x58  row pad:10 16 justify:space_between align:center
+      Button  36x36  row justify:center align:center  r:pill  fill:#FFFFFF@0.90  shadow:0 2 4 -2 #000000@0.10  shadow:0 4 6 -1 #000000@0.10
+        Icon  17.99x17.99
+          Vector  5.25x10.5  border:#1A1A1A/1.5
+          Vector  10.5x0  border:#1A1A1A/1.5

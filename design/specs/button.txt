@@ -1,0 +1,7 @@
+
+=== Button  (177:3090) ===
+Button  149.65x126  r:5  border:#9747FF/1
+  Property 1=Default  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#FFF1F0  border:#D42B2B@0.07/1
+    "Make it unavailable"  97x17  text:Urbanist 600 11/16.5 #D42B2B center
+  Property 1=Variant2  109.65x35  col pad:8 0 justify:center align:center  r:10  fill:#D1FAE5@0.15  border:#065F46@0.07/1
+    "Make Available"  76x17  text:Urbanist 600 11/16.5 #065F46 center

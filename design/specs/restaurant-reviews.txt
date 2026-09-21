@@ -1,0 +1,275 @@
+
+=== Update track order design  (18:5057) ===
+Update track order design  393x1452  fill:#FFFFFF
+  Container  393x282
+    Image (Mama's Kitchen)  394x282  fill:image(889817cb FILL)
+    Container  394x282  fill:linear(#000000@0.50 0% -> #000000@0.10 50% -> #3D3D3D@0.13 52% -> #646464@0.16 53% -> #939393@0.21 56% -> #C0C0C0@0.32 63% -> #D6D6D6@0.44 69% -> #E3E3E3@0.55 75% -> #F2F2F2@0.77 88% -> #FAFAFA 100%)
+  App  393x1153.13  col  r:28  fill:#FFFFFF
+    RestaurantDetailScreen  393x1153.13  col  fill:#FFFFFF
+      Container  393x106.54  col pad:14 16  border:#F3F4F6/1
+        Container  361.46x50  row justify:space_between
+          Container  141.62x50  col
+            Paragraph  141.62x30  col
+              "Mama's Kitchen"  142x30  text:Urbanist 700 20/30 #1F2937
+            Paragraph  141.62x20  col
+              "Sri Lankan Authentic Food"  147x20  text:Urbanist 400 13/19.5 #6B7280
+          Container  86x30  row gap:4 pad:5 10 align:center  r:pill
+            Icon  13x13
+              Vector  10.83x10.33  fill:#FBBF24  border:#FBBF24/1.08
+            Paragraph  18x20  col
+              "4.8"  18x20  text:Urbanist 600 13/19.5 #1F2937
+            Paragraph  27x18  col
+              "(234)"  27x18  text:Urbanist 400 12/18 #6B7280
+        Container  361.46x28  row gap:14 pad:10 0 0 0 align:center
+          Container  74x18  row gap:4 align:center
+            Icon  13x13
+              Vector  10.83x10.83  border:#9CA3AF/1.08
+              Vector  2.17x4.33  border:#9CA3AF/1.08
+            Paragraph  57x18  col
+              "20–30 min"  57x18  text:Urbanist 400 12/18 #6B7280
+          Container  92x18  row gap:4 align:center
+            Icon  13x13
+              Vector  3.79x3.79  border:#9CA3AF/1.08
+              Vector  3.79x3.79  border:#9CA3AF/1.08
+              Vector  1.08x1.08  border:#9CA3AF/1.08
+              Vector  4.33x5.15  border:#9CA3AF/1.08
+            Paragraph  75x18  col
+              "Rs. 80 delivery"  75x18  text:Urbanist 400 12/18 #6B7280
+          Container  49x18  row gap:4 align:center
+            Icon  13x13
+              Vector  8.67x10.83  border:#9CA3AF/1.08
+              Vector  3.25x3.25  border:#9CA3AF/1.08
+            Paragraph  32x18  col
+              "1.2 km"  32x18  text:Urbanist 400 12/18 #6B7280
+      Container  393.46x47.16  row  border:#F3F4F6/1
+        Button  131.15x46.62  col pad:12 0 justify:center align:center  border:#000000@0.00/1
+          "Menu"  35x21  text:Urbanist 600 14/21 #9CA3AF center
+        Button  131.15x46.62  col pad:12 0 justify:center align:center  border:#D42B2B/1
+          "Reviews"  51x21  text:Urbanist 600 14/21 #D42B2B center
+        Button  131.15x46.62  col pad:12 0 justify:center align:center  border:#000000@0.00/1
+          "Info"  24x21  text:Urbanist 600 14/21 #9CA3AF center
+      Container  393x999.43  col
+        ReviewsSection  393x999.43  col pad:20 16 16 16
+          RatingSummary  361.46x132.04  row gap:20 pad:16 align:center  r:16  fill:#FFFFFF  border:#F3F4F6/0.54  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+            Container  80x77  col align:center
+              Text  58x42  col
+                "4.8"  58x42  text:Urbanist 800 42/42 #101828
+              StarRow  68x12  row gap:2 align:center
+                StarIcon  12x12
+                  Vector  10x9.54  fill:#FBBF24  border:#FBBF24/1
+                StarIcon  12x12
+                  Vector  10x9.54  fill:#FBBF24  border:#FBBF24/1
+                StarIcon  12x12
+                  Vector  10x9.54  fill:#FBBF24  border:#FBBF24/1
+                StarIcon  12x12
+                  Vector  10x9.54  fill:#FBBF24  border:#FBBF24/1
+                StarIcon  12x12
+                  Vector  10x9.54  fill:#FBBF24  border:#FBBF24/1
+              Text:margin  58x23  col pad:6 0 0 0
+                "234 reviews"  58x17  text:Urbanist 500 11/16.5 #99A1AF
+            Container  1x98.96  fill:#F3F4F6
+            Container  207.38x99  col gap:6
+              Container  207.41x15  row gap:8 align:center
+                Text  9.99x15  col align:max
+                  "5"  6x15  text:Urbanist 600 10/15 #6A7282 right
+                Icon  7.99x7.99
+                  Vector  6.66x6.35  fill:#FFB900  border:#FFB900/0.67
+                Container  141.42x6  col  r:pill  fill:#F3F4F6
+                  Container  96.18x6  r:pill  fill:#F59E0B
+                Text  24x15  col align:max
+                  "68%"  18x15  text:Urbanist 400 10/15 #99A1AF right
+              Container  207.41x15  row gap:8 align:center
+                Text  9.99x15  col align:max
+                  "4"  6x15  text:Urbanist 600 10/15 #6A7282 right
+                Icon  7.99x7.99
+                  Vector  6.66x6.35  fill:#FFB900  border:#FFB900/0.67
+                Container  141.42x6  col  r:pill  fill:#F3F4F6
+                  Container  26.87x6  r:pill  fill:#FCD34D
+                Text  24x15  col align:max
+                  "19%"  15x15  text:Urbanist 400 10/15 #99A1AF right
+              Container  207.41x15  row gap:8 align:center
+                Text  9.99x15  col align:max
+                  "3"  6x15  text:Urbanist 600 10/15 #6A7282 right
+                Icon  7.99x7.99
+                  Vector  6.66x6.35  fill:#D1D5DC  border:#D1D5DC/0.67
+                Container  141.42x6  col  r:pill  fill:#F3F4F6
+                  Container  11.31x6  r:pill  fill:#E5E7EB
+                Text  24x15  col align:max
+                  "8%"  12x15  text:Urbanist 400 10/15 #99A1AF right
+              Container  207.41x15  row gap:8 align:center
+                Text  9.99x15  col align:max
+                  "2"  6x15  text:Urbanist 600 10/15 #6A7282 right
+                Icon  7.99x7.99
+                  Vector  6.66x6.35  fill:#D1D5DC  border:#D1D5DC/0.67
+                Container  141.42x6  col  r:pill  fill:#F3F4F6
+                  Container  4.24x6  r:pill  fill:#E5E7EB
+                Text  24x15  col align:max
+                  "3%"  12x15  text:Urbanist 400 10/15 #99A1AF right
+              Container  207.41x15  row gap:8 align:center
+                Text  9.99x15  col align:max
+                  "1"  4x15  text:Urbanist 600 10/15 #6A7282 right
+                Icon  7.99x7.99
+                  Vector  6.66x6.35  fill:#D1D5DC  border:#D1D5DC/0.67
+                Container  141.42x6  col  r:pill  fill:#F3F4F6
+                  Container  2.83x6  r:pill  fill:#E5E7EB
+                Text  24x15  col align:max
+                  "2%"  12x15  text:Urbanist 400 10/15 #99A1AF right
+          Button:margin  361.46x74.74  col pad:24 0 0 0
+            Button  361.46x50.74  row gap:8 pad:14 0 justify:center align:center  r:16  border:#E5E7EB/1.63
+              Icon  14x14
+                Vector  5.25x0  border:#99A1AF/1.28
+                Vector  9.91x9.91  border:#99A1AF/1.28
+              "Write a Review"  88x20  text:Urbanist 700 13/19.5 #99A1AF center
+          Container  361.46x756.65  col gap:14 pad:20 0 0 0
+            ReviewCard  361.46x184.16  col pad:16  r:16  fill:#FFFFFF  border:#F3F4F6/0.54  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+              Container  328.39x39.99  row justify:space_between
+                Container  129.99x39.99  row gap:12 align:center
+                  Container  39.99x39.99  row justify:center align:center  r:pill  fill:#FEE2E2
+                    "R"  9x20  text:Urbanist 800 14/20 #B91C1C
+                  Container  78x37  col
+                    Container  78x20  row gap:6 align:center
+                      Text  43x20  col
+                        "Ravi S."  43x20  text:Urbanist 700 14/20 #101828
+                    Container:margin  78x17  col pad:2 0 0 0 align:center
+                      Container  78.96x15  row gap:6 align:center
+                        StarRow  57.96x9.99  row gap:2 align:center
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                        Text  15x15  col
+                Text  54x19  col pad:2 0 0 0
+                  "2 days ago"  54x17  text:Urbanist 400 11/16.5 #99A1AF
+              Container:margin  328.38x36.08  col pad:12 0 0 0 align:center
+                Container  328.39x24.08  row gap:6 align:center
+                  Container  97.08x24.08  row gap:6 pad:4 10 align:center  r:pill  fill:#FFF7F0  border:#FECACA/0.54
+                    Icon  8.99x8.99
+                      Vector  3x3.37  border:#D42B2B/0.94
+                      Vector  0x7.49  border:#D42B2B/0.94
+                      Vector  1.87x7.49  border:#D42B2B/0.94
+                    "Chicken Kottu"  61x15  text:Urbanist 600 10/15 #D42B2B
+              Paragraph:margin  329x75  col pad:12 0 0 0
+                "Best kottu in Trincomalee — the flavour was "  329x63  text:Urbanist 400 13/20.8 #4A5565
+            ReviewCard  361.46x184.16  col pad:16  r:16  fill:#FFFFFF  border:#F3F4F6/0.54  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+              Container  328.39x39.99  row justify:space_between
+                Container  130.04x39.99  row gap:12 align:center
+                  Container  39.99x39.99  row justify:center align:center  r:pill  fill:#EDE9FE
+                    "P"  8x20  text:Urbanist 800 14/20 #6D28D9
+                  Container  78.04x37  col
+                    Container  78.04x20  row gap:6 align:center
+                      Text  51x20  col
+                        "Priya M."  51x20  text:Urbanist 700 14/20 #101828
+                    Container:margin  78.04x17  col pad:2 0 0 0 align:center
+                      Container  78.96x15  row gap:6 align:center
+                        StarRow  57.96x9.99  row gap:2 align:center
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#E5E7EB  border:#E5E7EB/0.83
+                        Text  15x15  col
+                Text  54x19  col pad:2 0 0 0
+                  "1 week ago"  54x17  text:Urbanist 400 11/16.5 #99A1AF
+              Container:margin  328.38x36.08  col pad:12 0 0 0 align:center
+                Container  328.39x24.08  row gap:6 align:center
+                  Container  121.08x24.08  row gap:6 pad:4 10 align:center  r:pill  fill:#FFF7F0  border:#FECACA/0.54
+                    Icon  8.99x8.99
+                      Vector  3x3.37  border:#D42B2B/0.94
+                      Vector  0x7.49  border:#D42B2B/0.94
+                      Vector  1.87x7.49  border:#D42B2B/0.94
+                    "String Hoppers Set"  85x15  text:Urbanist 600 10/15 #D42B2B
+              Paragraph:margin  329x75  col pad:12 0 0 0
+                "Authentic home-style taste that's hard to fi"  329x63  text:Urbanist 400 13/20.8 #4A5565
+            ReviewCard  361.46x163.16  col pad:16  r:16  fill:#FFFFFF  border:#F3F4F6/0.54  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+              Container  328.39x39.99  row justify:space_between
+                Container  129.99x39.99  row gap:12 align:center
+                  Container  39.99x39.99  row justify:center align:center  r:pill  fill:#D1FAE5
+                    "S"  9x20  text:Urbanist 800 14/20 #047857
+                  Container  78x37  col
+                    Container  78x20  row gap:6 align:center
+                      Text  58x20  col
+                        "Suresh K."  58x20  text:Urbanist 700 14/20 #101828
+                    Container:margin  78x17  col pad:2 0 0 0 align:center
+                      Container  78.96x15  row gap:6 align:center
+                        StarRow  57.96x9.99  row gap:2 align:center
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                        Text  15x15  col
+                Text  61x19  col pad:2 0 0 0
+                  "2 weeks ago"  61x17  text:Urbanist 400 11/16.5 #99A1AF
+              Container:margin  328.38x36.08  col pad:12 0 0 0 align:center
+                Container  328.39x24.08  row gap:6 align:center
+                  Container  107.08x24.08  row gap:6 pad:4 10 align:center  r:pill  fill:#FFF7F0  border:#FECACA/0.54
+                    Icon  8.99x8.99
+                      Vector  3x3.37  border:#D42B2B/0.94
+                      Vector  0x7.49  border:#D42B2B/0.94
+                      Vector  1.87x7.49  border:#D42B2B/0.94
+                    "Pol Sambol Rice"  71x15  text:Urbanist 600 10/15 #D42B2B
+              Paragraph:margin  329x54  col pad:12 0 0 0
+                "Always consistent quality. My go-to restaura"  329x42  text:Urbanist 400 13/20.8 #4A5565
+            ReviewCard  361.46x163.16  col pad:16  r:16  fill:#FFFFFF  border:#F3F4F6/0.54  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+              Container  328.39x39.99  row justify:space_between
+                Container  129.99x39.99  row gap:12 align:center
+                  Container  39.99x39.99  row justify:center align:center  r:pill  fill:#FFAA75
+                    "J"  7x20  text:Urbanist 800 14/20 #954141
+                  Container  78x37  col
+                    Container  78x20  row gap:6 align:center
+                      Text  38x20  col
+                        "Jeeva"  38x20  text:Urbanist 700 14/20 #101828
+                    Container:margin  78x17  col pad:2 0 0 0 align:center
+                      Container  78.96x15  row gap:6 align:center
+                        StarRow  57.96x9.99  row gap:2 align:center
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                          StarIcon  9.99x9.99
+                            Vector  8.33x7.94  fill:#FBBF24  border:#FBBF24/0.83
+                        Text  15x15  col
+                Text  61x19  col pad:2 0 0 0
+                  "2 weeks ago"  61x17  text:Urbanist 400 11/16.5 #99A1AF
+              Container:margin  328.38x36.08  col pad:12 0 0 0 align:center
+                Container  328.39x24.08  row gap:6 align:center
+                  Container  107.08x24.08  row gap:6 pad:4 10 align:center  r:pill  fill:#FFF7F0  border:#FECACA/0.54
+                    Icon  8.99x8.99
+                      Vector  3x3.37  border:#D42B2B/0.94
+                      Vector  0x7.49  border:#D42B2B/0.94
+                      Vector  1.87x7.49  border:#D42B2B/0.94
+                    "Pol Sambol Rice"  71x15  text:Urbanist 600 10/15 #D42B2B
+              Paragraph:margin  329x54  col pad:12 0 0 0
+                "Always consistent quality. My go-to restaura"  329x42  text:Urbanist 400 13/20.8 #4A5565
+  Frame 8967  393.29x108  col
+    Top Bar  393.29x50  row gap:250 pad:0 25 align:center
+      time  39x20  r:0
+        "05:29"  39x20  text:Roboto 500 15/19.57 #FFFFFF center
+      Mask group  63x11
+        status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+        Status Bar Background  63x11  fill:#FFFFFF
+    Container  393.29x58  row pad:10 16 justify:space_between align:center
+      Button  36x36  row justify:center align:center  r:pill  fill:#FFFFFF@0.90  shadow:0 2 4 -2 #000000@0.10  shadow:0 4 6 -1 #000000@0.10
+        Icon  17.99x17.99
+          Vector  5.25x10.5  border:#1A1A1A/1.5
+          Vector  10.5x0  border:#1A1A1A/1.5

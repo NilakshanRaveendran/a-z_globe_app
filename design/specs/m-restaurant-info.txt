@@ -1,0 +1,112 @@
+
+=== iPhone 16 - 7  (394:2730) ===
+iPhone 16 - 7  393x1886  fill:#FFFFFF
+  Container  393.66x50.51  col pad:10 16  fill:#FFFFFF  border:#F3F4F6/1
+    Container  361.66x30  row gap:8
+      Button  89x30  col pad:6 14 justify:center align:center  r:pill  fill:#D42B2B
+        "All Reviews"  61x18  text:Urbanist 600 12/18 #FFFFFF center
+      Button  90x30  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+        "Not Replied"  62x18  text:Urbanist 600 12/18 #6B7280 center
+      Button  68x30  col pad:6 14 justify:center align:center  r:pill  fill:#F3F4F6
+        "Replied"  40x18  text:Urbanist 600 12/18 #6B7280 center
+  Container  361.66x1616.61  col gap:36
+    Container  361.66x130  col
+      Button  361x130  row justify:center align:center  fill:linear(#D42B2B 0% -> #FF8A65 100%)
+        Container  121.99x32  row gap:6 pad:7 12 align:center  r:12  fill:#000000@0.25  blur:16
+          Icon  14.99x14.99
+            Vector  12.18x10.31  border:#FFFFFF/1.12
+            Vector  3.75x3.75  border:#FFFFFF/1.12
+          Text  77x18  col align:center
+            "Change Cover"  77x18  text:Urbanist 600 12/18 #FFFFFF center
+      Container  52x52  col
+        Container  52x52  row justify:center align:center  r:16  fill:#D42B2B  border:#FFFFFF/2.55  shadow:0 2 4 -2 #000000@0.10  shadow:0 4 6 -1 #000000@0.10
+          Text  21x33  col
+            "M"  21x33  text:Inter 700 22/33 #FFFFFF
+        Button  20x20  row justify:center align:center  r:pill  fill:#D42B2B  border:#FFFFFF/1.53  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+          Icon  9x9
+            Vector  6.3x6.3  border:#FFFFFF/0.9
+    Frame 8979  361.66x1450.61  col gap:16
+      Card  361.66x320.71  col pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 3 #000000@0.06
+        SectionHeader  328.64x15  col
+          "Basic Information"  106x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        RestaurantInfoPage  328.64x272.69  col gap:12 pad:10 0 0 0
+          TextInput  328.64x64.51  col
+            Paragraph:margin  328.64x22  col pad:0 0 5 0
+            Container  328.64x42.51
+          TextInput  328.64x64.51  col
+            Paragraph:margin  328.64x22  col pad:0 0 5 0
+            Container  328.64x42.51
+          Container  328.64x109.67  col
+            Paragraph:margin  328.64x22  col pad:0 0 5 0
+            Container  328.64x87.67
+      Card  361.66x246.53  col pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 3 #000000@0.06
+        SectionHeader  328.64x15  col
+          "Location"  53x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        RestaurantInfoPage  328.64x198.51  col gap:12 pad:10 0 0 0
+          TextInput  328.64x64.51  col
+            Paragraph:margin  328.64x22  col pad:0 0 5 0
+            Container  328.64x42.51
+          Container:margin  324.64x112  col pad:12 0 0 0
+            Container  324.64x100  r:14  fill:linear(#E8F4F0 0% -> #E6F3F1 13% -> #E5F3F2 25% -> #E3F2F3 38% -> #E2F1F4 50% -> #E0F0F5 63% -> #DFF0F6 75% -> #DDEFF7 88% -> #DCEEF8 100%)  border:#E5E7EB/0.51
+      Card  361.66x122.53  col pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 3 #000000@0.06
+        SectionHeader  328.64x15  col
+          "Contact"  50x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        TextInput  328.64x74.51  col pad:10 0 0 0
+          Paragraph  328.64x22  col pad:0 0 5 0
+            "Phone Number"  72x17  text:Urbanist 500 11/16.5 #6B7280
+          Container  328.64x42.51
+            Text Input  328.64x42.51  col pad:11 14 justify:center  r:12  border:#E5E7EB/0.51
+      Container  361.66x410.3  col pad:18  r:20  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 4 #000000@0.06
+        SectionLabel  324.64x32  row gap:8 align:center
+          Container  32x32  row justify:center align:center  r:10  fill:#FFF0F0
+            RestaurantInfoPage  16x16
+          Paragraph  94x21  col
+            "Opening Hours"  94x21  text:Urbanist 700 14/21 #1F2937
+        Container  324.64x341.28  col gap:2 pad:14 0 0 0
+          Container  324.64x45.04  col pad:10 12  r:12  fill:#FAFAFA  border:#000000@0.00/0.51
+            Container  299.62x24.02  row justify:space_between align:center
+          Container  324.64x45.04  col pad:10 12  r:12  fill:#FAFAFA  border:#000000@0.00/0.51
+            Container  299.62x24.02  row justify:space_between align:center
+          Container  324.64x45.04  col pad:10 12  r:12  fill:#FAFAFA  border:#000000@0.00/0.51
+            Container  299.62x25.52  row justify:space_between align:center
+          Container  324.64x45.04  col pad:10 12  r:12  fill:#FAFAFA  border:#000000@0.00/0.51
+            Container  299.62x24.02  row justify:space_between align:center
+          Container  324.64x45.04  col pad:10 12  r:12  fill:#FAFAFA  border:#000000@0.00/0.51
+            Container  299.62x24.02  row justify:space_between align:center
+          Container  324.64x45.04  col pad:10 12  r:12  fill:#FAFAFA  border:#000000@0.00/0.51
+            Container  299.62x24.02  row justify:space_between align:center
+          Container  324.64x45.04  col pad:10 12  r:12  fill:#FAFAFA  border:#000000@0.00/0.51
+            Container  299.62x25.52  row justify:space_between align:center
+      Card  361.66x286.55  col pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.51  shadow:0 1 3 #000000@0.06
+        SectionHeader  328.64x15  col
+          "Order Information"  110x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        RestaurantInfoPage  328.64x238.53  col gap:14 pad:10 0 0 0
+          Container  328.64x99.02  col
+            Paragraph  328.64x17  col
+            Container:margin  328.64x82.02  col pad:8 0 0 0
+          Container  328.64x37  row justify:space_between align:center
+            Container  104.47x37  col
+            Button  44x24  r:pill  fill:#D42B2B
+          TextInput  328.64x64.51  col
+            Paragraph:margin  328.64x22  col pad:0 0 5 0
+            Container  328.64x42.51
+  Container  393.66x74.51  row gap:10 pad:12 16  fill:#FFFFFF  border:#E5E7EB/1
+    Button  361.66x50  row gap:6 justify:center align:center  r:14  fill:#D42B2B
+      Icon  14x14
+        Vector  9x6.5  border:#FFFFFF/1.5
+      Text  92x21  col align:center
+        "Save Changes"  92x21  text:Urbanist 700 14/21 #FFFFFF center
+  Frame 8974  393x170.51  col  border:#F3F4F6/0.51
+    Top Bar  393x50  row gap:250 pad:0 25 align:center  fill:#FFFFFF
+      time  39x20  r:0
+        "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+      Mask group  63x11
+        status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+        Status Bar Background  63x11  fill:#1F2937
+    Container  393x120  col pad:23 16 16 16  fill:#FFFFFF
+      Container  361.46x36  row justify:space_between align:center
+        BackButton  36x36  col justify:center align:center  r:pill  fill:#F3F4F6
+          Icon  7.99x14
+            Vector  6x11.99  border:#1F2937/1.8
+      Heading 1  361.46x45  col pad:12 0 0 0
+        "Restaurant Information"  229x33  text:Urbanist 700 22/33 #1F2937

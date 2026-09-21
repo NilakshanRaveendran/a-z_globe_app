@@ -1,0 +1,25 @@
+{
+  "name": "@azglobe/core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Design tokens, UI kit and Firebase helpers shared by the customer and provider apps. Knows nothing about any specific A-Z module.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./theme": "./src/theme/index.ts",
+    "./ui": "./src/ui/index.ts",
+    "./firebase": "./src/firebase/index.ts",
+    "./firebase/db": "./src/firebase/db.ts",
+    "./utils/*": "./src/utils/*.ts",
+    "./ui/*": "./src/ui/*.tsx"
+  },
+  "peerDependencies": {
+    "expo-image": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-reanimated": "*",
+    "react-native-safe-area-context": "*",
+    "react-native-svg": "*"
+  }
+}

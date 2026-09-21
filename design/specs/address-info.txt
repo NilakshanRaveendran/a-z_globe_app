@@ -1,0 +1,119 @@
+
+=== Frame 8970  (400:4244) ===
+Frame 8970  393x1325  fill:#FFFFFF
+  Container  393x60.51  row pad:12 16 justify:space_between align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Button  36x36  row justify:center align:center  r:pill  fill:#F3F4F6
+      Icon  18x18
+        Vector  5x10  border:#1F2937/1.7
+    Paragraph  91x24  col
+      "Address info"  91x24  text:Urbanist 700 16/24 #1F2937
+    Button  47x20  col align:center
+      "Remove"  47x20  text:Urbanist 600 13/19.5 #EF4444 center
+  Container  393x180  fill:#E5E7EB
+    Container  402.06x179.99  col  opacity:0.4
+      Container  100.51x60  fill:#E9ECF0  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#E9ECF0  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#E9ECF0  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#E9ECF0  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+      Container  100.51x60  fill:#F3F4F6  border:#D1D5DB/0.52
+    Container  402.06x6  fill:#FFFFFF@0.70
+    Container  6x179.99  fill:#FFFFFF@0.70
+    Container  32x46  col align:center
+      Container  32x32  row justify:center align:center  r:pill  fill:#FFFFFF  border:#D42B2B/1.55  shadow:0 4 6 -4 #000000@0.10  shadow:0 10 15 -3 #000000@0.10
+        Icon  13.99x13.99
+          Vector  8x11.99  fill:#D42B2B
+          Vector  3x3  fill:#FFFFFF
+      Container:margin  2x14  col pad:2 0 0 0
+        Container  2x12  fill:#D42B2B
+    Container  393x29  row justify:center
+      Container  307x29  row gap:8 pad:6 12 align:center  r:10  fill:#FFFFFF  shadow:0 2 4 -2 #000000@0.10  shadow:0 4 6 -1 #000000@0.10
+        Icon  12x12
+          Vector  7x10  fill:#D42B2B
+          Vector  2.4x2.4  fill:#FFFFFF
+        Paragraph  263x17  col
+          "Home, Metro Voyage - Jaffna, 574 Hospital Rd"  263x17  text:Urbanist 600 11/16.5 #1F2937
+  Frame 8980  370x878.36  col gap:21
+    Container  370x343.66  col gap:12 pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.52
+      Container  336.97x69.03  col gap:6
+        Paragraph  336.97x18  col
+          "Building Type"  72x18  text:Urbanist 600 12/18 #374151
+        Container  336.97x45.03  row pad:12 justify:space_between align:center  r:12  border:#E5E7EB/0.52
+          Paragraph  36x20  col
+            "House"  36x20  text:Urbanist 600 13/19.5 #1F2937
+          Icon  16x16
+            Vector  8x4  border:#6B7280/1.4
+      Field  336.97x68.53  col gap:6
+        Paragraph  336.97x18  col
+          "Apt / Flat / Floor"  87x18  text:Urbanist 600 12/18 #374151
+        Text Input  337.04x44.53  col pad:12 justify:center  r:12  border:#E5E7EB/0.52
+          "e.g. Apt 4B, Floor 3"  312x16  text:Urbanist 500 13/15.6 #1F2937@0.50
+      Field  336.97x68.53  col gap:6
+        Paragraph  336.97x18  col
+          "Business / Building name"  131x18  text:Urbanist 600 12/18 #374151
+        Text Input  337.04x44.53  col pad:12 justify:center  r:12  border:#E5E7EB/0.52
+          "Optional"  312x16  text:Urbanist 500 13/15.6 #1F2937@0.50
+      Field  336.97x68.53  col gap:6
+        Paragraph  336.97x18  col
+          "Nearby landmark"  95x18  text:Urbanist 600 12/18 #374151
+        Text Input  337.04x44.53  col pad:12 justify:center  r:12  border:#E5E7EB/0.52
+          "e.g. Near city hospital"  312x16  text:Urbanist 500 13/15.6 #1F2937@0.50
+    Container  370x177.03  col gap:12 pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.52
+      Paragraph  336.97x21  col
+        "Dropoff options"  98x21  text:Urbanist 700 14/21 #1F2937
+      Button  336.97x29  row gap:12 pad:4 0 align:center
+        Container  19.99x19.99  row justify:center align:center  r:pill  border:#D42B2B/1.55
+          Container  10x10  r:pill  fill:#D42B2B
+        Paragraph  105x21  col align:center
+          "Meet at my door"  105x21  text:Urbanist 600 14/21 #1F2937 center
+        Text  117x17  col pad:0 0 0 2 align:center
+          "· More options available"  115x17  text:Urbanist 500 11/16.5 #6B7280 center
+      Button  336.97x29  row gap:12 pad:4 0 align:center
+        Container  19.99x19.99  r:pill  border:#D1D5DB/1.55
+        Paragraph  93x21  col align:center
+          "Leave at lobby"  93x21  text:Urbanist 600 14/21 #1F2937 center
+      Button  336.97x29  row gap:12 pad:4 0 align:center
+        Container  19.99x19.99  r:pill  border:#D1D5DB/1.55
+        Paragraph  87x21  col align:center
+          "Leave at gate"  87x21  text:Urbanist 600 14/21 #1F2937 center
+    Container  370x191.6  col pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.52
+      Field  337.04x107.53  col gap:6
+        Paragraph  337.04x18  col
+          "Instructions for delivery person"  165x18  text:Urbanist 600 12/18 #374151
+        Text Area  337.04x83.53  col pad:12  r:12  border:#E5E7EB/0.52
+          "e.g. Ring the bell twice, leave at door if n"  312x20  text:Urbanist 500 13/19.5 #1F2937@0.50
+      Button:margin  336.97x51.03  col pad:12 0 0 0 align:center
+        Button  337.04x39.03  row gap:8 pad:10 12 align:center  r:10  border:#D1D5DB/0.52
+          Icon  16x16
+            Vector  12x12  border:#9CA3AF/1.3
+            Vector  3x3  border:#9CA3AF/1.2
+            Vector  12x5  border:#9CA3AF/1.2
+          Paragraph  62x18  col align:center
+            "Add photos"  62x18  text:Urbanist 600 12/18 #9CA3AF center
+    Container  370x103.07  col gap:12 pad:16  r:16  fill:#FFFFFF  border:#E5E7EB/0.52
+      Paragraph  336.97x21  col
+        "Address label"  87x21  text:Urbanist 700 14/21 #1F2937
+      Container  336.97x37.03  row gap:8
+        Button  68.03x37.03  col pad:8 16 justify:center  r:pill  fill:#FFEFEF  border:#D42B2B/0.52
+          "Home"  35x20  text:Urbanist 600 13/19.5 #D42B2B center
+        Button  63.03x37.03  col pad:8 16 justify:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.52
+          "Work"  30x20  text:Urbanist 600 13/19.5 #374151 center
+        Button  67.03x37.03  col pad:8 16 justify:center  r:pill  fill:#FFFFFF  border:#E5E7EB/0.52
+          "Other"  34x20  text:Urbanist 600 13/19.5 #374151 center
+      Text Input  337.04x40.53  col pad:10 12 justify:center  r:12  border:#E5E7EB/0.52
+        "Enter custom label"  312x16  text:Urbanist 500 13/15.6 #1F2937@0.50
+  Container  393x83.54  col pad:14 16  fill:#FFFFFF  border:#F3F4F6/1
+    Button  370.06x55  col pad:16 0 justify:center align:center  r:16  fill:#D42B2B
+      "Save and continue"  126x23  text:Urbanist 700 15/22.5 #FFFFFF center
+  Top Bar  393x50  row gap:250 pad:0 25 align:center
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937

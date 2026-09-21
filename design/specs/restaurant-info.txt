@@ -1,0 +1,125 @@
+
+=== Update track order design  (18:5218) ===
+Update track order design  393x1052.97  fill:#FFFFFF
+  Container  393x282
+    Image (Mama's Kitchen)  394x282  fill:image(889817cb FILL)
+    Container  394x282  fill:linear(#000000@0.50 0% -> #000000@0.10 50% -> #3D3D3D@0.13 52% -> #646464@0.16 53% -> #939393@0.21 56% -> #C0C0C0@0.32 63% -> #D6D6D6@0.44 69% -> #E3E3E3@0.55 75% -> #F2F2F2@0.77 88% -> #FAFAFA 100%)
+  App  393x808.97  col  fill:#FFFFFF
+    RestaurantDetailScreen  393x808.97  col  fill:#FFFFFF
+      Container  393x106.54  col pad:14 16  border:#F3F4F6/1
+        Container  361.46x50  row justify:space_between
+          Container  141.62x50  col
+            Paragraph  141.62x30  col
+              "Mama's Kitchen"  142x30  text:Urbanist 700 20/30 #1F2937
+            Paragraph  141.62x20  col
+              "Sri Lankan Home Food"  127x20  text:Urbanist 400 13/19.5 #6B7280
+          Container  86x30  row gap:4 pad:5 10 align:center  r:pill
+            Icon  13x13
+              Vector  10.83x10.33  fill:#FBBF24  border:#FBBF24/1.08
+            Paragraph  18x20  col
+              "4.8"  18x20  text:Urbanist 600 13/19.5 #1F2937
+            Paragraph  27x18  col
+              "(234)"  27x18  text:Urbanist 400 12/18 #6B7280
+        Container  361.46x28  row gap:14 pad:10 0 0 0 align:center
+          Container  74x18  row gap:4 align:center
+            Icon  13x13
+              Vector  10.83x10.83  border:#9CA3AF/1.08
+              Vector  2.17x4.33  border:#9CA3AF/1.08
+            Paragraph  57x18  col
+              "20–30 min"  57x18  text:Urbanist 400 12/18 #6B7280
+          Container  92x18  row gap:4 align:center
+            Icon  13x13
+              Vector  3.79x3.79  border:#9CA3AF/1.08
+              Vector  3.79x3.79  border:#9CA3AF/1.08
+              Vector  1.08x1.08  border:#9CA3AF/1.08
+              Vector  4.33x5.15  border:#9CA3AF/1.08
+            Paragraph  75x18  col
+              "Rs. 80 delivery"  75x18  text:Urbanist 400 12/18 #6B7280
+          Container  49x18  row gap:4 align:center
+            Icon  13x13
+              Vector  8.67x10.83  border:#9CA3AF/1.08
+              Vector  3.25x3.25  border:#9CA3AF/1.08
+            Paragraph  32x18  col
+              "1.2 km"  32x18  text:Urbanist 400 12/18 #6B7280
+      Container  393.46x47.16  row  border:#F3F4F6/1
+        Button  131.15x46.62  col pad:12 0 justify:center align:center  border:#000000@0.00/1
+          "Menu"  35x21  text:Urbanist 600 14/21 #9CA3AF center
+        Button  131.15x46.62  col pad:12 0 justify:center align:center  border:#000000@0.00/1
+          "Reviews"  51x21  text:Urbanist 600 14/21 #9CA3AF center
+        Button  131.15x46.62  col pad:12 0 justify:center align:center  border:#D42B2B/1
+          "Info"  24x21  text:Urbanist 600 14/21 #D42B2B center
+      Container  393x655.27  col pad:0 16 16 16
+        Container  361.46x639.27  col gap:16 pad:20 0
+          Container  361.46x63.54  row gap:12 pad:12 0 align:center  border:#F3F4F6/1
+            Icon  16x16
+              Vector  10.66x13.33  border:#9CA3AF/1.33
+              Vector  4x4  border:#9CA3AF/1.33
+            Container  214.1x39  col
+              Paragraph  214.1x18  col
+                "Address"  43x18  text:Urbanist 400 12/18 #9CA3AF
+              Paragraph  214.1x21  col
+                "45 Beach Road, Trincomalee 31000"  217x21  text:Urbanist 600 14/21 #1F2937
+          Container  361.46x63.54  row gap:12 pad:12 0 align:center  border:#F3F4F6/1
+            Icon  16x16
+              Vector  13.33x13.33  border:#9CA3AF/1.33
+              Vector  2.67x5.33  border:#9CA3AF/1.33
+            Container  158.28x39  col
+              Paragraph  158.28x18  col
+                "Hours"  30x18  text:Urbanist 400 12/18 #9CA3AF
+              Paragraph  158.28x21  col
+                "7:00 AM – 10:00 PM, Daily"  162x21  text:Urbanist 600 14/21 #1F2937
+          Container  361.46x63.54  row gap:12 pad:12 0 align:center  border:#F3F4F6/1
+            Icon  16x16
+              Vector  13.26x13.28  border:#9CA3AF/1.33
+            Container  102.01x39  col
+              Paragraph  102.01x18  col
+                "Phone"  33x18  text:Urbanist 400 12/18 #9CA3AF
+              Paragraph  102.01x21  col
+                "+94 26 222 3456"  104x21  text:Urbanist 600 14/21 #1F2937
+          Container  361.46x66.07  row gap:12 pad:16 0 0 0
+            Button  174.19x50.07  row gap:8 pad:14 0 justify:center align:center  r:16  fill:#D42B2B  shadow:0 1 2 -1 #FFC9C9  shadow:0 1 3 #FFC9C9
+              Icon  15x15
+                Vector  12.43x12.45  border:#FFFFFF/1.56
+              "Call Now"  57x21  text:Urbanist 700 14/21 #FFFFFF center
+            Button  175.28x50.07  row gap:8 pad:14 0 justify:center align:center  r:16  fill:#FFFFFF  border:#E5E7EB/0.54
+              Icon  15x15
+                Vector  3.75x3.75  border:#364153/1.25
+                Vector  3.75x3.75  border:#364153/1.25
+                Vector  3.75x3.75  border:#364153/1.25
+                Vector  4.27x2.49  border:#364153/1.25
+                Vector  4.26x2.49  border:#364153/1.25
+              "Share"  38x21  text:Urbanist 700 14/21 #364153 center
+          Container  361.47x278.58  col gap:7 pad:16  r:16  fill:#FFFFFF  border:#F3F4F6/0.54  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+            Heading 3  328.39x19.49  row gap:8 align:center
+              Icon  17.5x17.5
+                Vector  11.66x14.58  border:#D42B2B/1.33
+                Vector  4.37x4.37  border:#D42B2B/1.33
+              "Location"  49x20  text:Urbanist 500 13/19.5 #D42B2B
+            Container  328x180  r:16  fill:#E5E7EB
+              Container  402.06x6  fill:#FFFFFF@0.70
+              Container  6x179.99  fill:#FFFFFF@0.70
+              Container  32x46  col align:center
+                Container  32x32  row justify:center align:center  r:pill  fill:#FFFFFF  border:#D42B2B/1.55  shadow:0 4 6 -4 #000000@0.10  shadow:0 10 15 -3 #000000@0.10
+                  Icon  13.99x13.99
+                    Vector  8x11.99  fill:#D42B2B
+                    Vector  3x3  fill:#FFFFFF
+                Container:margin  2x14  col pad:2 0 0 0
+                  Container  2x12  fill:#D42B2B
+              Button  91.08x29.57  row gap:6 pad:6 12 align:center  r:14  fill:#FFFFFF  border:#FFE2E2/0.54  shadow:0 2 4 -2 #000000@0.10  shadow:0 4 6 -1 #000000@0.10
+                Icon  11x11
+                  Vector  8.71x8.71  border:#D42B2B/1.15
+                "Directions"  49x17  text:Urbanist 700 11/16.5 #D42B2B center
+            Paragraph  328.39x32  col pad:12 0 0 0
+              "45 Beach Road, Trincomalee 31000"  202x20  text:Urbanist 600 13/19.5 #101828
+  Frame 8967  393.29x108  col
+    Top Bar  393.29x50  row gap:250 pad:0 25 align:center
+      time  39x20  r:0
+        "05:29"  39x20  text:Roboto 500 15/19.57 #FFFFFF center
+      Mask group  63x11
+        status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+        Status Bar Background  63x11  fill:#FFFFFF
+    Container  393.29x58  row pad:10 16 justify:space_between align:center
+      Button  36x36  row justify:center align:center  r:pill  fill:#FFFFFF@0.90  shadow:0 2 4 -2 #000000@0.10  shadow:0 4 6 -1 #000000@0.10
+        Icon  17.99x17.99
+          Vector  5.25x10.5  border:#1A1A1A/1.5
+          Vector  10.5x0  border:#1A1A1A/1.5

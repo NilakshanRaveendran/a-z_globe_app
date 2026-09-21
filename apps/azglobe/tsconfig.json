@@ -1,0 +1,33 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@modules/*": [
+        "./src/modules/*"
+      ],
+      "@core/*": [
+        "../../packages/core/src/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../../packages/core/**/*.ts",
+    "../../packages/core/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "app.config.ts"
+  ]
+}

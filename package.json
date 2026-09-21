@@ -1,22 +1,32 @@
 {
   "name": "azglobe",
   "version": "1.0.0",
-  "main": "index.ts",
-  "dependencies": {
-    "expo": "~57.0.22",
-    "expo-status-bar": "~57.0.1",
-    "react": "19.2.3",
-    "react-native": "0.86.3"
+  "private": true,
+  "description": "A-Z Globe \u2014 multi-service app. Customer and provider apps over a shared core.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "android": "npm run android --workspace @azglobe/app",
+    "app": "npm start --workspace @azglobe/app",
+    "check:firebase": "node tools/check-firebase.mjs",
+    "clear:catalogue": "node tools/clear-catalogue.mjs",
+    "figma": "node tools/figma-spec.mjs",
+    "ios": "npm run ios --workspace @azglobe/app",
+    "migrate:accounts": "node tools/migrate-accounts.mjs",
+    "posttest:rules": "node tools/free-port.mjs 8085",
+    "pretest:rules": "node tools/free-port.mjs 8085",
+    "test:rules": "firebase emulators:exec --only firestore \"node tools/rules-test.mjs\"",
+    "typecheck": "tsc --noEmit --project apps/azglobe && tsc --noEmit --project packages/core && tsc --noEmit --project functions",
+    "verify:live": "node tools/verify-live-rules.mjs"
   },
   "devDependencies": {
-    "@types/react": "~19.2.2",
+    "@firebase/rules-unit-testing": "^5.0.2",
+    "@types/node": "^26.5.1",
+    "esbuild": "^0.28.2",
+    "firebase": "^12.19.0",
+    "firebase-admin": "^14.4.0",
     "typescript": "~6.0.3"
-  },
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "private": true
+  }
 }

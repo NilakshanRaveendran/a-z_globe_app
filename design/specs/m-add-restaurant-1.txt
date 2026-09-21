@@ -1,0 +1,46 @@
+
+=== AddRestaurantSheet  (385:4028) ===
+AddRestaurantSheet  393.66x502.71  col  r:24 24 0 0  fill:#FFFFFF
+  Container  393.66x16  row pad:12 0 0 0 justify:center
+    Container  36x4  r:pill  fill:#E5E7EB
+  Container  393.66x72  row pad:14 20 justify:space_between align:center
+    Container  119.78x44  col
+      Paragraph  119.78x26  col
+        "Add Restaurant"  120x26  text:Urbanist 700 17/25.5 #1F2937
+      Paragraph  119.78x18  col
+        "Step 1 of 4 · Basic Info"  113x18  text:Urbanist 500 12/18 #9CA3AF
+    Button  30x30  row justify:center align:center  r:pill  fill:#F3F4F6
+      Icon  14x14
+        Vector  10x10  border:#6B7280/1.6
+  Container  393.66x20  row gap:6 pad:0 20 16 20 align:center
+    Container  24x4  r:pill  fill:#D42B2B
+    Container  8x4  r:pill  fill:#E5E7EB
+    Container  8x4  r:pill  fill:#E5E7EB
+    Container  8x4  r:pill  fill:#E5E7EB
+  Container  393.66x302.2  col pad:0 20 24 20
+    Container  353.66x278.7  col gap:14
+      Field  353.66x69.01  col
+        Paragraph:margin  353.66x23  col pad:0 0 8 0
+          Paragraph  353.66x15  col
+            "Restaurant Name *"  108x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        AddRestaurantSheet  353.66x46.01  col pad:12 14 justify:center  r:12  border:#D74C4D/0.51
+          "e.g. Mama's Kitchen"  324.64x17  text:Urbanist 600 14/16.8 #1F2937@0.50
+      Field  353.66x69.01  col
+        Paragraph:margin  353.66x23  col pad:0 0 8 0
+          Paragraph  353.66x15  col
+            "Cuisine / Category *"  116x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        AddRestaurantSheet  353.66x46.01  col pad:12 14 justify:center  r:12  border:#E5E7EB/0.51
+          "e.g. Sri Lankan · Authentic"  324.64x17  text:Urbanist 600 14/16.8 #1F2937@0.50
+      Field  353.66x112.68  col
+        Paragraph:margin  353.66x23  col pad:0 0 8 0
+          Paragraph  353.66x15  col
+            "Short Description"  107x15  text:Urbanist 700 10/15 ls0.55 #9CA3AF
+        Container  353.66x89.68
+          AddRestaurantSheet  353.66x83.53  col pad:12 14  r:12  border:#E5E7EB/0.51
+            "Describe your restaurant in a few words…"  324.64x20  text:Urbanist 400 13/19.5 #1F2937@0.50
+  Container  393.66x92.51  row gap:10 pad:10 20 32 20  border:#F3F4F6/1
+    Button  353.66x50  row gap:6 justify:center align:center  r:14  fill:#D42B2B
+      Text  32x23  col align:center
+        "Next"  32x23  text:Urbanist 700 15/22.5 #FFFFFF center
+      Icon  16x16
+        Vector  4x8  border:#FFFFFF/1.5

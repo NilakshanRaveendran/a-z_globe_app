@@ -1,0 +1,113 @@
+
+=== Service Provider Home Screen  (269:1625) ===
+Service Provider Home Screen  402x874  col  fill:#FFFFFF
+  Top Bar  393x50  row gap:250 pad:0 25 align:center
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937
+  App  402.06x874.39  col  fill:#FFFFFF
+    Container  402.06x44  row pad:0 16 8 16 justify:space_between align:center
+      Button  36x36  row justify:center align:center  r:pill  fill:#F3F4F6
+        Icon  18x18
+          Vector  5x10  border:#1F2937/1.7
+      Button  28x21  col align:center
+        "Skip"  28x21  text:Urbanist 600 14/21 #6B7280 center
+    Container:margin  402.06x199.99  col pad:0 16
+      Container  370.06x199.99  row justify:center align:center  r:24  fill:linear(#D42B2B 0% -> #B00000 46% -> #000000 100%)
+        Icon  179.99x159.99
+          Vector  179.99x30  fill:#FFFFFF@0.12
+          Vector  40x72  fill:#FFFFFF@0.25
+          Vector  10x10  fill:#FFFFFF@0.50
+          Vector  10x10  fill:#FFFFFF@0.50
+          Vector  10x10  fill:#FFFFFF@0.50
+          Vector  10x10  fill:#FFFFFF@0.50
+          Vector  10x10  fill:#FFFFFF@0.50
+          Vector  10x10  fill:#FFFFFF@0.50
+          Vector  50x92  fill:#FFFFFF@0.35
+          Vector  14x14  fill:#FFFFFF@0.60
+          Vector  14x14  fill:#FFFFFF@0.60
+          Vector  14x14  fill:#FFFFFF@0.60
+          Vector  14x14  fill:#FFFFFF@0.60
+          Vector  14x14  fill:#FFFFFF@0.60
+          Vector  14x14  fill:#FFFFFF@0.60
+          Vector  16x17  fill:#000000@0.15
+          Vector  40x57  fill:#FFFFFF@0.20
+          Vector  10x10  fill:#FFFFFF@0.45
+          Vector  10x10  fill:#FFFFFF@0.45
+          Vector  10x10  fill:#FFFFFF@0.45
+          Vector  10x10  fill:#FFFFFF@0.45
+          Vector  18x18  fill:#FFFFFF@0.85
+          Vector  20x8  fill:#FFFFFF@0.65
+          Vector  7x9  fill:#EF4444
+          Vector  2.4x2.4  fill:#FFFFFF
+    Container  402.06x83  col pad:20 20 8 20
+      Paragraph  362.07x33  col
+        "Choose building type"  211x33  text:Urbanist 800 22/33 #1F2937
+      Paragraph  362.07x22  col pad:4 0 0 0
+        "Let us know your building type for more accu"  337x18  text:Urbanist 500 13/18 #6B7280
+    Container  402.06x547.4  col pad:0 16 24 16
+      Button  370.06x76.52  row gap:16 pad:16 0 align:center  border:#F3F4F6/1
+        Container  44x44  row justify:center align:center  r:14  fill:#F3F4F6
+          Icon  24x24
+            Vector  18x19  border:#374151/1.6
+            Vector  6x8  border:#374151/1.6
+        Container  276.07x41  col
+          Paragraph  276.07x23  col
+            "House"  41x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  276.07x18  col
+            "Single or multi-family home"  147x18  text:Urbanist 500 12/18 #6B7280
+        Icon  18x18
+          Vector  5x10  border:#9CA3AF/1.6
+      Button  370.06x76.52  row gap:16 pad:16 0 align:center  border:#F3F4F6/1
+        Container  44x44  row justify:center align:center  r:14  fill:#F3F4F6
+          Icon  24x24
+            Vector  18x18  border:#374151/1.6
+            Vector  8x8  border:#374151/1.4
+            Vector  4x3  border:#374151/1.4
+        Container  276.07x41  col
+          Paragraph  276.07x23  col
+            "Apartment"  75x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  276.07x18  col
+            "Multi-unit residential building"  153x18  text:Urbanist 500 12/18 #6B7280
+        Icon  18x18
+          Vector  5x10  border:#9CA3AF/1.6
+      Button  370.06x76.52  row gap:16 pad:16 0 align:center  border:#F3F4F6/1
+        Container  44x44  row justify:center align:center  r:14  fill:#F3F4F6
+          Icon  24x24
+            Vector  20x15  border:#374151/1.6
+            Vector  8x6  border:#374151/1.6
+            Vector  4x4  border:#374151/1.4
+            Vector  0x2  border:#374151/1.4
+        Container  276.07x41  col
+          Paragraph  276.07x23  col
+            "Office"  42x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  276.07x18  col
+            "Workplace with entry restrictions"  173x18  text:Urbanist 500 12/18 #6B7280
+        Icon  18x18
+          Vector  5x10  border:#9CA3AF/1.6
+      Button  370.06x76.52  row gap:16 pad:16 0 align:center  border:#F3F4F6/1
+        Container  44x44  row justify:center align:center  r:14  fill:#F3F4F6
+          Icon  24x24
+            Vector  20x20  border:#374151/1.6
+            Vector  12x15  border:#374151/1.4
+        Container  276.07x41  col
+          Paragraph  276.07x23  col
+            "Hotel"  35x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  276.07x18  col
+            "Lodging, motel or resort"  126x18  text:Urbanist 500 12/18 #6B7280
+        Icon  18x18
+          Vector  5x10  border:#9CA3AF/1.6
+      Button  370.06x76  row gap:16 pad:16 0 align:center
+        Container  44x44  row justify:center align:center  r:14  fill:#F3F4F6
+          Icon  24x24
+            Vector  18x18  border:#374151/1.6
+            Vector  3x7  border:#374151/1.6
+        Container  276.07x41  col
+          Paragraph  276.07x23  col
+            "Other"  40x23  text:Urbanist 700 15/22.5 #1F2937
+          Paragraph  276.07x18  col
+            "Hospital, park, outdoors, etc"  147x18  text:Urbanist 500 12/18 #6B7280
+        Icon  18x18
+          Vector  5x10  border:#9CA3AF/1.6

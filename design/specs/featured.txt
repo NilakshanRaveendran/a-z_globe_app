@@ -1,0 +1,158 @@
+
+=== Order Food - Detailed Page  (16:4256) ===
+Order Food - Detailed Page  393x1638  fill:#FFFFFF
+  App  393.29x1598  col  fill:#FFFFFF
+    Container  393.29x58  row pad:10 16 justify:space_between align:center
+      Button  248.99x33  row gap:3 align:center
+        Icon  17.99x17.99
+          Vector  4x8  border:#1A1A1A/2
+        Paragraph  228x33  col align:center
+          "Featured on A-Z Globe"  228x33  text:Urbanist 700 22/33 #1A1A1A center
+      Button  38x38  row justify:center align:center
+        Icon  22x22
+          Vector  3.18x0.92  border:#1A1A1A/1.65
+          Vector  16.5x13.75  border:#1A1A1A/1.65
+    FeaturedListScreen  393.29x1540  col  fill:#FFFFFF
+      Frame 8959  393x1539.98  col
+        Container  393x308  col
+          Placeholder for FeaturedListScreen:margin  393.46x212  col pad:12 16 0 16
+            Placeholder for FeaturedListScreen  361.46x200
+          Container  393x96  col pad:10 16 6 16
+            Container  361.46x22  col pad:0 8 0 0
+              "Mama's Kitchen"  128x22  text:Urbanist 700 18/21.25 #1A1A1A
+            Container:margin  361x22  col pad:4 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Container  14x14  row justify:center align:center  r:3  fill:#D42B2B
+                  Paragraph  9x6  col
+                    "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                Paragraph  161x18  col
+                  "Rs. 80 Delivery Fee · 20–30 min"  161x18  text:Urbanist 400 12/18 #6B7280
+            Container:margin  361x23  col pad:5 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Icon  13x13
+                  Vector  9.75x9.26  fill:#1A1A1A
+                Paragraph  65x18  col
+                  "Best Overall"  65x18  text:Urbanist 600 12/18 #1A1A1A
+            Container:margin  361.46x13  col pad:12 0 0 0
+              Container  361.46x1  fill:#F3F4F6
+          Container  361.46x200  col  r:16
+            Image (Mama's Kitchen)  361.46x200  fill:image(889817cb FILL)
+            Container  136x27  row gap:5 pad:5 10 align:center  r:8  fill:#D42B2B
+              Icon  12x12
+                Vector  7.5x7.5  fill:#FFFFFF  opacity:0.9
+                Vector  1.8x1.8  fill:#FFFFFF
+              Paragraph  99x17  col
+                "50% off select items"  99x17  text:Urbanist 700 11/16.5 #FFFFFF
+        Container  393x308  col
+          Placeholder for FeaturedListScreen:margin  393.46x212  col pad:12 16 0 16
+            Placeholder for FeaturedListScreen  361.46x200
+          Container  393x96  col pad:10 16 6 16
+            Container  361.46x22  col pad:0 8 0 0
+              "Yaal Angaadi"  111x22  text:Urbanist 700 18/21.25 #1A1A1A
+            Container:margin  361x22  col pad:4 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Container  14x14  row justify:center align:center  r:3  fill:#D42B2B
+                  Paragraph  9x6  col
+                    "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                Paragraph  130x18  col
+                  "Free delivery · 25–35 min"  130x18  text:Urbanist 400 12/18 #6B7280
+            Container:margin  361x23  col pad:5 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Icon  13x13
+                  Vector  9.75x9.26  fill:#1A1A1A
+                Paragraph  65x18  col
+                  "Best Overall"  65x18  text:Urbanist 600 12/18 #1A1A1A
+            Container:margin  361.46x13  col pad:12 0 0 0
+              Container  361.46x1  fill:#F3F4F6
+          Container  361.46x200  col  r:16
+            Image (Yaal Angaadi)  361.46x200  fill:image(1aea2829 FILL)
+            Container  113x27  row gap:5 pad:5 10 align:center  r:8  fill:#D42B2B
+              Icon  12x12
+                Vector  7.5x7.5  fill:#FFFFFF  opacity:0.9
+                Vector  1.8x1.8  fill:#FFFFFF
+              Paragraph  76x17  col
+                "Buy 1, get 1 free"  76x17  text:Urbanist 700 11/16.5 #FFFFFF
+        Container  393x308  col
+          Container:margin  393.46x212  col pad:12 16 0 16
+            Container  361.46x200  col  r:16
+              Image (Namma Ooru Cafe)  361.46x200  fill:image(9c57cdb5 FILL)
+              Container  136x27  row gap:5 pad:5 10 align:center  r:8  fill:#D42B2B
+                Icon  12x12
+                  Vector  7.5x7.5  fill:#FFFFFF  opacity:0.9
+                  Vector  1.8x1.8  fill:#FFFFFF
+                Paragraph  99x17  col
+                  "30% off select items"  99x17  text:Urbanist 700 11/16.5 #FFFFFF
+          Container  393x96  col pad:10 16 6 16
+            Container  361.46x22  col pad:0 8 0 0
+              "Namma Ooru Cafe"  153x22  text:Urbanist 700 18/21.25 #1A1A1A
+            Container:margin  361x22  col pad:4 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Container  14x14  row justify:center align:center  r:3  fill:#D42B2B
+                  Paragraph  9x6  col
+                    "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                Paragraph  158x18  col
+                  "Rs. 50 Delivery Fee · 15–20 min"  158x18  text:Urbanist 400 12/18 #6B7280
+            Container:margin  361x23  col pad:5 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Icon  13x13
+                  Vector  9.75x9.26  fill:#1A1A1A
+                Paragraph  85x18  col
+                  "Fastest Delivery"  85x18  text:Urbanist 600 12/18 #1A1A1A
+            Container:margin  361.46x13  col pad:12 0 0 0
+              Container  361.46x1  fill:#F3F4F6
+        Container  393x308  col  opacity:0.5
+          Container:margin  393.46x212  col pad:12 16 0 16
+            Container  361.46x200  col  r:16
+              Image (Trinco Blu Restaurant)  361.46x200  fill:image(71ec4131 FILL)
+              Container  361.46x200  row justify:center align:center  fill:#000000@0.40
+                Paragraph  106x21  col
+                  "Currently Closed"  106x21  text:Urbanist 700 14/21 #FFFFFF
+          Container  393x96  col pad:10 16 6 16
+            Container  361.46x22  col pad:0 8 0 0
+              "Trinco Blu Restaurant"  171x22  text:Urbanist 700 18/21.25 #1A1A1A
+            Container:margin  361x22  col pad:4 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Container  14x14  row justify:center align:center  r:3  fill:#D42B2B
+                  Paragraph  9x6  col
+                    "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                Paragraph  165x18  col
+                  "Rs. 100 Delivery Fee · 30–40 min"  165x18  text:Urbanist 400 12/18 #6B7280
+            Container:margin  361x23  col pad:5 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Icon  13x13
+                  Vector  9.75x9.26  fill:#1A1A1A
+                Paragraph  56x18  col
+                  "Top Rated"  56x18  text:Urbanist 600 12/18 #1A1A1A
+            Container:margin  361.46x13  col pad:12 0 0 0
+              Container  361.46x1  fill:#F3F4F6
+        Container  393x308  col  opacity:0.5
+          Container:margin  393.46x212  col pad:12 16 0 16
+            Container  361.46x200  col  r:16
+              Image (Trinco Blu Restaurant)  361.46x200  fill:image(71ec4131 FILL)
+              Container  361.46x200  row justify:center align:center  fill:#000000@0.40
+                Paragraph  106x21  col
+                  "Currently Closed"  106x21  text:Urbanist 700 14/21 #FFFFFF
+          Container  393x96  col pad:10 16 6 16
+            Container  361.46x22  col pad:0 8 0 0
+              "Trinco Blu Restaurant"  171x22  text:Urbanist 700 18/21.25 #1A1A1A
+            Container:margin  361x22  col pad:4 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Container  14x14  row justify:center align:center  r:3  fill:#D42B2B
+                  Paragraph  9x6  col
+                    "AZ"  9x6  text:Urbanist 900 6/6 #FFFFFF
+                Paragraph  165x18  col
+                  "Rs. 100 Delivery Fee · 30–40 min"  165x18  text:Urbanist 400 12/18 #6B7280
+            Container:margin  361x23  col pad:5 0 0 0 align:center
+              Container  361.46x18  row gap:5 align:center
+                Icon  13x13
+                  Vector  9.75x9.26  fill:#1A1A1A
+                Paragraph  56x18  col
+                  "Top Rated"  56x18  text:Urbanist 600 12/18 #1A1A1A
+            Container:margin  361.46x13  col pad:12 0 0 0
+              Container  361.46x1  fill:#F3F4F6
+  Top Bar  393.29x50  row gap:250 pad:0 25 align:center
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937

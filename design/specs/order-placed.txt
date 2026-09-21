@@ -1,0 +1,21 @@
+
+=== Create Cart Page UI  (416:4243) ===
+Create Cart Page UI  393x852  col  fill:#FFFFFF
+  Body  393.66x852.58  col
+    App:margin  393.66x852.58  col align:center
+      OrderSuccess  392.99x852.58  col pad:60 32 justify:center align:center  fill:#FFFFFF
+        Container:margin  100x124  col pad:0 0 24 0
+          Container  100x100  row justify:center align:center  r:pill  fill:#FFF1F1
+            Icon  52x52
+              Vector  48x48  border:#D42B2B/2.5
+              Vector  24x16  border:#D42B2B/2.8
+        Frame 8982  178x36  row gap:6 align:center
+          "Order Placed!"  148x36  text:Urbanist 700 24/36 #1F2937 center
+          mingcute:celebrate-line  24x24
+            Vector  16.64x17.7  border:#D42B2B/2
+        Paragraph:margin  293x29  col pad:0 0 8 0
+          "Your order is being prepared at Mama's Kitch"  293x21  text:Urbanist 400 14/21 #6B7280 center
+        Paragraph:margin  177x56  col pad:0 0 36 0
+          "Estimated delivery: 25–40 min"  177x20  text:Urbanist 600 13/19.5 #D42B2B
+        Button  156x51  col pad:14 32 justify:center  r:14  fill:#D42B2B
+          "Back to Menu"  92x23  text:Urbanist 700 15/22.5 #FFFFFF center

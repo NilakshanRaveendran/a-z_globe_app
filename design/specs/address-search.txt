@@ -1,0 +1,110 @@
+
+=== AddressSearchSheet  (269:1496) ===
+AddressSearchSheet  402x643  col  r:20 20 0 0  fill:#FFFFFF
+  Container  402x20  row pad:12 0 4 0 justify:center
+    Container  40x4  r:pill  fill:#E5E7EB
+  Container  402x56  row pad:12 16 justify:space_between align:center
+    Button  32x32  row justify:center align:center
+      Icon  18x18
+        Vector  9x9  border:#1F2937/1.8
+    Paragraph  75x24  col
+      "Addresses"  75x24  text:Urbanist 700 16/24 #1F2937
+    Container  32x32
+  Container  402x57  col pad:0 16 12 16
+    Container  370x45  row gap:12 pad:12 16 align:center  r:pill  fill:#F3F4F6
+      SearchIcon  18x18
+        Vector  11x11  border:#9CA3AF/1.4
+        Vector  3.5x3.5  border:#9CA3AF/1.4
+      Text Input  308x21  col justify:center
+        "Search for an address"  308x17  text:Urbanist 500 14/16.8 #1F2937@0.50
+  Container  402x66  row gap:8 pad:0 16 16 16
+    Button  129.03x50  row gap:6 pad:8 12 align:center  r:10  fill:#FFFFFF  border:#E5E7EB/0.52  shadow:0 1 3 #000000@0.06
+      HomeIcon  18x18
+        Vector  13.5x14.25  border:#374151/1.3
+        Vector  4.5x6  border:#374151/1.3
+      Container  80x33  col
+        Paragraph  80x18  col
+          "Home"  32x18  text:Urbanist 600 12/18 #1F2937
+        Paragraph  80x15  col
+          "Metro Voyage - J..."  81x15  text:Urbanist 400 10/15 #9CA3AF
+    Button  95.03x50  row gap:6 pad:8 12 align:center  r:10  fill:#FFFFFF  border:#E5E7EB/0.52  shadow:0 1 3 #000000@0.06
+      Icon  16x16
+        Vector  12x9  border:#374151/1.2
+        Vector  6x4  border:#374151/1.2
+      Container  48x18  col
+        "Set work"  48x18  text:Urbanist 600 12/18 #1F2937
+    Button  99.03x50  row gap:6 pad:8 12 align:center  r:10  fill:#FFFFFF  border:#E5E7EB/0.52  shadow:0 1 3 #000000@0.06
+      Icon  16x16
+        Vector  10x10  border:#374151/1.5
+      Container  52x18  col
+        "Add label"  52x18  text:Urbanist 600 12/18 #1F2937
+  Container  402x444  col
+    Paragraph  402x32  col pad:0 16 8 16
+      "Explore nearby"  110x24  text:Urbanist 700 16/24 #1F2937
+    Button  402x63  row gap:12 pad:12 16 align:center
+      Container  36x36  row justify:center align:center  r:pill  fill:#F3F4F6
+        ArrowIcon  18x18
+          Vector  10.5x7.5  border:#6B7280/1.3
+      Container  322x39  col
+        Paragraph  322x21  col
+          "2 Kandy Rd"  71x21  text:Urbanist 600 14/21 #1F2937
+        Paragraph  322x18  col
+          "Trincomalee"  66x18  text:Urbanist 400 12/18 #6B7280
+    Container:margin  402x20  col pad:12 0 0 0
+      Container  402x8  fill:#F9FAFB
+    Container  402x44  col pad:12 16 8 16
+      Paragraph  370x24  col
+        "Saved addresses"  124x24  text:Urbanist 700 16/24 #1F2937
+    Button  402x63.52  row gap:12 pad:12 16 align:center  fill:#F9FAFB  border:#F3F4F6/1
+      Container  36x36  row justify:center align:center
+        HomeIcon  18x18
+          Vector  13.5x14.25  border:#374151/1.3
+          Vector  4.5x6  border:#374151/1.3
+      Container  282x39  col
+        Paragraph  282x21  col
+          "Home"  37x21  text:Urbanist 600 14/21 #1F2937
+        Paragraph  282x18  col
+          "Metro Voyage - Jaffna, 574 Hospital Rd, Jaff"  243x18  text:Urbanist 400 12/18 #6B7280
+      Container  28x28  row justify:center align:center
+        EditIcon  16x16
+          Vector  10.5x10.5  border:#9CA3AF/1.2
+    Button  402x63.52  row gap:12 pad:12 16 align:center  border:#F3F4F6/1
+      Container  36x36  row justify:center align:center
+        PinIcon  18x18
+          Vector  9x15  border:#6B7280/1.3
+          Vector  3x3  border:#6B7280/1.3
+      Container  282x39  col
+        Paragraph  282x21  col
+          "241 Maradana Rd"  109x21  text:Urbanist 600 14/21 #1F2937
+        Paragraph  282x18  col
+          "Colombo"  49x18  text:Urbanist 400 12/18 #6B7280
+      Container  28x28  row justify:center align:center
+        EditIcon  16x16
+          Vector  10.5x10.5  border:#9CA3AF/1.2
+    Button  402x63.52  row gap:12 pad:12 16 align:center  border:#F3F4F6/1
+      Container  36x36  row justify:center align:center
+        PinIcon  18x18
+          Vector  9x15  border:#6B7280/1.3
+          Vector  3x3  border:#6B7280/1.3
+      Container  282x39  col
+        Paragraph  282x21  col
+          "Cake o clock"  79x21  text:Urbanist 600 14/21 #1F2937
+        Paragraph  282x18  col
+          "35HV+PQM, Wakwella Rd, Hapugala"  189x18  text:Urbanist 400 12/18 #6B7280
+      Container  28x28  row justify:center align:center
+        EditIcon  16x16
+          Vector  10.5x10.5  border:#9CA3AF/1.2
+    Button  402x63  row gap:12 pad:12 16 align:center
+      Container  36x36  row justify:center align:center
+        PinIcon  18x18
+          Vector  9x15  border:#6B7280/1.3
+          Vector  3x3  border:#6B7280/1.3
+      Container  282x39  col
+        Paragraph  282x21  col
+          "G- block canteen"  108x21  text:Urbanist 600 14/21 #1F2937
+        Paragraph  282x18  col
+          "Peradeniya-Badulla-Chenkaladi Hwy, Badulla"  236x18  text:Urbanist 400 12/18 #6B7280
+      Container  28x28  row justify:center align:center
+        EditIcon  16x16
+          Vector  10.5x10.5  border:#9CA3AF/1.2
+    Container  402x32

@@ -1,0 +1,96 @@
+
+=== Frame 8963  (215:1152) ===
+Frame 8963  393x852  fill:#FFFFFF
+  Frame 8968  393x802  col align:center
+    Header  393x85  col  fill:#FFFFFF
+      Container  393x85  col pad:12 16 16 16
+        Paragraph  361.46x36  col
+          "Personal Profile"  165x36  text:Urbanist 700 24/36 #1F2937
+        Paragraph  361.46x21  col
+          "Manage your Personal profile in here."  228x21  text:Urbanist 500 14/21 #6B7280
+    Frame 8972  393x652  col gap:183
+      Frame 8969  393x435  col
+        Button  393x97  row gap:16 pad:16 align:center  border:#F3F4F6/1
+          Avatar  56x56  row justify:center align:center  r:pill  fill:#D42B2B  shadow:0 2 2 #000000@0.10  shadow:0 4 3 #000000@0.10
+            Text  17x23  col align:center
+              "V"  17x23  text:Urbanist 700 22.4/22.4 #FFFFFF center
+          Container  255x64  col
+            Paragraph  255x24  col
+              "Vanan"  48x24  text:Urbanist 700 16/24 #1F2937
+            Paragraph  255x20  col
+              "071 110 9390"  68x20  text:Urbanist 500 13/19.5 #6B7280
+            Paragraph  255x20  col
+              "vanan@example.com"  125x20  text:Urbanist 500 13/19.5 #6B7280
+          Icon  18x18
+            Vector  4.5x9  border:#D1D5DB/1.13
+        Container  393x76  col
+          SettingsRow  393x76  row gap:16 pad:16 align:center  border:#F3F4F6/1
+            Icon  20x20
+              Vector  5x7.5  border:#374151/1.33
+              Vector  15x15.83  border:#374151/1.33
+            Container  291x43  col
+              Paragraph  291x23  col
+                "Home"  40x23  text:Urbanist 600 15/22.5 #1F2937
+              Paragraph  328x20  col pad:2 0 0 0
+                "Metro Voyage - Jaffna"  130x18  text:Urbanist 500 13/17.88 #6B7280
+            Icon  18x18
+              Vector  4.5x9  border:#D1D5DB/1.13
+        SectionHeader  393x58  col pad:24 16 8 16
+          "App Preferences"  127x26  text:Urbanist 700 17/25.5 #1F2937
+        Container  393x76  col  border:#F3F4F6/1
+          SettingsRow  393x75  row gap:16 pad:16 align:center
+            Icon  20x20
+              Vector  2.89x0.83  border:#374151/1.33
+              Vector  15x12.5  border:#374151/1.33
+            Container  291x43  col
+              Paragraph  291x23  col
+                "Notifications"  83x23  text:Urbanist 600 15/22.5 #1F2937
+              Paragraph  328x20  col pad:2 0 0 0
+                "Manage push and email notifications"  211x18  text:Urbanist 500 13/17.88 #6B7280
+            Icon  18x18
+              Vector  4.5x9  border:#D1D5DB/1.13
+        Container:margin  393x128  col pad:16 0 0 0
+          Container  393x112  col
+            Button  393x56  row pad:16 align:center  border:#F3F4F6/1
+              Text  216x23  row gap:16 align:center
+                Icon  20x20
+                  Vector  16.67x4.17  border:#D42B2B/1
+                  Vector  13.33x8.33  border:#D42B2B/1
+                  Vector  5x5  border:#D42B2B/1
+                  Vector  16.67x0  border:#D42B2B/1
+                  Vector  16.67x4.17  border:#D42B2B/1
+                "Switch to business account"  180x23  text:Urbanist 600 15/22.5 #D42B2B center
+            Button  393x55  row pad:16 align:center
+              Text  55x23  col align:center
+                "Sign out"  55x23  text:Urbanist 600 15/22.5 #D42B2B center
+      Paragraph  393x34  col pad:16 16 0 16
+        "v1.0.0"  28x18  text:Urbanist 400 12/18 #9CA3AF
+  Top Bar  393x50  row gap:250 pad:0 25 align:center
+    time  39x20  r:0
+      "05:29"  39x20  text:Roboto 500 15/19.57 #1F2937 center
+    Mask group  63x11
+      status-bar-phone-wifi-icon-260nw-2207922269 copy 1  63x11  fill:image(c7d1cbc4 FILL)
+      Status Bar Background  63x11  fill:#1F2937
+  BottomNav  393x66  row pad:5 8 align:center  fill:#FFFFFF  border:#F3F4F6/1
+    Frame 8955  377x56  row justify:space_between align:center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  17.42x17.42  border:#9CA3AF/1.65
+        "Messages"  45x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x55  col gap:3 pad:8 0 justify:center align:center
+        Button  22x39  col gap:2 align:center
+          Icon  22x22
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  1.83x1.83  border:#9CA3AF/1.47
+            Vector  18.37x12.83  border:#9CA3AF/1.47
+          "Cart"  20x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.59x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  5.5x8.25  border:#9CA3AF/2.02
+          Vector  16.5x17.42  border:#9CA3AF/2.02
+        "Home"  27x15  text:Urbanist 500 10/15 #9CA3AF center
+      Button  73.6x56  col gap:3 pad:8 0 justify:center align:center
+        Icon  22x22
+          Vector  12.83x5.5  border:#D42B2B/1.65
+          Vector  7.33x7.33  border:#D42B2B/1.65
+        "Profile"  28x15  text:Urbanist 500 10/15 #D42B2B center

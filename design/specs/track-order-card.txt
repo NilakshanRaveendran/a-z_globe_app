@@ -1,0 +1,74 @@
+
+=== TrackOrderCard  (3:943) ===
+TrackOrderCard  393.46x358.07  col pad:0 16
+  Container  361.46x358.07  col  r:16  fill:#FFFFFF  border:#E5E7EB/0.54  shadow:0 1 2 -1 #000000@0.10  shadow:0 1 3 #000000@0.10
+    Container  360.38x356.99  col gap:16 pad:16 16 18 16
+      Container  328.38x63.99  row justify:space_between
+        Container  247.99x50  col gap:4
+          Paragraph  247.99x28  col
+            "8:15 – 8:30 PM"  140x28  text:Urbanist 700 22/27.5 #0F172A
+          Container  247.99x18  row gap:6 align:center
+            Container  54.99x18  row gap:4 align:center
+              Container  7.99x7.99  r:pill  fill:#22C55E
+              Paragraph  43x18  col
+                "On time"  43x18  text:Urbanist 600 12/18 #22C55E
+            Text  4x18  col
+              "·"  4x18  text:Inter 400 12/18 #D1D5DB
+            Paragraph  177x18  col
+              "Restaurant's preparing your order"  177x18  text:Urbanist 500 12/18 #6B7280
+        FoodIllustration  63.99x63.99  row justify:center align:center  r:pill  fill:#E8F4FD
+          Icon  39.99x39.99
+            Vector  35.99x35.99  fill:#B3DDF5
+            Vector  20x10  fill:#5B9BD5
+            Vector  16x8  fill:#7AB8E8
+            Vector  10x6  fill:#90C7F0
+            Vector  4x5  fill:#5B9BD5
+            Vector  3x3  fill:#3A7AB8
+            Vector  3x3  fill:#3A7AB8
+            Vector  3x3  fill:#3A7AB8
+      Container  328.38x57  row align:center
+        Container  143.19x57  row align:center
+          Container  48x57  col gap:6 align:center
+            Container  36x36  row justify:center align:center  r:pill  fill:#22C55E
+              Container  19.99x19.99  col justify:center align:center
+                RestaurantIcon  19.99x19.99
+                  Vector  10x16.66  fill:#FFFFFF
+            "Restaurant"  48x15  text:Urbanist 500 10/15 #22C55E
+          Container:margin  95.19x21  row pad:0 4 18 4
+            Container  87.64x3  r:pill  fill:#E5E7EB
+              Container  87.64x3  r:pill  fill:#22C55E
+        Container  143.19x57  row align:center
+          Container  42x57  col gap:6 align:center
+            Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+              Container  19.99x19.99  col  opacity:0.4
+                DriverIcon  19.99x19.99
+                  Vector  6.66x6.66  fill:#FFFFFF
+                  Vector  10x6.66  border:#FFFFFF/1.67
+            "Picked up"  42x15  text:Urbanist 500 10/15 #9CA3AF
+          Container:margin  101.19x21  row pad:0 4 18 4
+            Container  93.56x3  r:pill  fill:#E5E7EB
+              Container  0x3  fill:#22C55E
+        Container  42x57  col gap:6 align:center
+          Container  36x36  row justify:center align:center  r:pill  fill:#E5E7EB
+            Container  19.99x19.99  col  opacity:0.4
+              HomeIcon  19.99x19.99
+                Vector  14.99x7.5  border:#FFFFFF/1.67
+                Vector  11.66x8.33  border:#FFFFFF/1.67
+          "Delivered"  42x15  text:Urbanist 500 10/15 #9CA3AF
+      Paragraph  328.38x36  col
+        "We'll let you know when your driver's on the"  329x36  text:Urbanist 500 12/18 #6B7280
+      Divider  328x1  fill:#F3F4F6
+      OrderInfo  328x47  col gap:6
+        Paragraph  328x23  col
+          "Mama's Kitchen"  105x23  text:Urbanist 600 15/22.5 #0F172A
+        Paragraph  328x18  col
+          "Food Delivery · Ref AZG-7821"  153x18  text:Urbanist 500 12/18 #6B7280
+      Actions  328x38  row gap:10
+        CallButton  103x38  row gap:12 pad:0 16 align:center  r:pill  fill:#E5E7EB
+          PhoneIcon  16x16
+            Vector  13.26x13.26  fill:#1F2937
+          Text  24x21  col align:center
+            "Call"  24x21  text:Urbanist 500 14/21 #1F2937 center
+        TrackButton  215x38  row justify:center align:center  r:pill  fill:#00B14F
+          Text  75x21  col align:center
+            "Track Order"  75x21  text:Urbanist 500 14/21 #FFFFFF center
