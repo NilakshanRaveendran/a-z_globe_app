@@ -5,9 +5,13 @@ import {
   signOut as fbSignOut,
   updateProfile,
   type ConfirmationResult,
-} from '@react-native-firebase/auth';
+} from '@core/firebase/auth';
 import { getApp, isFirebaseReady } from '@core/firebase';
 import { ensureAccount, type AccountKind } from '@core/account';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCart } from '@modules/food/store/cart';
+import { useActiveOrder } from '@modules/food/store/activeOrder';
+import { useSelectedAddressStore } from '@modules/food/store/selectedAddress';
 
 /**
  * Phone / OTP sign-in.
@@ -29,7 +33,11 @@ import { ensureAccount, type AccountKind } from '@core/account';
  */
 let pendingConfirmation: ConfirmationResult | null = null;
 
+/** What `signOut` did — `'demo'` means nothing: demo accounts cannot sign out. */
+export type SignOutResult = 'signed-out' | 'demo';
+
 export function useAuthActions() {
+  const queryClient = useQueryClient();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -98,14 +106,21 @@ export function useAuthActions() {
     }
   }, []);
 
-  const completeProfile = useCallback(async (kind: AccountKind, name: string, email: string) => {
+  /**
+   * `name` is the person (the sign-in's display name). A business also passes
+   * `businessName`, which is what its account document — and customers — see.
+   */
+  const completeProfile = useCallback(async (kind: AccountKind, name: string, email: string, businessName?: string) => {
     const user = getAuth(getApp()).currentUser;
     if (!user) return false;
     setBusy(true);
     setError(null);
     try {
       await updateProfile(user, { displayName: name });
-      await ensureAccount(kind, user.uid, { name, email: email || null });
+      await ensureAccount(kind, user.uid, {
+        name: kind === 'supplier' ? businessName?.trim() || name : name,
+        email: email || null,
+      });
       return true;
     } catch (e) {
       setError(authMessage(e));
@@ -115,11 +130,29 @@ export function useAuthActions() {
     }
   }, []);
 
-  const signOut = useCallback(async () => {
-    if (!isFirebaseReady()) return;
+  /**
+   * Sign out and leave nothing of this person behind on the device.
+   *
+   * The cart, the Home tracker's order pointer and the chosen delivery address
+   * are stored on the device, not per account, so without this the next person
+   * to sign in on the phone would inherit them — and the query cache would
+   * still hold the previous account's orders and address book.
+   *
+   * Resolves `'demo'` without doing anything when there is no Firebase project:
+   * the demo runs as fixed accounts with no sign-in stack to return to, so the
+   * caller should explain that rather than appear to do nothing. Rejects if
+   * Firebase refuses, leaving everything as it was.
+   */
+  const signOut = useCallback(async (): Promise<SignOutResult> => {
+    if (!isFirebaseReady()) return 'demo';
     pendingConfirmation = null;
     await fbSignOut(getAuth(getApp()));
-  }, []);
+    useCart.getState().clear();
+    useActiveOrder.getState().setOrderId(null);
+    useSelectedAddressStore.getState().reset();
+    queryClient.clear();
+    return 'signed-out';
+  }, [queryClient]);
 
   return { sendCode, confirmCode, createAccount, completeProfile, signOut, busy, error, setError };
 }

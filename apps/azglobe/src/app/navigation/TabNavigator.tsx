@@ -1,6 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NavIcons, Text } from '@core/ui';
@@ -10,7 +8,7 @@ import { MessagesScreen } from '@app/screens/MessagesScreen';
 import { ProfileScreen } from '@app/screens/ProfileScreen';
 import { CartTabScreen } from '@app/screens/CartTabScreen';
 import { useCart } from '@modules/food/store/cart';
-import type { RootStackParamList, TabParamList } from './types';
+import type { TabParamList } from './types';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -27,9 +25,6 @@ type TabKey = keyof typeof NavIcons;
 export function TabNavigator() {
   const insets = useSafeAreaInsets();
   const itemCount = useCart((s) => s.lines.reduce((n, l) => n + l.qty, 0));
-  // The ROOT navigator: `Food` is a root-stack route, not a tab, so the tab's
-  // own navigation object cannot reach it.
-  const root = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <Tab.Navigator
@@ -48,23 +43,9 @@ export function TabNavigator() {
         component={MessagesScreen}
         options={{ tabBarIcon: ({ focused }) => <TabItem tab="Messages" label="Messages" focused={focused} /> }}
       />
-      {/*
-        The cart lives inside the Food module, so this tab forwards into it.
-        That MUST happen on tabPress, not on focus: forwarding on focus made
-        the back gesture unescapable — leaving Food > Cart landed on this tab,
-        which immediately forwarded straight back in. `preventDefault` stops
-        the tab ever taking focus, so back returns to whichever tab you came
-        from.
-      */}
       <Tab.Screen
         name="CartTab"
         component={CartTabScreen}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault();
-            root.navigate('Food', { screen: 'Cart' });
-          },
-        }}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabItem tab="Cart" label="Cart" focused={focused} badge={itemCount} />
@@ -122,7 +103,9 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: colors.surfaceAlt,
+    // The shorthand, not borderTopColor: React Navigation sets `borderColor`
+    // itself, and on web the shorthand it passes wins over a longhand.
+    borderColor: colors.surfaceAlt,
     paddingTop: spacing[2],
     // React Navigation applies its own elevation; the design has none.
     elevation: 0,

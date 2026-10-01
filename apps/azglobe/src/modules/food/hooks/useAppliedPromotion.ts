@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { useCart } from '../store/cart';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { isFirebaseReady } from '@core/firebase';
+import { cartGroups, useCart, type CartGroup } from '../store/cart';
 import {
   bestOffer,
   discountFor,
@@ -24,25 +25,72 @@ export type AppliedPromotion = {
 
 export const activeOffersKey = (merchantId: string) => ['offers', 'active', merchantId] as const;
 
+type TypedLookup = { isLoading: boolean; data: Promotion | null | undefined };
+
 /**
- * The discount on the current cart, recomputed from the promotion on every
- * change — never a stored amount (see services/promotions.ts).
+ * The discount on one restaurant's share of the cart, recomputed from the
+ * promotion on every change — never a stored amount (see services/promotions).
  *
- * A code the customer typed wins; otherwise the restaurant's best running offer
- * applies by itself. Both Cart and Checkout read this, so the figure the
- * customer sees is the one the order is placed with.
+ * An order carries at most one promotion, so each restaurant's order gets the
+ * better of the code typed for it and that restaurant's best running offer. A
+ * typed code that does not apply (expired, wrong restaurant, below its
+ * minimum…) is reported in `codeError` but never blocks the offer (audit C18);
+ * neither does a valid code that saves less than the offer.
  */
-export function useAppliedPromotion(): AppliedPromotion {
-  const merchantId = useCart((s) => s.merchantId) ?? '';
+function appliedFor(
+  group: CartGroup,
+  offers: Promotion[],
+  promoCode: string | null,
+  typed: TypedLookup
+): AppliedPromotion {
+  const { merchantId, lines, subtotal } = group;
+  const best = bestOffer(offers, merchantId, lines, subtotal);
+  const offer = (codeError: string | null): AppliedPromotion =>
+    best
+      ? {
+          promo: best.promo,
+          discount: best.discount,
+          label: best.promo.look?.label || 'Offer',
+          codeError,
+          automatic: true,
+        }
+      : { promo: null, discount: 0, label: promoCode ?? '', codeError, automatic: !promoCode };
+
+  if (!promoCode) return offer(null);
+  // Still looking the code up: show the offer (if any) rather than flash a zero.
+  if (typed.isLoading) {
+    return best ? offer(null) : { promo: null, discount: 0, label: promoCode, codeError: null, automatic: false };
+  }
+  const promo = typed.data ?? null;
+  const reason = promo ? ineligibleReason(promo, merchantId, subtotal) : 'That promo code is not valid.';
+  const discount = promo && !reason ? discountFor(promo, lines, subtotal) : 0;
+  if (promo && !reason && discount > 0) {
+    if (!best || discount >= best.discount) {
+      return { promo, discount, label: promoCode, codeError: null, automatic: false };
+    }
+    return offer('The restaurant’s own offer saves you more, so it is applied instead.');
+  }
+  return offer(reason ?? 'That code does not apply to the dishes in your cart.');
+}
+
+/**
+ * Every restaurant's promotion in the cart, keyed by merchant id. Cart and
+ * Checkout both read this, so the figures shown are the ones each order is
+ * placed with.
+ */
+export function useCartPromotions(): Record<string, AppliedPromotion> {
   const lines = useCart((s) => s.lines);
   const promoCode = useCart((s) => s.promoCode);
-  const subtotal = lines.reduce((sum, l) => sum + l.unitPrice * l.qty, 0);
+  const promoMerchantId = useCart((s) => s.promoMerchantId);
+  const groups = cartGroups(lines);
 
-  const offers = useQuery({
-    queryKey: activeOffersKey(merchantId),
-    queryFn: () => listActiveOffers(merchantId),
-    enabled: !!merchantId,
-    staleTime: 60_000,
+  const offers = useQueries({
+    queries: groups.map((g) => ({
+      queryKey: activeOffersKey(g.merchantId),
+      queryFn: () => listActiveOffers(g.merchantId),
+      // Demo offers are a local store the business side edits — always re-read.
+      staleTime: isFirebaseReady() ? 60_000 : 0,
+    })),
   });
 
   const typed = useQuery({
@@ -52,30 +100,22 @@ export function useAppliedPromotion(): AppliedPromotion {
     staleTime: 60_000,
   });
 
-  if (promoCode) {
-    const promo = typed.data ?? null;
-    if (typed.isLoading) return { promo: null, discount: 0, label: promoCode, codeError: null, automatic: false };
-    const reason = promo ? ineligibleReason(promo, merchantId, subtotal) : 'That promo code is not valid.';
-    if (!reason && promo) {
-      const discount = discountFor(promo, lines, subtotal);
-      if (discount > 0) return { promo, discount, label: promoCode, codeError: null, automatic: false };
-    }
-    return {
-      promo: null,
-      discount: 0,
-      label: promoCode,
-      codeError: reason ?? 'That code does not apply to the dishes in your cart.',
-      automatic: false,
-    };
-  }
-
-  const best = bestOffer(offers.data ?? [], merchantId, lines, subtotal);
-  if (!best) return { promo: null, discount: 0, label: '', codeError: null, automatic: true };
-  return {
-    promo: best.promo,
-    discount: best.discount,
-    label: best.promo.look?.label || 'Offer',
-    codeError: null,
-    automatic: true,
-  };
+  const out: Record<string, AppliedPromotion> = {};
+  groups.forEach((g, i) => {
+    out[g.merchantId] = appliedFor(
+      g,
+      offers[i]?.data ?? [],
+      g.merchantId === promoMerchantId ? promoCode : null,
+      { isLoading: typed.isLoading, data: typed.data }
+    );
+  });
+  return out;
 }
+
+export const NO_PROMOTION: AppliedPromotion = {
+  promo: null,
+  discount: 0,
+  label: '',
+  codeError: null,
+  automatic: true,
+};

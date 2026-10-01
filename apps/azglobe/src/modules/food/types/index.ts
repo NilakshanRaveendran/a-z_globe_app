@@ -25,6 +25,24 @@ export type MerchantFeature =
 
 export type DayHours = { open: string; close: string; closed?: boolean };
 
+/**
+ * A restaurant's own delivery terms.
+ *
+ *   flat      `deliveryFee` wherever it delivers
+ *   distance  free within `freeKm`; past it `deliveryFee` (a base, may be 0)
+ *             plus `perKm` for every km beyond the free zone, a part-km
+ *             counting as a whole one
+ *
+ * `maxKm` caps the delivery area in either mode (0 = no limit). Distances are
+ * straight-line from the restaurant's pin to the customer's pinned address.
+ */
+export type DeliveryRules = {
+  pricing: 'flat' | 'distance';
+  freeKm: number;
+  perKm: Money;
+  maxKm: number;
+};
+
 export type Merchant = {
   id: string;
   module: 'food';
@@ -46,7 +64,8 @@ export type Merchant = {
   reviewCount: number;
   /** Denormalised for list cards. */
   deliveryFee: Money;
-  freeDeliveryOver?: Money;
+  /** Orders this big deliver free (inside the area). Null clears it. */
+  freeDeliveryOver?: Money | null;
   prepTimeMin: number;
   prepTimeMax: number;
   distanceKm?: number;
@@ -59,6 +78,13 @@ export type Merchant = {
   geo?: GeoPoint;
   address: string;
   phone: string;
+  /**
+   * How far the restaurant delivers and how it prices it — set on Restaurant
+   * Info. Absent means the original behaviour: `deliveryFee` flat, any
+   * distance. Measured from `geo`, so it only applies once the pin is set
+   * (services/deliveryPricing.ts, mirrored by `firestore.rules`).
+   */
+  deliveryRules?: DeliveryRules | null;
   website?: string;
   hours: Record<'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun', DayHours>;
   isOpen: boolean;
@@ -69,6 +95,12 @@ export type Merchant = {
   badges: string[];
   /** "50% off select items", "Buy 1, get 1 free" — the ribbon on Featured cards. */
   offerLabel?: string;
+  /**
+   * Retired by its owner. Restaurants are never deleted (`firestore.rules`
+   * refuses it — orders and reviews point at them), so archiving closes the
+   * restaurant and drops it from every listing, customer and owner alike.
+   */
+  archived?: boolean;
 };
 
 export type OptionChoice = {
@@ -122,6 +154,8 @@ export type CartLine = {
   lineId: string;
   menuItemId: string;
   merchantId: string;
+  /** The restaurant's name, so a cart holding several can be grouped by it. */
+  merchantName?: string;
   name: string;
   image: string;
   qty: number;
@@ -206,6 +240,8 @@ export type Order = {
   orderType: 'delivery' | 'pickup';
   address: Address | null;
   dropoffOption: DropoffOption;
+  /** Restaurant → address, straight-line km, when the restaurant prices or limits by distance. */
+  deliveryDistanceKm?: number;
   noteToRestaurant?: string;
   requestUtensils: boolean;
   deliveryMode: DeliveryMode;
@@ -214,11 +250,100 @@ export type Order = {
   promoCode?: string;
   paymentMethod: string;
   status: OrderStatus;
-  timeline: Array<{ status: OrderStatus; at: number }>;
+  /**
+   * One entry per step. `by` is set on a cancellation so both sides can say
+   * who called it off — the customer (only while 'new') or the restaurant.
+   */
+  timeline: Array<{ status: OrderStatus; at: number; by?: 'customer' | 'restaurant' }>;
   etaFrom: number;
   etaTo: number;
   createdAt: number;
+  /**
+   * The customer's phone, snapshotted at checkout so the restaurant can call
+   * about the order — it cannot read `customers/{uid}`. Absent when the
+   * account has no number; never written as undefined.
+   */
+  userPhone?: string;
+  /** Why the restaurant turned the order down — one of CANCEL_REASONS. */
+  cancelReason?: string;
 };
+
+/** Statuses after which nothing more happens to an order. */
+export const TERMINAL_STATUSES: readonly OrderStatus[] = ['delivered', 'cancelled', 'refunded'];
+
+export function isTerminalStatus(status: OrderStatus): boolean {
+  return TERMINAL_STATUSES.includes(status);
+}
+
+/**
+ * The furthest point of the normal lifecycle the order reached. For a
+ * cancelled or refunded order that is where it stopped (read from the
+ * timeline); for anything else it is the status itself.
+ */
+export function lastReachedStatus(order: { status: OrderStatus; timeline?: Order['timeline'] }): OrderStatus {
+  if (order.status !== 'cancelled' && order.status !== 'refunded') return order.status;
+  const steps = (order.timeline ?? []).map((t) => t.status);
+  for (let i = steps.length - 1; i >= 0; i--) {
+    const s = steps[i]!;
+    if (s !== 'cancelled' && s !== 'refunded') return s;
+  }
+  return 'new';
+}
+
+/**
+ * How far the three-node customer tracker is filled — Figma Status Loader
+ * (91:3780) has six variants, which map onto the lifecycle as:
+ *
+ *   new                          nothing lit
+ *   accepted                     Restaurant
+ *   preparing · ready_for_pickup Restaurant + first bar
+ *   picked_up                    Restaurant + Picked up + second bar
+ *   delivered                    everything
+ *
+ * A cancelled or refunded order stops where it was and turns brand red.
+ */
+export function trackerProgress(order: {
+  status: OrderStatus;
+  timeline?: Order['timeline'];
+  orderType?: Order['orderType'];
+}): {
+  nodes: 0 | 1 | 2 | 3;
+  bars: 0 | 1 | 2;
+  tone: 'success' | 'danger';
+} {
+  const tone = order.status === 'cancelled' || order.status === 'refunded' ? 'danger' : 'success';
+  const reached = lastReachedStatus(order);
+  // Takeaway: Restaurant → Ready → Collected. Ready lights as soon as the
+  // kitchen marks it, since that's the moment the customer should set off.
+  if (order.orderType === 'pickup') {
+    switch (reached) {
+      case 'new':
+        return { nodes: tone === 'danger' ? 1 : 0, bars: 0, tone };
+      case 'accepted':
+        return { nodes: 1, bars: 0, tone };
+      case 'preparing':
+        return { nodes: 1, bars: 1, tone };
+      case 'ready_for_pickup':
+        return { nodes: 2, bars: 2, tone };
+      default:
+        return { nodes: 3, bars: 2, tone };
+    }
+  }
+  switch (reached) {
+    case 'new':
+      // A cancelled-while-new order still shows where it stopped: at the restaurant.
+      return { nodes: tone === 'danger' ? 1 : 0, bars: 0, tone };
+    case 'accepted':
+      return { nodes: 1, bars: 0, tone };
+    case 'preparing':
+    case 'ready_for_pickup':
+      return { nodes: 1, bars: 1, tone };
+    case 'picked_up':
+      return { nodes: 2, bars: 2, tone };
+    default:
+      return { nodes: 3, bars: 2, tone };
+  }
+}
 
 export type Review = {
   id: string;
@@ -231,6 +356,12 @@ export type Review = {
   dishTag?: string;
   helpfulCount: number;
   createdAt: number;
+  /** The restaurant's public response — written by its owner (385:5924). */
+  reply?: { text: string; createdAt: number };
+  /** Owner-side archive. Only filters the owner's Reviews screen; customers still see it. */
+  hiddenByMerchant?: boolean;
+  /** The delivered order this review is about — `firestore.rules` requires it on create. */
+  orderId?: string;
 };
 
 /**
@@ -274,17 +405,12 @@ export type OfferLook = {
   illustration: string;
 };
 
-/** Collapses the 8 order statuses onto the 3-node customer tracker. */
-export function trackerStage(status: OrderStatus): 0 | 1 | 2 {
-  switch (status) {
-    case 'new':
-    case 'accepted':
-    case 'preparing':
-      return 0;
-    case 'ready_for_pickup':
-    case 'picked_up':
-      return 1;
-    default:
-      return 2;
-  }
+/**
+ * Collapses the 8 order statuses onto the 3-node customer tracker: the index
+ * of the last node reached, or -1 before the restaurant has accepted. A
+ * cancelled or refunded order stops at the last node it actually reached
+ * (pass its timeline) instead of lighting "Delivered".
+ */
+export function trackerStage(status: OrderStatus, timeline?: Order['timeline']): -1 | 0 | 1 | 2 {
+  return (trackerProgress({ status, timeline }).nodes - 1) as -1 | 0 | 1 | 2;
 }

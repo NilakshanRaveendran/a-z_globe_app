@@ -13,7 +13,7 @@ import {
   onSnapshot,
   type WhereFilterOp,
   type DocumentSnapshot,
-} from '@react-native-firebase/firestore';
+} from './firestore';
 import { getApp } from './index';
 
 /**

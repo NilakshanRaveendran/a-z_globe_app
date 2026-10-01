@@ -6,17 +6,13 @@ import { liveModules } from '@modules/registry';
 import { TabNavigator } from './TabNavigator';
 import { ComingSoonScreen } from '@app/screens/ComingSoonScreen';
 import { AccountUnavailableScreen } from '@app/screens/AccountUnavailableScreen';
+import { NotificationSettingsScreen } from '@app/screens/NotificationSettingsScreen';
+import { EditProfileScreen } from '@app/screens/EditProfileScreen';
 import { AuthNavigator } from '@app/auth/AuthNavigator';
 import { useSession } from '@app/providers/SessionProvider';
-import { SupplierDashboardScreen } from '@/supplier/screens/SupplierDashboardScreen';
-import { OrderHistoryScreen } from '@/supplier/screens/OrderHistoryScreen';
-import { OffersScreen } from '@/supplier/screens/OffersScreen';
-import { MenuManagementScreen } from '@/supplier/screens/MenuManagementScreen';
-import { ActiveOrdersScreen } from '@/supplier/screens/ActiveOrdersScreen';
-import { RestaurantInfoScreen } from '@/supplier/screens/RestaurantInfoScreen';
-import { RestaurantManagementScreen } from '@/supplier/screens/RestaurantManagementScreen';
-import { RestaurantHubScreen } from '@/supplier/screens/RestaurantHubScreen';
+import { SupplierNavigator } from '@/supplier/navigation/SupplierNavigator';
 import type { RootStackParamList } from './types';
+import { MessagingFlow } from '@modules/messaging/entry';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -76,14 +72,9 @@ export function RootNavigator() {
         <AccountUnavailableScreen />
       ) : stage === 'ready' && accountKind === 'supplier' ? (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="SupplierDashboard" component={SupplierDashboardScreen} />
-          <Stack.Screen name="SupplierRestaurants" component={RestaurantManagementScreen} />
-          <Stack.Screen name="SupplierRestaurantHub" component={RestaurantHubScreen} />
-          <Stack.Screen name="SupplierMenu" component={MenuManagementScreen} />
-          <Stack.Screen name="SupplierOrders" component={ActiveOrdersScreen} />
-          <Stack.Screen name="SupplierOrderHistory" component={OrderHistoryScreen} />
-          <Stack.Screen name="SupplierOffers" component={OffersScreen} />
-          <Stack.Screen name="SupplierRestaurantInfo" component={RestaurantInfoScreen} />
+          <Stack.Screen name="SupplierTabs" component={SupplierNavigator} />
+          <Stack.Screen name="Messaging" component={MessagingFlow} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           <Stack.Screen
             name="ComingSoon"
             component={ComingSoonScreen}
@@ -93,10 +84,13 @@ export function RootNavigator() {
       ) : stage === 'ready' ? (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
+          <Stack.Screen name="Messaging" component={MessagingFlow} />
 
           {liveModules.map((m) => (
             <Stack.Screen key={m.id} name={m.route as 'Food'} component={m.navigator} />
           ))}
+          <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
 
           <Stack.Screen
             name="ComingSoon"
@@ -106,6 +100,7 @@ export function RootNavigator() {
         </Stack.Navigator>
       ) : (
         <AuthNavigator
+          key={stage}
           initialRoute={
             stage === 'needs-account-type'
               ? 'ChooseAccountType'

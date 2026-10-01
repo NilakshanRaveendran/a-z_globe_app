@@ -1,11 +1,14 @@
 import { Fragment } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from '@core/ui';
+import { Icon, Text } from '@core/ui';
 import { colors, radius, spacing } from '@core/theme';
-import { trackerStage, type OrderStatus } from '../types';
+import { trackerProgress, type Order, type OrderStatus } from '../types';
 
 const NODES = ['Restaurant', 'Picked up', 'Delivered'] as const;
-const GLYPHS = ['🍲', '🛵', '🏠'] as const;
+const GLYPHS = ['utensils', 'person', 'home'] as const;
+/** Takeaway has no rider: the customer collects it once it's ready. */
+const PICKUP_NODES = ['Restaurant', 'Ready', 'Collected'] as const;
+const PICKUP_GLYPHS = ['utensils', 'check', 'store'] as const;
 
 /**
  * The three-node order tracker — Figma Status Loader (91:3780) and
@@ -15,11 +18,14 @@ const GLYPHS = ['🍲', '🛵', '🏠'] as const;
  *   label     Urbanist 500 10/15 · complete #22C55E, pending #9CA3AF
  *   connector 3pt pill track #E5E7EB, filled #22C55E
  *
- * The eight order statuses collapse onto these three via `trackerStage`.
+ * The Status Loader's six variants map onto the eight statuses through
+ * `trackerProgress`: nothing lit while 'new', Restaurant once accepted, the
+ * first bar while preparing and ready, Picked up and the second bar once the
+ * rider has it, everything when delivered.
  *
- * Order History (346:3748) reuses it for finished orders: a delivered order is
- * all green, a cancelled one all brand red — `tone="danger"` with the whole
- * track filled, which is how the frame draws it.
+ * A cancelled or refunded order stops at the last stage it actually reached
+ * and turns brand red (`tone="danger"`), so it can never read as delivered
+ * (C9). Pass the timeline so that stage is known.
  *
  * Layout: node columns are fixed width and the connectors flex, so the three
  * labels stay evenly spread at any card width. Wrapping each node together with
@@ -28,26 +34,45 @@ const GLYPHS = ['🍲', '🛵', '🏠'] as const;
  */
 export function OrderProgress({
   status,
-  tone = 'success',
+  timeline,
+  orderType,
+  tone,
   filled = false,
+  pending = false,
 }: {
   status: OrderStatus;
+  timeline?: Order['timeline'];
+  orderType?: Order['orderType'];
+  /** Overrides the tone the status implies. */
   tone?: 'success' | 'danger';
-  /** Fill every node regardless of status — a finished order in history. */
+  /** Fill every node regardless of status. */
   filled?: boolean;
+  /** Draw nothing lit regardless of status. */
+  pending?: boolean;
 }) {
-  const stage = filled ? NODES.length - 1 : trackerStage(status);
-  const accent = tone === 'danger' ? colors.primary : colors.success;
+  const progress = trackerProgress({ status, timeline, orderType });
+  const pickup = orderType === 'pickup';
+  const labels = pickup ? PICKUP_NODES : NODES;
+  const glyphs = pickup ? PICKUP_GLYPHS : GLYPHS;
+  const nodes = pending ? 0 : filled ? 3 : progress.nodes;
+  const bars = pending ? 0 : filled ? 2 : progress.bars;
+  const accent = (tone ?? progress.tone) === 'danger' ? colors.primary : colors.success;
 
   return (
-    <View style={styles.row}>
-      {NODES.map((label, i) => {
-        const complete = i <= stage;
+    <View
+      style={styles.row}
+      accessible
+      accessibilityLabel={`Order progress: ${nodes ? labels[nodes - 1] : 'waiting for the restaurant'}`}
+    >
+      {labels.map((label, i) => {
+        const complete = i < nodes;
         return (
           <Fragment key={label}>
             <View style={styles.nodeColumn}>
               <View style={[styles.node, complete ? { backgroundColor: accent } : styles.nodeOff]}>
-                <Text style={[styles.glyph, !complete && styles.glyphOff]}>{GLYPHS[i]}</Text>
+                <View style={complete ? undefined : styles.glyphOff}>
+                  <Icon name={glyphs[i]!} size={20} color={colors.onPrimary} />
+                </View>
               </View>
               <Text
                 variant="caption"
@@ -59,9 +84,9 @@ export function OrderProgress({
               </Text>
             </View>
 
-            {i < NODES.length - 1 ? (
+            {i < labels.length - 1 ? (
               <View style={styles.track}>
-                <View style={[styles.fill, { width: i < stage ? '100%' : '0%', backgroundColor: accent }]} />
+                <View style={[styles.fill, { width: i < bars ? '100%' : '0%', backgroundColor: accent }]} />
               </View>
             ) : null}
           </Fragment>
@@ -82,7 +107,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   nodeOff: { backgroundColor: colors.border },
-  glyph: { fontSize: 17, lineHeight: 22 },
   glyphOff: { opacity: 0.4 },
   track: {
     flex: 1,

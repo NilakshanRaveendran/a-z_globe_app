@@ -11,11 +11,21 @@
     "./ui": "./src/ui/index.ts",
     "./firebase": "./src/firebase/index.ts",
     "./firebase/db": "./src/firebase/db.ts",
+    "./firebase/auth": "./src/firebase/auth.ts",
+    "./firebase/firestore": "./src/firebase/firestore.ts",
+    "./storage": "./src/storage.ts",
     "./utils/*": "./src/utils/*.ts",
     "./ui/*": "./src/ui/*.tsx"
   },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.4.0",
+    "@mui/material": "^9.4.0",
+    "firebase": "^12.19.0",
+    "react-dom": "^19.2.3"
+  },
   "peerDependencies": {
-    "expo-image": "*",
     "react": "*",
     "react-native": "*",
     "react-native-reanimated": "*",

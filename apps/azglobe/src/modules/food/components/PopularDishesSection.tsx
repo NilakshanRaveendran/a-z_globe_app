@@ -7,8 +7,8 @@ import type { RootStackParamList } from '@app/navigation/types';
 import { FoodCard } from './FoodCard';
 import { FoodCardSkeleton } from './FoodCardSkeleton';
 import { EmptyState } from '@core/ui/EmptyState';
-import { useCart } from '../store/cart';
-import { usePopularDishes } from '../hooks/queries';
+import { useAddToCart } from '../hooks/useAddToCart';
+import { useMerchants, usePopularDishes } from '../hooks/queries';
 import type { MenuItem } from '../types';
 
 /**
@@ -19,13 +19,19 @@ import type { MenuItem } from '../types';
  *
  * Figma: section pad 24/16 · header, then a 12pt gap, then a 2-column grid with
  * 12pt gaps both ways (cards 174.5 wide inside a 361 container).
+ *
+ * "See all" opens Search, which lists every popular dish while the query is
+ * empty — a dishes list, not the restaurant landing page.
  */
 export function PopularDishesSection() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { data, isLoading } = usePopularDishes();
-  const addLine = useCart((s) => s.addFromMenuItem);
+  const addToCart = useAddToCart();
+  // Same query as "Popular Near You" below, so this costs no extra read.
+  const { data: merchants } = useMerchants();
+  const closedIds = new Set((merchants ?? []).filter((m) => !m.isOpen).map((m) => m.id));
 
-  const openLanding = () => navigation.navigate('Food', { screen: 'FoodLanding' });
+  const openAll = () => navigation.navigate('Food', { screen: 'Search', params: { autoFocus: false } });
   const openItem = (dish: MenuItem) =>
     navigation.navigate('Food', {
       screen: 'ItemDetail',
@@ -38,7 +44,7 @@ export function PopularDishesSection() {
 
   return (
     <View style={styles.section}>
-      <SectionHeader title="Popular Dishes" size="md" onSeeAll={openLanding} />
+      <SectionHeader title="Popular Dishes" size="md" onSeeAll={openAll} />
 
       <View style={styles.grid}>
         {!isLoading && !dishes.length ? (
@@ -62,10 +68,11 @@ export function PopularDishesSection() {
             <View key={i} style={styles.row}>
               {pair.map((dish) => (
                 <FoodCard
-                  key={dish.id}
+                  key={`${dish.merchantId}-${dish.id}`}
                   item={dish}
                   onPress={() => openItem(dish)}
-                  onAdd={() => addLine(dish)}
+                  addDisabled={closedIds.has(dish.merchantId)}
+                  onAdd={() => addToCart(dish)}
                 />
               ))}
               {/* Keeps a lone trailing card at half width instead of stretching. */}
@@ -81,7 +88,7 @@ export function PopularDishesSection() {
 const styles = StyleSheet.create({
   section: {
     paddingHorizontal: SCREEN_PADDING,
-    paddingVertical: spacing[9],
+    paddingVertical: 44,
     gap: spacing[4],
   },
   grid: { gap: spacing[4] },

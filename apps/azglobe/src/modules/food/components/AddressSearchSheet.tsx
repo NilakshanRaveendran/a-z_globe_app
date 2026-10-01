@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Icon, Text } from '@core/ui';
+import { Icon, Text, type IconName } from '@core/ui';
 import { SearchBar } from '@core/ui/SearchBar';
 import { Sheet } from '@core/ui/Sheet';
 import { colors, radius, shadows, spacing } from '@core/theme';
-import { addressSubtitle, addressTitle } from '../services/addresses';
+import { addressLine, addressSubtitle, addressTitle } from '../services/addresses';
 import type { Address, AddressLabel } from '../types';
 
 /**
@@ -25,6 +25,11 @@ import type { Address, AddressLabel } from '../types';
  */
 export type NewAddressIntent = { label?: AddressLabel; line1?: string; useLocation?: boolean };
 
+/** Figma's glyph per label: a house for Home, a briefcase for Work, a pin otherwise. */
+export function addressIcon(label: AddressLabel): IconName {
+  return label === 'Home' ? 'house' : label === 'Work' ? 'briefcase' : 'mapPin';
+}
+
 export function AddressSearchSheet({
   visible,
   addresses,
@@ -44,9 +49,16 @@ export function AddressSearchSheet({
 }) {
   const [query, setQuery] = useState('');
 
+  // Each opening starts with an empty search, not the last one typed.
+  useEffect(() => {
+    if (visible) setQuery('');
+  }, [visible]);
+
   const q = query.trim().toLowerCase();
   const matches = q
-    ? addresses.filter((a) => addressSubtitle(a).toLowerCase().includes(q) || a.label.toLowerCase().includes(q))
+    ? addresses.filter((a) =>
+        [addressLine(a), addressTitle(a), a.label].some((text) => text.toLowerCase().includes(q))
+      )
     : addresses;
 
   const home = addresses.find((a) => a.label === 'Home');
@@ -60,13 +72,13 @@ export function AddressSearchSheet({
 
       <View style={styles.shortcuts}>
         <Shortcut
-          icon="mapPin"
-          title="Home"
-          subtitle={home ? addressSubtitle(home) : 'Set home'}
+          icon="house"
+          title={home ? 'Home' : 'Set home'}
+          subtitle={home ? addressSubtitle(home) : undefined}
           onPress={() => (home ? onSelect(home) : onAdd({ label: 'Home' }))}
         />
         <Shortcut
-          icon="store"
+          icon="briefcase"
           title={work ? 'Work' : 'Set work'}
           subtitle={work ? addressSubtitle(work) : undefined}
           onPress={() => (work ? onSelect(work) : onAdd({ label: 'Work' }))}
@@ -76,7 +88,11 @@ export function AddressSearchSheet({
 
       <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
         {q ? (
-          <Pressable style={styles.nearbyRow} onPress={() => onAdd({ line1: query.trim() })}>
+          <Pressable
+            style={styles.nearbyRow}
+            // A typed street is a new place: "Other" unless there is no Home yet.
+            onPress={() => onAdd({ line1: query.trim(), label: home ? 'Other' : 'Home' })}
+          >
             <View style={styles.nearbyWell}>
               <Icon name="plus" size={16} color={colors.text} />
             </View>
@@ -124,12 +140,18 @@ export function AddressSearchSheet({
               onPress={() => onSelect(address)}
               style={[styles.savedRow, current && styles.savedRowCurrent]}
             >
-              <Icon name="mapPin" size={20} color={colors.text} />
+              <View style={styles.savedWell}>
+                <Icon
+                  name={addressIcon(address.label)}
+                  size={18}
+                  color={address.label === 'Other' ? colors.textSecondary : colors.palette.gray700}
+                />
+              </View>
               <View style={styles.flex}>
-                <Text variant="h5" color={colors.textStrong}>
+                <Text variant="labelLg" color={colors.textStrong} numberOfLines={1}>
                   {addressTitle(address)}
                 </Text>
-                <Text variant="bodySm" color={colors.textSecondary} numberOfLines={1}>
+                <Text variant="bodyRegular" color={colors.textSecondary} numberOfLines={1}>
                   {addressSubtitle(address)}
                 </Text>
               </View>
@@ -161,14 +183,14 @@ function Shortcut({
   subtitle,
   onPress,
 }: {
-  icon: 'mapPin' | 'store' | 'plus';
+  icon: IconName;
   title: string;
   subtitle?: string;
   onPress: () => void;
 }) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.shortcut, pressed && styles.pressed]}>
-      <Icon name={icon} size={18} color={colors.palette.gray700} />
+      <Icon name={icon} size={icon === 'house' ? 18 : 16} color={colors.palette.gray700} />
       <View style={styles.flex}>
         <Text variant="label" color={colors.text} numberOfLines={1}>
           {title}
@@ -224,14 +246,15 @@ const styles = StyleSheet.create({
     marginTop: spacing[3],
     backgroundColor: colors.surfaceSunken,
   },
+  savedWell: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
   savedRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing[5],
+    gap: spacing[4],
     paddingHorizontal: spacing[6],
-    paddingVertical: spacing[5],
+    paddingVertical: spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: colors.surfaceAlt,
   },
   savedRowCurrent: { backgroundColor: colors.surfaceSunken },
 

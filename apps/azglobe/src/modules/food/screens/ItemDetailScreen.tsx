@@ -3,15 +3,22 @@ import { useNavigation, useRoute, type RouteProp } from '@react-navigation/nativ
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BottomBar, Button, Icon, OptionButton, QuantityStepper, Screen, Text } from '@core/ui';
+import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { BottomBar, Button, Icon, OptionButton, QuantityStepper, Screen, showToast, Text } from '@core/ui';
 import { Skeleton } from '@core/ui/Skeleton';
 import { colors, radius, SCREEN_PADDING, spacing } from '@core/theme';
 import { formatDelta, formatMoney } from '@core/utils/currency';
 import { resolveImage } from '../data/images';
-import { useMenuItem } from '../hooks/queries';
-import { unitPriceFor, useCart } from '../store/cart';
+import { useMenuItem, useMerchant } from '../hooks/queries';
+import { useAddToCart } from '../hooks/useAddToCart';
+import { LoadErrorState } from '../components/LoadErrorState';
+import { OfferPrice } from '../components/OfferPrice';
+import { useItemOffer } from '../hooks/useItemOffer';
+import { lineDiscount } from '../services/promotions';
+import { formatDayMonth } from '@core/utils/datetime';
+import { HeroTopBar } from '../components/HeroTopBar';
+import { unitPriceFor } from '../store/cart';
+import { closedLabel } from '../utils/hours';
 import type { FoodStackParamList } from '../navigation/types';
 import type { OptionGroup, SelectedOption } from '../types';
 
@@ -25,15 +32,26 @@ type Nav = NativeStackNavigationProp<FoodStackParamList>;
  *   title   name Urbanist 700 ~24 with the price right-aligned in #D42B2B
  *   groups  Size (14/21 options, pad 11) · Spice Level (12/18, pad 10) ·
  *           Add-ons with "(Optional)" and checkbox rows
- *   footer  quantity stepper + "Add to Cart — Rs. X"
+ *   footer  quantity stepper + "Add to Cart — Rs. X" ("Add · Rs. X" below
+ *           360pt, where the long label would wrap and split "Rs." from the
+ *           amount)
+ *
+ * A sold-out dish, or any dish while its restaurant is closed, keeps the page
+ * readable but swaps the CTA for a disabled one saying why.
  */
 export function ItemDetailScreen() {
   const navigation = useNavigation<Nav>();
-  const insets = useSafeAreaInsets();
   const { params } = useRoute<RouteProp<FoodStackParamList, 'ItemDetail'>>();
-  const { data: item, isLoading } = useMenuItem(params.merchantId, params.menuItemId);
-
-  const add = useCart((s) => s.add);
+  const { width } = useWindowDimensions();
+  const { data: item, isSuccess, isError, refetch } = useMenuItem(params.merchantId, params.menuItemId);
+  const { data: merchant } = useMerchant(params.merchantId);
+  const addToCart = useAddToCart();
+  // The restaurant's running offer on this dish — the cart takes off the same.
+  const offer = useItemOffer(item?.available === false ? null : item);
+  const goBack = () =>
+    navigation.canGoBack()
+      ? navigation.goBack()
+      : navigation.navigate('Restaurant', { merchantId: params.merchantId });
   const [qty, setQty] = useState(1);
   const [choices, setChoices] = useState<Record<string, string[]>>({});
 
@@ -74,7 +92,29 @@ export function ItemDetailScreen() {
     );
   }, [item, selection]);
 
-  if (isLoading || !item) {
+  if (isError && !item) {
+    return (
+      <LoadErrorState
+        title="Couldn't load this dish"
+        message="Check your connection and try again."
+        onBack={goBack}
+        onRetry={() => void refetch()}
+      />
+    );
+  }
+
+  // A settled read that found nothing — not a slow or paused one.
+  if (isSuccess && !item) {
+    return (
+      <LoadErrorState
+        title="Dish not found"
+        message="The restaurant may have taken it off the menu."
+        onBack={goBack}
+      />
+    );
+  }
+
+  if (!item) {
     return (
       <Screen edges={[]}>
         <Skeleton height={282} borderRadius={0} />
@@ -88,7 +128,19 @@ export function ItemDetailScreen() {
   }
 
   const unitPrice = unitPriceFor(item.price, selectedOptions);
-  const total = unitPrice * qty;
+  const fullTotal = unitPrice * qty;
+  // As the cart works it out: this line's saving, rounded down.
+  const total = offer?.price != null ? fullTotal - lineDiscount(offer.promo, { menuItemId: item.id, unitPrice, qty }) : fullTotal;
+  const soldOut = item.available === false;
+  const closed = merchant?.isOpen === false;
+  const narrow = width < 360;
+  const ctaLabel = soldOut
+    ? 'Sold out'
+    : closed
+      ? closedLabel(merchant?.hours)
+      : narrow
+        ? `Add · ${formatMoney(total)}`
+        : `Add to Cart — ${formatMoney(total)}`;
 
   const toggle = (group: OptionGroup, choiceId: string) =>
     setChoices((prev) => {
@@ -117,14 +169,7 @@ export function ItemDetailScreen() {
             locations={[0, 0.5, 0.88, 1]}
             style={StyleSheet.absoluteFill}
           />
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            onPress={navigation.goBack}
-            style={({ pressed }) => [styles.back, { top: insets.top + spacing[3] }, pressed && styles.pressed]}
-          >
-            <Icon name="arrowLeft" size={18} color={colors.palette.ink} />
-          </Pressable>
+          <HeroTopBar onBack={goBack} />
         </View>
 
         <View style={styles.body}>
@@ -132,13 +177,48 @@ export function ItemDetailScreen() {
             <Text variant="h1" color={colors.textHeading} style={styles.title}>
               {item.name}
             </Text>
-            <Text variant="h1" color={colors.primary} style={styles.price}>
-              {formatMoney(item.price)}
-            </Text>
+            <OfferPrice price={item.price} offer={offer} variant="h1" style={styles.priceBlock} />
           </View>
+          {merchant ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`From ${merchant.name}. Open restaurant`}
+              onPress={() => navigation.navigate('Restaurant', { merchantId: merchant.id })}
+              style={({ pressed }) => [styles.merchantRow, pressed && styles.pressed]}
+            >
+              <View style={styles.merchantIcon}>
+                <Icon name="store" size={14} color={colors.primary} />
+              </View>
+              <Text variant="labelMd" color={colors.text} numberOfLines={1} style={styles.merchantName}>
+                {merchant.name}
+              </Text>
+              <Icon name="star" size={12} color={colors.palette.amber400} />
+              <Text variant="bodySm" color={colors.textSecondary}>
+                {merchant.rating.toFixed(1)} · {merchant.prepTimeMin}–{merchant.prepTimeMax} min
+              </Text>
+              <Icon name="chevronRight" size={12} color={colors.textMuted} />
+            </Pressable>
+          ) : null}
+          {offer ? (
+            <View style={styles.offerNote}>
+              <Icon name="offers" size={14} color={colors.primary} />
+              <Text variant="bodySm" color={colors.primary} style={styles.flex}>
+                {offer.label} at {merchant?.name ?? 'this restaurant'} · until {formatDayMonth(offer.promo.validUntil)}
+                {offer.price == null ? ' — applied in your cart once you reach the minimum' : ' — applied in your cart'}
+              </Text>
+            </View>
+          ) : null}
           <Text variant="bodyLg" color={colors.textSecondary}>
             {item.description}
           </Text>
+          {soldOut ? (
+            <View style={styles.notice}>
+              <Icon name="warning" size={14} color={colors.textSecondary} />
+              <Text variant="bodySm" color={colors.textSecondary} style={styles.flex}>
+                Sold out right now — the restaurant hasn't got any left today.
+              </Text>
+            </View>
+          ) : null}
 
           {item.optionGroups.map((group) => (
             <View key={group.key} style={styles.group}>
@@ -203,13 +283,20 @@ export function ItemDetailScreen() {
 
       <BottomBar>
         <View style={styles.footer}>
-          <QuantityStepper value={qty} onChange={setQty} />
+          {soldOut || closed ? null : <QuantityStepper value={qty} onChange={setQty} />}
           <Button
-            label={`Add to Cart — ${formatMoney(total)}`}
-            leadingIcon={<Icon name="cart" size={16} color={colors.onPrimary} />}
+            label={ctaLabel}
+            disabled={soldOut || closed}
+            leadingIcon={
+              soldOut || closed || narrow ? undefined : <Icon name="cart" size={16} color={colors.onPrimary} />
+            }
             onPress={() => {
-              add(item, selectedOptions, qty);
-              navigation.navigate('Cart');
+              if (closed) {
+                showToast(`${merchant?.name ?? 'This restaurant'} is closed right now`, { tone: 'error' });
+                return;
+              }
+              // Stay on the dish so another can be added; the toast links to the cart.
+              addToCart(item, { options: selectedOptions, qty }, () => setQty(1));
             }}
             style={styles.flex}
           />
@@ -223,22 +310,40 @@ const styles = StyleSheet.create({
   content: { paddingBottom: spacing[8] },
   loading: { padding: SCREEN_PADDING, gap: spacing[4] },
   hero: { height: 282, backgroundColor: colors.surfaceAlt },
-  back: {
-    position: 'absolute',
-    left: SCREEN_PADDING,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-  },
   pressed: { opacity: 0.8 },
 
   body: { paddingHorizontal: SCREEN_PADDING, paddingTop: spacing[4], gap: spacing[3] },
   titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing[4] },
   title: { fontSize: 24, lineHeight: 32, flex: 1 },
-  price: { fontSize: 22, lineHeight: 32 },
+  priceBlock: { flexShrink: 0, alignItems: 'baseline' },
+  merchantRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[2],
+    alignSelf: 'flex-start',
+    maxWidth: '100%',
+    paddingVertical: spacing[2],
+    paddingHorizontal: spacing[3],
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceAlt,
+  },
+  merchantIcon: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primaryTint,
+  },
+  merchantName: { flexShrink: 1 },
+  offerNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[3],
+    padding: spacing[4],
+    borderRadius: radius.xl,
+    backgroundColor: colors.primaryTint,
+  },
 
   group: { paddingTop: spacing[6], gap: spacing[4] },
   groupHead: { flexDirection: 'row', alignItems: 'baseline', gap: spacing[2] },
@@ -256,6 +361,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkboxOn: { backgroundColor: colors.primary, borderColor: colors.primary },
+
+  notice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[2.5],
+    marginTop: spacing[2],
+    padding: spacing[4],
+    borderRadius: radius.xl,
+    backgroundColor: colors.surfaceAlt,
+  },
 
   footer: { flexDirection: 'row', alignItems: 'center', gap: spacing[4] },
   flex: { flex: 1 },

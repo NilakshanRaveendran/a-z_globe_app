@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { BottomBar, Button, Icon, Screen, Text } from '@core/ui';
+import { BackButton, BottomBar, Button, Icon, Screen, showToast, Text } from '@core/ui';
+import { Alert } from '@core/ui/alert';
 import { Field } from '@core/ui/Field';
-import { colors, fontFamily, radius, SCREEN_PADDING, spacing, typography } from '@core/theme';
+import { colors, radius, SCREEN_PADDING, spacing, typography } from '@core/theme';
 import { dropPin } from '@app/location';
 import { MapPreview } from '../components/MapPreview';
 import { useAddresses } from '../hooks/useAddresses';
-import { addressSubtitle, removeAddress, saveAddress } from '../services/addresses';
+import { addressLine, addressTitle } from '../services/addresses';
 import type { AddressLabel, BuildingType, DropoffOption, GeoPoint } from '../types';
 import type { FoodStackParamList } from '../navigation/types';
 
@@ -50,7 +51,7 @@ const BUILDING_NAMES: Record<BuildingType, string> = {
 export function AddressInfoScreen() {
   const navigation = useNavigation<Nav>();
   const { params } = useRoute<RouteProp<FoodStackParamList, 'AddressInfo'>>();
-  const { uid, addresses, select, refresh } = useAddresses();
+  const { addresses, save, remove: removeSaved } = useAddresses();
   const existing = params?.addressId ? addresses.find((a) => a.id === params.addressId) : undefined;
 
   const [line1, setLine1] = useState(params?.line1 ?? '');
@@ -65,8 +66,11 @@ export function AddressInfoScreen() {
   const [label, setLabel] = useState<AddressLabel>(params?.label ?? 'Home');
 
   const [saving, setSaving] = useState(false);
+  const [removing, setRemoving] = useState(false);
   const [pinning, setPinning] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+  // A failed save or remove, shown right above the button that caused it.
+  const [failure, setFailure] = useState<string | null>(null);
   const [loadedId, setLoadedId] = useState<string | null>(null);
 
   // Editing: fill the form once the address arrives from the address book.
@@ -122,8 +126,10 @@ export function AddressInfoScreen() {
   const onSave = async () => {
     setSaving(true);
     setNote(null);
+    setFailure(null);
     try {
-      const saved = await saveAddress(uid, {
+      // `save` also makes it the address checkout delivers to.
+      await save({
         id: existing?.id,
         label,
         line1: line1.trim(),
@@ -136,48 +142,72 @@ export function AddressInfoScreen() {
         dropoffOption: dropoff,
         instructions: instructions.trim() || undefined,
       });
-      select(saved.id);
-      await refresh();
+      showToast(existing ? 'Address updated' : 'Address saved');
       navigation.goBack();
-    } catch {
-      setNote('Could not save the address. Check your connection and try again.');
+    } catch (e) {
+      const message = failureMessage(e, 'save');
+      setFailure(message);
+      showToast(message, { tone: 'error' });
     } finally {
       setSaving(false);
     }
   };
 
-  const onRemove = async () => {
+  const remove = async () => {
+    if (!existing) return;
+    setRemoving(true);
+    setFailure(null);
+    try {
+      // `remove` forgets the delivery choice only when it was this address —
+      // removing some other saved address must not move where the order goes.
+      await removeSaved(existing.id);
+      showToast('Address removed');
+      navigation.goBack();
+    } catch (e) {
+      // A failed delete is not a success: stay here, say so, keep the address.
+      const message = failureMessage(e, 'remove');
+      setFailure(message);
+      showToast(message, { tone: 'error' });
+    } finally {
+      setRemoving(false);
+    }
+  };
+
+  const onRemove = () => {
     if (!existing) {
       navigation.goBack();
       return;
     }
-    await removeAddress(uid, existing.id).catch(() => undefined);
-    select(null);
-    await refresh();
-    navigation.goBack();
+    Alert.alert(
+      'Remove this address?',
+      `${addressTitle(existing)} will be removed from your saved addresses.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Remove', style: 'destructive', onPress: () => void remove() },
+      ]
+    );
   };
 
   const chip = line1.trim()
-    ? `${label}, ${addressSubtitle({ line1: line1.trim(), city: city.trim() })}`
+    ? `${label}, ${addressLine({ line1: line1.trim(), city: city.trim() })}`
     : 'Add your delivery address';
 
   return (
     <Screen>
       <View style={styles.header}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          onPress={navigation.goBack}
-          style={({ pressed }) => [styles.back, pressed && styles.pressed]}
-        >
-          <Icon name="arrowLeft" size={18} color={colors.text} />
-        </Pressable>
+        <BackButton onPress={navigation.goBack} />
         <Text variant="h3" color={colors.text}>
           Address info
         </Text>
-        <Pressable accessibilityRole="button" hitSlop={8} onPress={() => void onRemove()}>
-          <Text variant="body" color="#EF4444" style={styles.remove}>
-            {existing ? 'Remove' : 'Cancel'}
+        <Pressable
+          accessibilityRole="button"
+          hitSlop={8}
+          onPress={onRemove}
+          disabled={removing || saving}
+          style={({ pressed }) => (pressed || removing) && styles.pressed}
+        >
+          <Text variant="labelMd" color={existing ? colors.palette.red400 : colors.textSecondary}>
+            {existing ? (removing ? 'Removing…' : 'Remove') : 'Cancel'}
           </Text>
         </Pressable>
       </View>
@@ -322,11 +352,19 @@ export function AddressInfoScreen() {
       </ScrollView>
 
       <BottomBar>
+        {failure ? (
+          <View accessibilityRole="alert" style={styles.failure}>
+            <Icon name="warning" size={16} color={colors.primary} />
+            <Text variant="bodySm" color={colors.primary} style={styles.flex}>
+              {failure}
+            </Text>
+          </View>
+        ) : null}
         <Button
           label="Save and continue"
           onPress={() => void onSave()}
           loading={saving}
-          disabled={!canSave}
+          disabled={!canSave || removing}
         />
       </BottomBar>
     </Screen>
@@ -344,15 +382,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.surfaceAlt,
   },
-  back: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  failure: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surfaceAlt,
+    gap: spacing[3],
+    marginBottom: spacing[4],
+    padding: spacing[4],
+    borderRadius: radius.xl,
+    backgroundColor: colors.primaryTint,
   },
-  remove: { fontFamily: fontFamily[600] },
   pressed: { opacity: 0.7 },
   flex: { flex: 1 },
 
@@ -419,3 +457,17 @@ const styles = StyleSheet.create({
   labelChipOn: { backgroundColor: colors.primaryTint, borderColor: colors.primary },
   labelChipOff: { backgroundColor: colors.surface, borderColor: colors.border },
 });
+
+/**
+ * What went wrong, in the customer's terms. Firestore's own messages ("Missing
+ * or insufficient permissions.") are not written for them.
+ */
+function failureMessage(e: unknown, action: 'save' | 'remove'): string {
+  const code = typeof e === 'object' && e && 'code' in e ? String((e as { code: unknown }).code) : '';
+  if (code === 'unavailable' || /network|offline/i.test(String((e as Error)?.message ?? ''))) {
+    return `You're offline — couldn't ${action} the address. Try again when you're connected.`;
+  }
+  return action === 'save'
+    ? "Couldn't save this address. Please try again."
+    : "Couldn't remove this address. Please try again.";
+}

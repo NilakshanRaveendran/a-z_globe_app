@@ -1,10 +1,11 @@
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
-import { Icon, Screen, Text } from '@core/ui';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { EmptyState, Screen, ScreenHeader } from '@core/ui';
 import { Skeleton } from '@core/ui/Skeleton';
-import { colors, radius, SCREEN_PADDING, spacing } from '@core/theme';
+import { radius, SCREEN_PADDING, spacing } from '@core/theme';
 import { FeaturedListRow } from '../components/FeaturedListRow';
+import { HeroActions } from '../components/HeroActions';
 import { useMerchants } from '../hooks/queries';
 import type { FoodStackParamList } from '../navigation/types';
 
@@ -25,23 +26,11 @@ export function FeaturedScreen() {
 
   return (
     <Screen>
-      <View style={styles.header}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          onPress={navigation.goBack}
-          hitSlop={8}
-          style={styles.headerBack}
-        >
-          <Icon name="arrowLeft" size={18} color={colors.palette.ink} />
-          <Text variant="h1" color={colors.palette.ink} style={styles.headerTitle}>
-            {params?.title ?? 'Featured on A-Z Globe'}
-          </Text>
-        </Pressable>
-        <Pressable accessibilityRole="button" accessibilityLabel="Notifications" hitSlop={8}>
-          <Icon name="bell" size={22} color={colors.palette.ink} />
-        </Pressable>
-      </View>
+      <ScreenHeader
+        title={params?.title ?? 'Featured on A-Z Globe'}
+        onBack={navigation.goBack}
+        action={<HeroActions />}
+      />
 
       {isLoading ? (
         <View style={styles.loading}>
@@ -66,6 +55,13 @@ export function FeaturedScreen() {
               onPress={() => navigation.navigate('Restaurant', { merchantId: item.id })}
             />
           )}
+          ListEmptyComponent={
+            <EmptyState
+              icon="store"
+              title="No restaurants yet"
+              message="Restaurants will appear here as they join A-Z Globe."
+            />
+          }
         />
       )}
     </Screen>
@@ -73,15 +69,6 @@ export function FeaturedScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: SCREEN_PADDING,
-    paddingVertical: spacing[3.5],
-  },
-  headerBack: { flexDirection: 'row', alignItems: 'center', gap: spacing[1], flex: 1 },
-  headerTitle: { fontSize: 22, lineHeight: 33 },
   list: { paddingBottom: spacing[9] },
   loading: { paddingHorizontal: SCREEN_PADDING, gap: spacing[6] },
   loadingRow: { gap: spacing[3] },

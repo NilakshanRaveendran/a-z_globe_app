@@ -39,6 +39,21 @@ import PlusCircle from '../../assets/icons/provider/plusCircle.svg';
 import More from '../../assets/icons/provider/more.svg';
 import PencilSm from '../../assets/icons/provider/pencilSm.svg';
 import Save from '../../assets/icons/provider/save.svg';
+// Provider dashboard / hub stat cards — Figma 385:3064 (box) and 385:3074 (trend).
+import Box from '../../assets/icons/provider/box.svg';
+import TrendingUp from '../../assets/icons/provider/trendingUp.svg';
+// Restaurant Information — Figma 394:3362 ("Change Cover") and 394:2803 ("Set Pin").
+import Camera from '../../assets/icons/provider/camera.svg';
+import Crosshair from '../../assets/icons/provider/crosshair.svg';
+// Hub "Active Orders Awaiting" alert (385:5480) and restaurant card menu (385:3361).
+import Warning from '../../assets/icons/provider/warning.svg';
+import MoreVertical from '../../assets/icons/provider/moreVertical.svg';
+// Provider Reviews — reply link (385:6619), dish tag (385:6611), "Hide Review" (432:3465).
+import Reply from '../../assets/icons/provider/reply.svg';
+import DishTag from '../../assets/icons/provider/dishTag.svg';
+import XCircle from '../../assets/icons/provider/xCircle.svg';
+// Add New Item — the photo drop zone's glyph (463:3008).
+import UploadPhoto from '../../assets/icons/provider/uploadPhoto.svg';
 import Close from '../../assets/icons/app/close.svg';
 import FilterOffers from '../../assets/icons/app/filter-offers.svg';
 import FilterPickup from '../../assets/icons/app/filter-pickup.svg';
@@ -58,6 +73,16 @@ import Share from '../../assets/icons/app/share.svg';
 import Store from '../../assets/icons/app/store.svg';
 import Trash from '../../assets/icons/app/trash.svg';
 import Zap from '../../assets/icons/app/zap.svg';
+// Choose building type — Figma 269:1625 (house / apartment / office / hotel);
+// the house is also the "Home" glyph on Addresses (269:1496) and Profile (215:1152),
+// the briefcase the "Set work" shortcut.
+import House from '../../assets/icons/app/house.svg';
+import Building from '../../assets/icons/app/building.svg';
+import Briefcase from '../../assets/icons/app/briefcase.svg';
+import Hotel from '../../assets/icons/app/hotel.svg';
+// Order Placed — Figma 416:4243: the 52pt line check and "mingcute:celebrate-line".
+import CheckCircle from '../../assets/icons/app/check-circle.svg';
+import Celebrate from '../../assets/icons/app/celebrate.svg';
 
 // Bottom navigation
 import NavHome from '../../assets/icons/nav/home.svg';
@@ -68,6 +93,8 @@ import NavProfile from '../../assets/icons/nav/profile.svg';
 import Star from '../../assets/icons/ui/star.svg';
 
 export const Icons = {
+  person: NavProfile,
+  home: NavHome,
   arrowLeft: ArrowLeft,
   bell: Bell,
   bike: Bike,
@@ -94,6 +121,16 @@ export const Icons = {
   more: More,
   pencilSm: PencilSm,
   save: Save,
+  box: Box,
+  trendingUp: TrendingUp,
+  camera: Camera,
+  crosshair: Crosshair,
+  warning: Warning,
+  moreVertical: MoreVertical,
+  reply: Reply,
+  dishTag: DishTag,
+  xCircle: XCircle,
+  uploadPhoto: UploadPhoto,
   close: Close,
   filterOffers: FilterOffers,
   filterPickup: FilterPickup,
@@ -114,6 +151,12 @@ export const Icons = {
   store: Store,
   trash: Trash,
   zap: Zap,
+  house: House,
+  building: Building,
+  briefcase: Briefcase,
+  hotel: Hotel,
+  checkCircle: CheckCircle,
+  celebrate: Celebrate,
 } as const;
 
 export const NavIcons = {

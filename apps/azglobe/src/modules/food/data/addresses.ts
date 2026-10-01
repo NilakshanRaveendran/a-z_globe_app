@@ -40,11 +40,3 @@ export const savedAddresses: SavedAddress[] = [
     subtitle: 'Peradeniya-Badulla-Chenkaladi Hwy, Badulla',
   },
 ];
-
-/** The address Checkout defaults to, matching Figma 414:3339. */
-export const checkoutAddress = {
-  id: 'galle-road',
-  label: 'Home' as const,
-  title: 'Home',
-  subtitle: '123 Galle Road, Colombo 03',
-};

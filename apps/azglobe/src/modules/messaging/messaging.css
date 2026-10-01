@@ -1,0 +1,2446 @@
+/*
+ * A-Z Groups (browser messaging) — drawn in the same language as the food and
+ * business screens: Urbanist, brand red #D42B2B, grey #F3F4F6 wells and pills,
+ * white rounded cards on a #F9FAFB page, 36pt circular back buttons, 50pt
+ * r14 primary buttons. Colours and fonts come from the app tokens via the
+ * --az-* variables set in ui.web.tsx.
+ */
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+.azm {
+  color: var(--az-text);
+  /* Urbanist has Latin only; Sinhala, Tamil and other scripts fall back to
+     these (then the system's own fonts), and emoji to the colour emoji font. */
+  font:
+    14px/1.5 var(--az-font),
+    "Noto Sans Sinhala",
+    "Sinhala Sangam MN",
+    "Iskoola Pota",
+    "Noto Sans Tamil",
+    "Tamil Sangam MN",
+    "Latha",
+    system-ui,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Noto Color Emoji";
+  letter-spacing: 0;
+  box-sizing: border-box;
+  background: white;
+  -webkit-font-smoothing: antialiased;
+}
+.azm *,
+.azm *::before,
+.azm *::after {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+.azm-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding-top: env(safe-area-inset-top);
+  position: relative;
+  overflow: hidden;
+}
+.azm button,
+.azm input,
+.azm textarea,
+.azm select {
+  font: inherit;
+  color: inherit;
+}
+.azm button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.azm button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.azm button:focus-visible,
+.azm a:focus-visible {
+  outline: 2px solid var(--az-red);
+  outline-offset: 2px;
+}
+.azm h1,
+.azm h2,
+.azm h3,
+.azm p {
+  margin: 0;
+}
+.azm h1 {
+  font: 20px/30px var(--az-bold);
+  min-width: 0;
+  flex: 1;
+  color: var(--az-strong);
+}
+.azm h2 {
+  font: 17px/25px var(--az-bold);
+  color: var(--az-strong);
+}
+.azm h3,
+.azm strong {
+  font-family: var(--az-bold);
+  font-weight: normal;
+}
+.azm h3 {
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--az-strong);
+}
+.azm small {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--az-muted);
+}
+.azm p {
+  overflow-wrap: anywhere;
+}
+.azm a {
+  color: var(--az-red);
+}
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+.azm-header {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--az-soft);
+  flex-shrink: 0;
+  background: white;
+  z-index: 2;
+}
+.azm-header h1 {
+  overflow-wrap: anywhere;
+}
+.azm-icon {
+  border: 0;
+  background: transparent;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--az-text);
+  touch-action: manipulation;
+  transition: background 0.15s;
+}
+.azm-icon:hover {
+  background: var(--az-soft);
+}
+.azm-header > .azm-icon:not(.azm-back) {
+  background: var(--az-soft);
+}
+.azm-header > .azm-icon:not(.azm-back):hover {
+  background: var(--az-line);
+}
+/* The app's back button (core BackButton): the same 40px grey circle. */
+.azm .azm-back {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  background: var(--az-soft);
+  color: var(--az-text);
+}
+.azm .azm-back svg {
+  font-size: 20px !important;
+}
+.azm-icon.red,
+.azm .red {
+  color: var(--az-red);
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────── */
+.azm-primary {
+  border: 0;
+  border-radius: 14px;
+  background: var(--az-red);
+  color: white !important;
+  min-height: 50px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: 15px/22px var(--az-bold) !important;
+  box-shadow: 0 4px 12px rgba(212, 43, 43, 0.22);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+.azm-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.azm-primary:disabled {
+  box-shadow: none;
+}
+.azm-primary.secondary {
+  background: white;
+  border: 1px solid var(--az-line);
+  color: var(--az-text) !important;
+  box-shadow: none;
+}
+.azm-text-action {
+  padding: 8px 0;
+  background: none;
+  border: 0;
+  color: var(--az-red) !important;
+  min-height: 40px;
+  text-align: left;
+  font-family: var(--az-bold) !important;
+  font-size: 13px;
+}
+
+/* ── Tabs & chips (the app's pill filters) ────────────────────────────── */
+.azm-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  flex-shrink: 0;
+  background: white;
+}
+.azm-tabs button,
+.azm-chips button {
+  border: 0;
+  background: var(--az-soft);
+  color: var(--az-text);
+  border-radius: 999px;
+  padding: 0 18px;
+  min-height: 36px;
+  white-space: nowrap;
+  font: 13px/20px var(--az-bold);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.azm-tabs button.active,
+.azm-chips button.active {
+  background: var(--az-red);
+  color: white;
+}
+.azm-chips {
+  display: flex;
+  overflow: auto;
+  gap: 8px;
+  padding: 4px 16px 12px;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.azm-chips::-webkit-scrollbar {
+  display: none;
+}
+.azm-chips button {
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+/* ── Scroll areas & sections ──────────────────────────────────────────── */
+.azm-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.azm-scroll::-webkit-scrollbar {
+  display: none;
+}
+.azm-padding {
+  padding: 16px;
+}
+.azm-section-title {
+  padding: 16px 16px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.azm-section-title h2 {
+  font-size: 17px;
+}
+.azm-section-title span {
+  color: var(--az-faint);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--az-page);
+}
+
+/* ── Group list rows ──────────────────────────────────────────────────── */
+.azm-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  background: white;
+  text-align: left;
+  min-width: 0;
+  transition: background 0.15s;
+}
+/* Inset divider, starting after the avatar. */
+.azm-row + .azm-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 82px;
+  right: 16px;
+  border-top: 1px solid var(--az-soft);
+}
+.azm-row:hover {
+  background: var(--az-page);
+}
+.azm-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.azm-row-main h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.azm-row-main p {
+  color: var(--az-muted);
+  font-size: 13px;
+  line-height: 19px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.azm-row-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--az-faint);
+}
+.azm-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--az-soft);
+  color: var(--az-muted);
+  font: 11px/16px var(--az-bold);
+}
+.azm-unread {
+  background: var(--az-red);
+  color: white;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  font: 11px var(--az-bold);
+}
+.azm-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--az-soft);
+  color: var(--az-text);
+  font: 16px var(--az-bold);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.azm-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.azm-avatar.large {
+  width: 92px;
+  height: 92px;
+  font-size: 28px;
+  box-shadow:
+    0 0 0 4px white,
+    0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Search ───────────────────────────────────────────────────────────── */
+.azm-search {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: 14px;
+  background: var(--az-soft);
+  min-height: 44px;
+  flex: 1;
+  min-width: 0;
+  color: var(--az-faint);
+}
+.azm-search .azm-icon {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  margin-right: -6px;
+}
+
+/* ── Inputs (the provider form field: h48 · r12 · #E5E7EB) ──────────────── */
+.azm input,
+.azm textarea,
+.azm select {
+  border: 1px solid var(--az-line);
+  background: white;
+  border-radius: 12px;
+  min-height: 48px;
+  padding: 12px 14px;
+  width: 100%;
+  min-width: 0;
+  outline: none;
+  font-size: 16px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.azm input::placeholder,
+.azm textarea::placeholder {
+  color: var(--az-faint);
+}
+.azm input:focus,
+.azm textarea:focus,
+.azm select:focus {
+  border-color: var(--az-red);
+  box-shadow: 0 0 0 3px var(--az-tint);
+}
+.azm-search input {
+  background: none;
+  border: 0;
+  padding: 8px 0;
+  min-height: 40px;
+  box-shadow: none !important;
+}
+
+/* ── Discover cards ───────────────────────────────────────────────────── */
+.azm-discover-row {
+  display: flex;
+  gap: 12px;
+  margin: 0 16px 12px;
+  padding: 14px;
+  border: 1px solid var(--az-soft);
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.azm-discover-row .azm-avatar {
+  width: 48px;
+  height: 48px;
+}
+.azm-discover-open {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+}
+.azm-discover-open p {
+  color: var(--az-muted);
+  margin: 4px 0 6px;
+  font-size: 13px;
+  line-height: 19px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.azm-discover-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--az-soft);
+}
+.azm .azm-join {
+  color: white;
+  background: var(--az-red);
+  border: 0;
+  border-radius: 999px;
+  padding: 0 18px;
+  min-height: 34px;
+  font: 13px var(--az-bold) !important;
+}
+
+/* ── Messages home: WhatsApp-style chat list ─────────────────────────────
+   Flat white rows, no cards: 52pt avatar, name + time, then the last message
+   and the unread badge, a hairline divider from the text column. */
+.azm-header:has(+ .azm-wa-top) {
+  border-bottom: 0;
+}
+.azm .azm-header:has(+ .azm-wa-top) h1 {
+  font-size: 24px;
+  line-height: 32px;
+}
+.azm-wa-top {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 16px 10px;
+  background: white;
+  flex-shrink: 0;
+}
+.azm .azm-wa-search {
+  flex: none;
+  min-height: 42px;
+  border-radius: 999px;
+  padding: 0 14px;
+  gap: 10px;
+  cursor: text;
+}
+.azm .azm-wa-search input {
+  font-size: 15px;
+  min-height: 40px;
+}
+.azm-wa-filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.azm-wa-filters::-webkit-scrollbar {
+  display: none;
+}
+.azm .azm-wa-filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--az-soft);
+  color: var(--az-muted);
+  font: 14px/20px var(--az-bold);
+  white-space: nowrap;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.azm .azm-wa-filters button.active {
+  background: var(--az-tint);
+  color: var(--az-red);
+}
+.azm-wa-filters button span {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  display: inline-grid;
+  place-items: center;
+  font: 11px var(--az-bold);
+  background: var(--az-red);
+  color: white;
+}
+/* Discover's category chips: set apart from the filters above them and from
+   the first group below. */
+.azm .azm-wa-categories {
+  margin-top: 6px;
+  padding-bottom: 10px;
+}
+.azm .azm-wa-categories button {
+  min-height: 28px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+.azm-wa-list {
+  background: white;
+  padding-bottom: 88px;
+}
+.azm .azm-wa-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 16px;
+  border: 0;
+  background: white;
+  text-align: left;
+  transition: background 0.15s;
+}
+.azm .azm-wa-row:hover {
+  background: var(--az-page);
+}
+.azm .azm-wa-row:active {
+  background: var(--az-soft);
+}
+.azm-wa-row .azm-avatar {
+  width: 52px;
+  height: 52px;
+  margin: 10px 0;
+}
+.azm-wa-main {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--az-soft);
+}
+.azm-wa-row:last-of-type .azm-wa-main {
+  border-bottom-color: transparent;
+}
+.azm-wa-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.azm .azm-wa-name {
+  flex: 1;
+  min-width: 0;
+  font: 16px/22px var(--az-bold);
+  color: var(--az-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.azm-wa-line time {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--az-faint);
+}
+.azm-wa-row.unread .azm-wa-line time {
+  color: var(--az-red);
+  font-family: var(--az-bold);
+}
+.azm-wa-preview {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--az-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.azm-wa-preview b {
+  font-weight: normal;
+  font-family: var(--az-bold);
+  color: var(--az-text);
+}
+.azm-wa-row.unread .azm-wa-preview {
+  color: var(--az-text);
+}
+.azm-wa-tick {
+  display: inline-flex;
+  vertical-align: -3px;
+  margin-right: 3px;
+  color: var(--az-faint);
+}
+.azm-wa-tick.read {
+  color: #34b7f1;
+}
+.azm-wa-badge {
+  flex-shrink: 0;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  display: inline-grid;
+  place-items: center;
+  font: 11px var(--az-bold);
+  background: var(--az-red);
+  color: white;
+}
+.azm-wa-muted {
+  flex-shrink: 0;
+  display: inline-flex;
+  color: var(--az-faint);
+}
+.azm-wa-join {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--az-red);
+  color: var(--az-red);
+  font: 12px/16px var(--az-bold);
+}
+.azm .azm-wa-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 18px 16px 0;
+  font-size: 12px;
+  color: var(--az-faint);
+}
+.azm .azm-wa-fab {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--az-red);
+  color: white;
+  box-shadow: 0 6px 16px rgba(212, 43, 43, 0.35);
+  z-index: 3;
+}
+
+/* ── Empty states ─────────────────────────────────────────────────────── */
+.azm-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 56px 32px;
+}
+.azm-empty p {
+  color: var(--az-muted);
+  max-width: 280px;
+  font-size: 14px;
+  line-height: 21px;
+}
+.azm-empty .azm-primary {
+  margin-top: 10px;
+  min-width: 200px;
+}
+.azm-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--az-tint);
+  color: var(--az-red);
+  margin-bottom: 8px;
+}
+
+/* ── Group info ───────────────────────────────────────────────────────── */
+.azm-info-page {
+  background: var(--az-page);
+}
+.azm-group-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 24px 22px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--az-tint) 0%, white 70%);
+}
+.azm-group-hero h2 {
+  margin-top: 10px;
+  font-size: 22px;
+  line-height: 30px;
+}
+.azm-group-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.azm-group-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font: 12px/18px var(--az-bold);
+  background: var(--az-soft);
+  color: var(--az-muted);
+}
+.azm-group-meta span.red {
+  background: var(--az-tint);
+  color: var(--az-red);
+}
+.azm-label {
+  color: var(--az-faint) !important;
+  text-transform: uppercase;
+  font: 11px/16px var(--az-bold) !important;
+  letter-spacing: 0.55px !important;
+  margin-bottom: 8px !important;
+}
+.azm-info-section {
+  margin: 12px 16px 0;
+  padding: 16px;
+  border: 1px solid var(--az-soft);
+  border-radius: 16px;
+  background: white;
+}
+.azm-info-section p {
+  font-family: var(--az-regular);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--az-text);
+}
+.azm-info-section small {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--az-tint);
+  color: var(--az-red);
+  font: 11px/16px var(--az-bold);
+}
+.azm-quick {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 16px;
+  padding: 14px 8px;
+  border: 1px solid var(--az-soft);
+  border-radius: 16px;
+  background: white;
+}
+.azm-quick button {
+  border: 0;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  min-height: 64px;
+  color: var(--az-text);
+  font: 12px var(--az-bold);
+}
+.azm-quick svg {
+  padding: 11px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  background: var(--az-tint);
+  color: var(--az-red);
+}
+.azm-actions {
+  margin: 12px 16px 24px;
+  border: 1px solid var(--az-soft);
+  border-radius: 16px;
+  background: white;
+  overflow: hidden;
+}
+.azm-action {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 56px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  background: white;
+  border: 0;
+  font: 14px var(--az-bold);
+  color: var(--az-text);
+}
+.azm-action + .azm-action::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 62px;
+  right: 14px;
+  border-top: 1px solid var(--az-soft);
+}
+.azm-action:hover {
+  background: var(--az-page);
+}
+.azm-action-icon {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--az-soft);
+  color: var(--az-muted);
+  flex-shrink: 0;
+}
+.azm-action.red .azm-action-icon {
+  background: var(--az-tint);
+  color: var(--az-red);
+}
+.azm-action > span:not(.azm-action-icon) {
+  flex: 1;
+  min-width: 0;
+}
+.azm-action > svg {
+  color: var(--az-faint);
+}
+
+/* ── Sticky footer ────────────────────────────────────────────────────── */
+.azm-bottom {
+  flex-shrink: 0;
+  padding: 12px 16px max(14px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--az-soft);
+  background: white;
+  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05);
+}
+.azm-bottom .azm-primary {
+  width: 100%;
+}
+.azm .azm-join-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 6px 0 16px;
+  color: var(--az-muted);
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+}
+.azm-notice {
+  margin: 8px 16px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--az-soft);
+  color: var(--az-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* ── Chat header ──────────────────────────────────────────────────────── */
+.azm-chat-header {
+  gap: 8px;
+  padding: 12px 12px 12px 16px;
+}
+.azm-chat-header > .azm-icon:not(.azm-back) {
+  background: transparent;
+}
+.azm-chat-header > .azm-icon:not(.azm-back):hover {
+  background: var(--az-soft);
+}
+.azm-chat-title {
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.azm-chat-title strong {
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--az-strong);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.azm-chat-title small {
+  display: block;
+  margin-top: 1px;
+}
+.azm-chat-header .azm-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 13px;
+}
+.azm-chat-header .azm-icon:has(> .azm-avatar) {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+}
+.azm-chat-header .azm-icon {
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+/* ── Timeline ─────────────────────────────────────────────────────────── */
+.azm-timeline {
+  padding: 12px 12px 20px;
+  background: var(--az-page);
+}
+.azm-date,
+.azm-system {
+  text-align: center;
+  margin: 16px auto;
+  color: var(--az-muted);
+  font-size: 11px;
+}
+.azm-date span {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid var(--az-soft);
+  font-family: var(--az-bold);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.azm-system {
+  width: fit-content;
+  max-width: 85%;
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: var(--az-soft);
+  line-height: 16px;
+}
+.azm-system.unread {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  background: none;
+  color: var(--az-red);
+  font-family: var(--az-bold);
+}
+.azm-system.unread::before,
+.azm-system.unread::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--az-tint);
+}
+.azm-message {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 8px 0;
+  scroll-margin: 20px;
+}
+.azm-message.own {
+  justify-content: flex-end;
+}
+.azm-message > .azm-avatar {
+  width: 30px;
+  height: 30px;
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+.azm-message-wrap {
+  max-width: 80%;
+  min-width: 0;
+}
+.azm-bubble {
+  border-radius: 18px 18px 18px 6px;
+  padding: 10px 12px 6px;
+  background: white;
+  border: 1px solid var(--az-soft);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow-wrap: anywhere;
+  user-select: text;
+  -webkit-touch-callout: none;
+}
+.azm-message.own .azm-bubble {
+  background: var(--az-red);
+  border-color: var(--az-red);
+  color: white;
+  border-radius: 18px 18px 6px 18px;
+  box-shadow: 0 2px 6px rgba(212, 43, 43, 0.2);
+}
+.azm-message.own .azm-bubble small,
+.azm-message.own .azm-stamp {
+  color: rgba(255, 255, 255, 0.8);
+}
+.azm-message.own .azm-bubble a {
+  color: white;
+}
+.azm-message.selected .azm-bubble {
+  outline: 2px solid var(--az-red);
+  outline-offset: 2px;
+}
+.azm-sender {
+  font: 12px/16px var(--az-bold);
+  margin-bottom: 4px;
+}
+.azm-bubble p {
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 21px;
+}
+.azm-stamp {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--az-faint);
+  margin-top: 2px;
+}
+.azm-stamp button {
+  padding: 2px;
+  border: 0;
+  background: none;
+  display: flex;
+  color: inherit;
+}
+.azm-stamp svg {
+  width: 15px;
+  height: 15px;
+}
+.azm-quote {
+  display: block;
+  border: 0;
+  border-left: 3px solid var(--az-red);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  text-align: left;
+  background: var(--az-page);
+  width: 100%;
+  font-size: 12px;
+  line-height: 17px;
+}
+.azm-message.own .azm-quote {
+  background: rgba(255, 255, 255, 0.16);
+  border-left-color: white;
+  color: white;
+}
+.azm-quote strong {
+  display: block;
+  color: var(--az-red);
+  font-size: 12px;
+}
+.azm-message.own .azm-quote strong {
+  color: white;
+}
+.azm-quote span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.azm-reactions {
+  display: flex;
+  gap: 4px;
+  margin: -4px 8px 0;
+  flex-wrap: wrap;
+  position: relative;
+}
+.azm-message.own .azm-reactions {
+  justify-content: flex-end;
+}
+.azm-reactions button {
+  background: white;
+  border: 1px solid var(--az-soft);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+  min-height: 26px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Rich content inside bubbles ──────────────────────────────────────── */
+.azm-attachments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin: 2px -4px 8px;
+}
+.azm-attachments.single {
+  grid-template-columns: 1fr;
+}
+.azm-media-button {
+  padding: 0;
+  border: 0;
+  background: var(--az-soft);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+.azm-media-button img,
+.azm-media-button video {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+.azm-file {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: min(236px, 64vw);
+  padding: 6px 4px 6px 8px;
+  margin-bottom: 6px;
+  border: 1px solid var(--az-soft);
+  border-radius: 12px;
+  background: var(--az-page);
+  color: inherit;
+}
+.azm-message.own .azm-file {
+  background: white;
+  border-color: transparent;
+  color: var(--az-text);
+}
+.azm-message.own .azm-file small {
+  color: var(--az-muted);
+}
+.azm .azm-file-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  color: inherit;
+}
+.azm .azm-file-main:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.azm-file-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.azm-file-text strong {
+  font-size: 13px;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.azm-file-download {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--az-muted) !important;
+  text-decoration: none;
+}
+.azm-file-download:hover {
+  background: var(--az-soft);
+}
+
+.azm-file .azm-icon {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+}
+/* Type badge — one colour per kind of file. */
+.azm-file-badge {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #9ca3af;
+  color: white;
+  font: 10px/1 var(--az-bold);
+  letter-spacing: 0.3px !important;
+}
+.azm-file-badge.large {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  font-size: 16px;
+}
+[data-kind="pdf"] .azm-file-badge,
+.azm-file-badge[data-kind="pdf"] {
+  background: #dc2626;
+}
+[data-kind="document"] .azm-file-badge {
+  background: #2563eb;
+}
+[data-kind="spreadsheet"] .azm-file-badge {
+  background: #16a34a;
+}
+[data-kind="presentation"] .azm-file-badge {
+  background: #ea580c;
+}
+[data-kind="archive"] .azm-file-badge {
+  background: #475569;
+}
+[data-kind="audio"] .azm-file-badge,
+.azm-file-badge[data-kind="audio"] {
+  background: #7c3aed;
+}
+[data-kind="video"] .azm-file-badge {
+  background: #db2777;
+}
+[data-kind="image"] .azm-file-badge {
+  background: #0891b2;
+}
+[data-kind="text"] .azm-file-badge {
+  background: #4b5563;
+}
+.azm-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.azm-file-list .azm-file {
+  margin: 0;
+  min-width: 0;
+}
+.azm-audio {
+  min-width: min(240px, 66vw);
+  margin-bottom: 4px;
+}
+.azm-audio-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.azm-audio-title .azm-file-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+.azm-audio-title > span:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.azm-audio-title strong {
+  font-size: 13px;
+  line-height: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.azm-location {
+  display: block;
+  margin: 2px -4px 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--az-soft);
+  text-decoration: none;
+  color: inherit !important;
+  background: white;
+}
+.azm-location-map {
+  position: relative;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  color: var(--az-red);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(135deg, #e8f3ec 0%, #dcebf5 100%);
+}
+.azm-location-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  color: var(--az-text);
+}
+.azm-location-body h3 {
+  font-size: 13px;
+  line-height: 18px;
+}
+.azm-location-body small {
+  color: var(--az-red) !important;
+  font-family: var(--az-bold);
+  white-space: nowrap;
+}
+.azm-poll {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  min-width: min(240px, 62vw);
+}
+.azm-poll-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--az-line);
+  border-radius: 12px;
+  width: 100%;
+  padding: 4px 10px 4px 4px;
+  background: white;
+  text-align: left;
+  min-height: 42px;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--az-text) !important;
+}
+/* Share of the votes, drawn behind the label. */
+.azm-poll-option::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--pct, 0%);
+  background: var(--az-soft);
+  z-index: -1;
+  transition: width 0.3s;
+}
+.azm-poll-option.active {
+  border-color: var(--az-red);
+}
+.azm-poll-option.active::before {
+  background: var(--az-tint);
+}
+/* The label — not the MUI checkbox/radio, which is a <span> too. */
+.azm-poll-option > span:not([class]) {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 18px;
+}
+.azm-poll-option small {
+  font-family: var(--az-bold);
+  color: var(--az-muted) !important;
+}
+.azm-message.own .azm-poll-option {
+  border-color: transparent;
+}
+.azm-message.own .azm-text-action {
+  color: white !important;
+}
+.azm-event {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 2px 0 4px;
+}
+.azm-event-heading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.azm-event-date {
+  width: 48px;
+  min-width: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+  border: 1px solid var(--az-soft);
+  background: white;
+}
+.azm-event-date b {
+  display: block;
+  padding: 2px 0;
+  background: var(--az-red);
+  color: white;
+  font: 10px/14px var(--az-bold);
+  text-transform: uppercase;
+  font-weight: normal;
+}
+.azm-event-date strong {
+  display: block;
+  padding: 3px 0 4px;
+  color: var(--az-strong);
+  font-size: 18px;
+  line-height: 22px;
+}
+.azm-event-heading h3 {
+  font-size: 15px;
+  line-height: 20px;
+}
+.azm-message.own .azm-event-heading h3 {
+  color: white;
+}
+.azm-event-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--az-muted);
+}
+.azm-message.own .azm-event-meta {
+  color: rgba(255, 255, 255, 0.85);
+}
+.azm-event-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--az-soft);
+}
+.azm-message.own .azm-event-foot {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+.azm-event-foot .azm-text-action {
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--az-tint);
+}
+.azm-message.own .azm-event-foot .azm-text-action {
+  background: rgba(255, 255, 255, 0.18);
+}
+.azm-voice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 210px;
+  padding: 2px 0 4px;
+}
+.azm .azm-voice-play {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--az-red);
+  color: white;
+}
+.azm .azm-message.own .azm-voice-play {
+  background: white;
+  color: var(--az-red);
+}
+.azm-voice-bars {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+}
+.azm-voice-bars i {
+  flex: 1;
+  min-width: 2px;
+  border-radius: 2px;
+  background: var(--az-line);
+}
+.azm-voice-bars i.on {
+  background: var(--az-red);
+}
+.azm-message.own .azm-voice-bars i {
+  background: rgba(255, 255, 255, 0.4);
+}
+.azm-message.own .azm-voice-bars i.on {
+  background: white;
+}
+.azm-voice small {
+  min-width: 30px;
+  text-align: right;
+  font-family: var(--az-bold);
+}
+
+/* ── Composer ─────────────────────────────────────────────────────────── */
+.azm-composer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  padding: 10px 12px max(10px, env(safe-area-inset-bottom));
+  background: white;
+  border-top: 1px solid var(--az-soft);
+  flex-shrink: 0;
+}
+.azm-composer > .azm-icon:not(.azm-send) {
+  background: var(--az-soft);
+  margin-bottom: 2px;
+}
+.azm-composer-field {
+  background: var(--az-soft);
+  border-radius: 22px;
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  min-width: 0;
+  border: 1px solid transparent;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.azm-composer-field:focus-within {
+  background: white;
+  border-color: var(--az-line);
+}
+.azm-composer textarea {
+  border: 0;
+  background: none;
+  resize: none;
+  padding: 11px 6px 11px 16px;
+  line-height: 22px;
+  min-height: 44px;
+  max-height: 132px;
+  box-shadow: none !important;
+}
+.azm .azm-send {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  background: var(--az-red);
+  color: white;
+  box-shadow: 0 4px 10px rgba(212, 43, 43, 0.25);
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.azm-send:hover {
+  background: var(--az-red);
+}
+.azm-send svg {
+  animation: azm-icon-in 0.18s ease;
+}
+@keyframes azm-icon-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.azm-reply-preview {
+  padding: 10px 12px 10px 16px;
+  background: white;
+  border-top: 1px solid var(--az-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.azm-reply-preview > div {
+  flex: 1;
+  border-left: 3px solid var(--az-red);
+  border-radius: 4px;
+  background: var(--az-page);
+  padding: 6px 10px;
+  min-width: 0;
+}
+.azm-reply-preview p {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--az-muted);
+}
+.azm .azm-latest {
+  position: absolute;
+  bottom: 84px;
+  right: 16px;
+  background: white;
+  border: 1px solid var(--az-soft);
+  border-radius: 999px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px 12px;
+  color: var(--az-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font: 12px var(--az-bold);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Sheets & forms ───────────────────────────────────────────────────── */
+.azm-sheet {
+  padding: 0;
+  border: 0;
+  border-radius: 24px 24px 0 0;
+  width: min(100%, 480px);
+  max-width: 480px;
+  max-height: 90dvh;
+  margin: auto auto 0;
+  overflow: hidden;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+}
+.azm-sheet::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+.azm-sheet-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: 90dvh;
+}
+.azm-sheet .azm-header {
+  min-height: 56px;
+  padding: 12px 20px 8px;
+  border-bottom: 0;
+}
+/* The app's sheet close: a 32px grey circle (Add / Edit Item). */
+.azm .azm-sheet .azm-header > .azm-icon {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  background: var(--az-soft);
+}
+.azm .azm-sheet .azm-header > .azm-icon svg {
+  font-size: 16px !important;
+}
+.azm-sheet .azm-header h1 {
+  font-size: 18px;
+  line-height: 27px;
+}
+.azm-sheet-content {
+  overflow: auto;
+  padding: 8px 20px max(24px, env(safe-area-inset-bottom));
+}
+.azm-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--az-line);
+  border-radius: 4px;
+  margin: 12px auto 0;
+  flex-shrink: 0;
+}
+.azm-attachment-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 8px;
+  padding: 12px 0 8px;
+}
+.azm-attachment-grid button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: none;
+  font: 12px var(--az-bold);
+  color: var(--az-text);
+}
+.azm-attachment-grid svg {
+  padding: 16px;
+  box-sizing: content-box;
+  border-radius: 18px;
+  background: var(--az-soft);
+}
+/* One tint per kind, so the grid reads at a glance. */
+.azm-attachment-grid [data-kind="media"] svg {
+  background: #fee2e2;
+  color: #d42b2b;
+}
+.azm-attachment-grid [data-kind="camera"] svg {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+.azm-attachment-grid [data-kind="document"] svg {
+  background: #dbeafe;
+  color: #2563eb;
+}
+.azm-attachment-grid [data-kind="audio"] svg {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+.azm-attachment-grid [data-kind="location"] svg {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.azm-attachment-grid [data-kind="poll"] svg {
+  background: #fef3c7;
+  color: #d97706;
+}
+.azm-attachment-grid [data-kind="event"] svg {
+  background: #fce7f3;
+  color: #db2777;
+}
+.azm-reaction-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 0 14px;
+}
+.azm-reaction-row button {
+  width: 46px;
+  min-width: 0;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--az-page);
+  font-size: 24px;
+  transition: transform 0.12s;
+}
+.azm-reaction-row button:hover {
+  transform: scale(1.12);
+}
+.azm-reaction-row .azm-icon {
+  background: var(--az-soft);
+  font-size: inherit;
+}
+.azm-event-row {
+  margin: 12px 16px 0;
+  width: calc(100% - 32px);
+  border: 1px solid var(--az-soft);
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.azm-event-row + .azm-event-row::before {
+  display: none;
+}
+.azm-event-row .azm-row-main p {
+  white-space: normal;
+}
+.azm-tag.red {
+  background: var(--az-tint);
+  color: var(--az-red);
+}
+.azm-emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+.azm-emoji-grid button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  font-size: 26px;
+}
+.azm-emoji-grid button:hover {
+  background: var(--az-soft);
+}
+.azm-sheet-content > .azm-primary,
+.azm-sheet-content form > .azm-primary,
+.azm-sheet-content > div > .azm-primary:last-child {
+  width: 100%;
+  margin-top: 8px;
+}
+.azm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.azm-field > span {
+  font-family: var(--az-bold);
+  font-size: 12px;
+  line-height: 18px;
+  color: #374151;
+}
+/* Fields as in the app's forms (Add Item, Restaurant Info): #F9FAFB well,
+   1px #E5E7EB, r12, 47 high, 14px text; a fixed-height description. */
+.azm .azm-field input,
+.azm .azm-field textarea,
+.azm .azm-field select {
+  min-height: 47px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--az-line);
+  background: var(--az-page);
+  font-size: 14px;
+  line-height: 20px;
+}
+.azm .azm-field textarea {
+  min-height: 108px;
+  resize: none;
+}
+.azm .azm-field input:focus,
+.azm .azm-field textarea:focus {
+  background: white;
+}
+/* Chips for a single choice — the Add Item category row. */
+.azm-choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.azm .azm-choice button {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--az-soft);
+  color: var(--az-muted);
+  font: 12px/18px var(--az-bold);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.azm .azm-choice button.active {
+  background: var(--az-red);
+  color: white;
+}
+/* Photo row — the Add / Edit Item "Product Image" treatment. */
+.azm-photo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid var(--az-line);
+  border-radius: 16px;
+  background: var(--az-page);
+}
+.azm-photo-row .azm-avatar {
+  width: 72px;
+  height: 72px;
+  font-size: 22px;
+}
+.azm-photo-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.azm-photo-info strong {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--az-strong);
+}
+.azm-photo-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.azm .azm-pill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--az-line);
+  border-radius: 999px;
+  background: white;
+  color: var(--az-text);
+  font: 12px/18px var(--az-bold);
+  cursor: pointer;
+}
+.azm .azm-pill-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--az-red);
+  font: 12px/18px var(--az-bold);
+}
+/* Step dots under a two-step sheet's title. */
+.azm-steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+.azm-steps span {
+  width: 28px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--az-line);
+}
+.azm-steps span.active {
+  background: var(--az-red);
+}
+.azm-steps small {
+  margin-left: 6px;
+}
+/* Back + primary side by side at the foot of a sheet step. */
+.azm-sheet-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.azm .azm-sheet-actions .azm-primary {
+  flex: 2;
+  margin-top: 0 !important;
+}
+.azm .azm-sheet-actions .azm-primary.secondary {
+  flex: 1;
+}
+.azm-form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.azm-form-row .azm-field {
+  flex: 1;
+  min-width: 0;
+}
+.azm-error {
+  background: var(--az-tint);
+  color: var(--az-red);
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 18px;
+}
+.azm-toast {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 84px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--az-text);
+  color: white;
+  z-index: 6;
+  font-size: 13px;
+  line-height: 19px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* ── File viewer ──────────────────────────────────────────────────────── */
+.azm-pdf {
+  display: block;
+  width: 100%;
+  height: 62dvh;
+  border: 1px solid var(--az-soft);
+  border-radius: 14px;
+  background: var(--az-page);
+}
+.azm .azm-text-preview {
+  margin: 0;
+  max-height: 58dvh;
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid var(--az-soft);
+  border-radius: 14px;
+  background: var(--az-page);
+  font:
+    13px/1.6 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    "Noto Sans Sinhala",
+    "Noto Sans Tamil",
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  unicode-bidi: plaintext;
+}
+.azm-viewer-card,
+.azm-viewer-audio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 16px;
+  border-radius: 16px;
+  background: var(--az-page);
+  text-align: center;
+}
+.azm-viewer-card strong {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.azm-viewer-card p {
+  max-width: 300px;
+  color: var(--az-muted);
+  font-size: 13px;
+  line-height: 19px;
+}
+.azm-viewer-audio .azm-voice {
+  width: 100%;
+  max-width: 340px;
+}
+.azm .azm-viewer-note {
+  padding: 24px 8px;
+  color: var(--az-muted);
+  text-align: center;
+}
+.azm-viewer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0 0;
+  color: var(--az-muted);
+  font: 13px var(--az-bold);
+}
+.azm-viewer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.azm-viewer-actions a {
+  text-decoration: none;
+}
+.azm-picker p {
+  font-size: 13px;
+}
+.azm-media-thumbs button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Media, recording, members ────────────────────────────────────────── */
+.azm-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 12px;
+}
+.azm-gallery .azm-media-button {
+  border-radius: 10px;
+}
+.azm-gallery .azm-media-button img,
+.azm-gallery .azm-media-button video {
+  height: auto;
+  aspect-ratio: 1;
+}
+.azm-preview-media {
+  width: 100%;
+  max-height: 46dvh;
+  object-fit: contain;
+  background: var(--az-page);
+  border-radius: 14px;
+}
+.azm-media-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  margin: 12px 0;
+}
+.azm-media-thumbs button {
+  min-width: 52px;
+  height: 52px;
+  background: var(--az-soft);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.azm-media-thumbs button.active {
+  border-color: var(--az-red);
+}
+.azm-recording {
+  padding: 12px 16px;
+  background: white;
+  border-top: 1px solid var(--az-soft);
+  flex-shrink: 0;
+}
+.azm-record-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 6px 14px;
+  border-radius: 24px;
+  background: var(--az-tint);
+}
+.azm-record-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--az-red);
+  border-radius: 50%;
+  animation: azm-pulse 1s infinite;
+}
+@keyframes azm-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+.azm-wave {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 32px;
+  overflow: hidden;
+  color: var(--az-red);
+}
+.azm-wave i {
+  width: 3px;
+  min-width: 3px;
+  background: currentColor;
+  border-radius: 2px;
+}
+.azm-recording audio {
+  width: 100%;
+  height: 36px;
+  margin-top: 8px;
+}
+.azm-recording small {
+  display: block;
+  text-align: center;
+  margin-top: 6px;
+}
+.azm-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 8px 8px 8px 16px;
+  border: 1px solid var(--az-line);
+  border-radius: 12px;
+  background: var(--az-page);
+  font-size: 14px;
+}
+/* The app's switch: 44×24 pill, red when on, white knob. */
+.azm .azm-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--az-line);
+  transition: background 0.15s;
+}
+.azm .azm-switch > span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s;
+}
+.azm .azm-switch.on {
+  background: var(--az-red);
+}
+.azm .azm-switch.on > span {
+  transform: translateX(20px);
+}
+.azm-toggle {
+  min-height: 48px;
+}
+.azm-field > .azm-toggle + .azm-toggle {
+  margin-top: 0;
+}
+.azm-member {
+  padding: 10px 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--az-soft);
+}
+.azm-member:last-child {
+  border-bottom: 0;
+}
+.azm-member .azm-avatar {
+  width: 44px;
+  height: 44px;
+  font-size: 14px;
+}
+.azm-member > div {
+  flex: 1;
+  min-width: 0;
+}
+.azm-member strong {
+  font-size: 14px;
+  color: var(--az-strong);
+}
+.azm-member small {
+  display: block;
+}
+.azm mark {
+  background: #ffe3ae;
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 1px;
+}
+/* ── Long-press popup (WhatsApp style) ────────────────────────────────── */
+dialog.azm-popover {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+}
+dialog.azm-popover::backdrop {
+  background: rgba(17, 24, 39, 0.24);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  backdrop-filter: blur(14px) saturate(1.1);
+}
+.azm-popover-stack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  opacity: 0;
+}
+.azm-popover-stack.own {
+  align-items: flex-end;
+}
+.azm-popover-stack.ready {
+  opacity: 1;
+}
+.azm-react-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  max-width: calc(100vw - 24px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.16),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  transform-origin: bottom left;
+  animation: azm-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.azm-react-bar::-webkit-scrollbar {
+  display: none;
+}
+.azm-popover-stack.own .azm-react-bar {
+  transform-origin: bottom right;
+}
+.azm-react-bar button {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  font-size: 28px;
+  line-height: 1;
+  animation: azm-emoji-in 0.28s ease both;
+  transition: transform 0.12s;
+}
+.azm-react-bar button:hover,
+.azm-react-bar button:focus-visible {
+  transform: scale(1.18);
+}
+.azm-react-bar button.active {
+  background: var(--az-soft);
+}
+.azm .azm-react-bar .azm-react-more {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  margin: 0 3px 0 2px;
+  background: var(--az-soft);
+  color: var(--az-muted);
+  font-size: inherit;
+}
+.azm-popover-message {
+  margin: 0;
+}
+.azm-popover-bubble {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  animation: azm-lift 0.2s ease both;
+}
+.azm-popover-bubble .azm-bubble {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+/* A message too tall for the screen fades out instead of pushing the menu off. */
+.azm-popover-bubble.cut {
+  -webkit-mask-image: linear-gradient(#000 78%, transparent);
+  mask-image: linear-gradient(#000 78%, transparent);
+}
+.azm-popover-menu {
+  width: 250px;
+  max-width: calc(100vw - 24px);
+  overflow: hidden;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.18),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  transform-origin: top left;
+  animation: azm-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.azm-popover-stack.own .azm-popover-menu {
+  transform-origin: top right;
+}
+.azm-popover-group + .azm-popover-group {
+  border-top: 6px solid var(--az-page);
+}
+.azm-popover-menu button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  background: none;
+  color: var(--az-text);
+  font: 15px/20px var(--az-font);
+  text-align: left;
+}
+.azm-popover-menu button + button {
+  border-top: 0.5px solid var(--az-line);
+}
+.azm-popover-menu button svg {
+  color: var(--az-muted);
+}
+.azm-popover-menu button:hover,
+.azm-popover-menu button:focus-visible {
+  background: var(--az-page);
+  outline: none;
+}
+.azm-popover-menu button.danger,
+.azm-popover-menu button.danger svg {
+  color: var(--az-red);
+}
+@media (max-width: 360px) {
+  .azm-react-bar button {
+    width: 37px;
+    min-width: 37px;
+    height: 37px;
+    font-size: 23px;
+  }
+  .azm .azm-react-bar .azm-react-more {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+  }
+}
+@keyframes azm-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes azm-emoji-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes azm-lift {
+  from {
+    transform: scale(0.97);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .azm * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

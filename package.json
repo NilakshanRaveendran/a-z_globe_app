@@ -2,7 +2,7 @@
   "name": "azglobe",
   "version": "1.0.0",
   "private": true,
-  "description": "A-Z Globe \u2014 multi-service app. Customer and provider apps over a shared core.",
+  "description": "A-Z Globe — multi-service app. Customer and provider apps over a shared core.",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -10,6 +10,11 @@
   "scripts": {
     "android": "npm run android --workspace @azglobe/app",
     "app": "npm start --workspace @azglobe/app",
+    "web": "npm run web --workspace @azglobe/app",
+    "build:web": "npm run build:web --workspace @azglobe/app",
+    "preview:web": "node tools/serve-web.mjs",
+    "typecheck:web": "tsc --noEmit --project apps/azglobe/tsconfig.web.json",
+    "test:web": "node --test tools/web.test.mjs tools/messaging.test.mjs tools/restaurants.test.mjs tools/delivery.test.mjs",
     "check:firebase": "node tools/check-firebase.mjs",
     "clear:catalogue": "node tools/clear-catalogue.mjs",
     "figma": "node tools/figma-spec.mjs",
@@ -22,11 +27,11 @@
     "verify:live": "node tools/verify-live-rules.mjs"
   },
   "devDependencies": {
-    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/node": "^26.5.1",
     "esbuild": "^0.28.2",
     "firebase": "^12.19.0",
     "firebase-admin": "^14.4.0",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "workbox-build": "^7.4.1"
   }
 }

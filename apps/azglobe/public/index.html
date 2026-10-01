@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#D42B2B" />
+    <meta name="description" content="A-Z Globe food ordering and local services." />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="A-Z Globe" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <title>A-Z Globe</title>
+    <style>
+      html, body, #root { width: 100%; height: 100%; margin: 0; }
+      /* The visible height on phones (Safari's toolbar included), 100% before dvh. */
+      html, body { height: 100dvh; overscroll-behavior: none; }
+      body { overflow: hidden; background: #f3f4f6; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+      #root { display: flex; flex: 1; min-height: 100%; max-width: 480px; margin: 0 auto; background: #fff; }
+      /* iOS zooms into any field under 16px; react-native-web's atomic classes
+         would otherwise win over a plain rule. */
+      input, textarea, select { font-size: max(16px, 1em) !important; }
+    </style>
+  </head>
+  <body>
+    <noscript>Enable JavaScript to open A-Z Globe.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

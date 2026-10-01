@@ -7,6 +7,7 @@ import { colors, radius, spacing } from '@core/theme';
 import { formatMoney, formatPrepTime } from '@core/utils/currency';
 import { resolveImage } from '../data/images';
 import type { Merchant } from '../types';
+import { deliveryPriceLabel } from '../utils/deliveryLabels';
 
 /**
  * The 2-up featured tile under the big card on the Order Food landing page.
@@ -74,7 +75,7 @@ export function FeaturedTile({ merchant, onPress }: { merchant: Merchant; onPres
             ·
           </Text>
           <Text variant="captionRegular" color={colors.textSecondary} numberOfLines={1}>
-            {rank ?? formatMoney(merchant.deliveryFee)}
+            {rank ?? (merchant.deliveryRules ? deliveryPriceLabel(merchant) : formatMoney(merchant.deliveryFee))}
           </Text>
           <Icon name="chevronRight" size={9} color={colors.palette.ink} />
         </View>

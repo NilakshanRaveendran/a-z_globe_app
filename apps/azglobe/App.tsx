@@ -1,12 +1,13 @@
-import 'react-native-gesture-handler';
 import { useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
-import { View } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Platform, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAppFonts } from '@core/theme';
+import { ToastHost } from '@core/ui';
+import { ErrorBoundary } from '@app/components/ErrorBoundary';
+import { GestureRoot } from '@app/components/GestureRoot';
 import { SessionProvider } from '@app/providers/SessionProvider';
 import { RootNavigator } from '@app/navigation/RootNavigator';
 
@@ -27,6 +28,14 @@ const queryClient = new QueryClient({
   },
 });
 
+// Browsers draw a rectangular focus ring inside the rounded field boxes; every
+// field already shows its own border, so drop the ring on text inputs only.
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = 'input:focus, textarea:focus { outline: none; }';
+  document.head.appendChild(style);
+}
+
 export default function App() {
   const [fontsLoaded, fontError] = useAppFonts();
 
@@ -39,17 +48,20 @@ export default function App() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureRoot style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
             <View style={{ flex: 1 }} onLayout={onLayout}>
-              <RootNavigator />
+              <ErrorBoundary>
+                <RootNavigator />
+              </ErrorBoundary>
+              <ToastHost />
             </View>
             <StatusBar style="dark" />
           </SessionProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
-    </GestureHandlerRootView>
+    </GestureRoot>
   );
 }

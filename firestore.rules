@@ -159,6 +159,20 @@ service cloud.firestore {
     match /merchants/{merchantId} {
       allow read: if true;
 
+      // Delivery terms the order rules can evaluate: numbers, none negative,
+      // a free zone inside the radius. Absent is fine (flat fee, any distance).
+      function validDeliveryRules(m) {
+        let r = m.get('deliveryRules', null);
+        return r == null || (
+          r.keys().hasOnly(['pricing', 'freeKm', 'perKm', 'maxKm'])
+          && r.pricing in ['flat', 'distance']
+          && r.freeKm is number && r.freeKm >= 0
+          && r.perKm is number && r.perKm >= 0
+          && r.maxKm is number && r.maxKm >= 0 && r.maxKm <= 100
+          && (r.maxKm == 0 || r.freeKm <= r.maxKm)
+        );
+      }
+
       // A supplier creates the business it will operate, under its own
       // supplier uid. Ratings are earned from customer reviews, so a supplier
       // may not invent one, and ownership may never be reassigned by a write.
@@ -171,10 +185,12 @@ service cloud.firestore {
       allow create: if isSupplier()
         && request.resource.data.supplierId == request.auth.uid
         && (!('rating' in request.resource.data) || request.resource.data.rating == 0)
-        && (!('reviewCount' in request.resource.data) || request.resource.data.reviewCount == 0);
+        && (!('reviewCount' in request.resource.data) || request.resource.data.reviewCount == 0)
+        && validDeliveryRules(request.resource.data);
       allow update: if ownsMerchant(merchantId)
         && !request.resource.data.diff(resource.data).affectedKeys()
-              .hasAny(['supplierId', 'rating', 'reviewCount']);
+              .hasAny(['supplierId', 'rating', 'reviewCount'])
+        && validDeliveryRules(request.resource.data);
       allow delete: if false;
 
       match /menuItems/{itemId} {
@@ -185,20 +201,77 @@ service cloud.firestore {
       match /reviews/{reviewId} {
         allow read: if true;
 
+        // A reply is a map `{ text, createdAt }`: non-empty text of at most 1000
+        // characters (REPLY_MAX_LENGTH in supplier/services/reviews.ts).
+        function validReply(r) {
+          return r is map
+            && r.keys().hasAll(['text', 'createdAt'])
+            && r.keys().hasOnly(['text', 'createdAt'])
+            && r.text is string
+            && r.text.trim().size() > 0
+            && r.text.size() <= 1000
+            && r.createdAt is number;
+        }
+
+        // The restaurant's owner may answer a review and archive it on their own
+        // Reviews screen — `reply` and `hiddenByMerchant`, and nothing else; it
+        // can never touch the stars or the words. Removing `reply` deletes the
+        // reply. Hiding is owner-side only: customers still read the review, and
+        // it still counts. Each field is validated only when this write moves it.
+        function ownerEditIsValid() {
+          let changed = request.resource.data.diff(resource.data).affectedKeys();
+          let after = request.resource.data;
+          return changed.hasOnly(['reply', 'hiddenByMerchant'])
+            && (!changed.hasAny(['reply']) || !('reply' in after) || validReply(after.reply))
+            && (!changed.hasAny(['hiddenByMerchant'])
+                 || !('hiddenByMerchant' in after) || after.hiddenByMerchant is bool);
+        }
+
         // Only a CUSTOMER who actually received an order from this restaurant
         // may review it, under their own id. A supplier account cannot review
         // anything — reviewing belongs to the customer side of the product.
+        //
+        // One review per order: it is stored under the order's id, so a second
+        // write for the same order is an update (stars and words only), never
+        // another review. It carries only the fields the app writes — never a
+        // ready-made `reply` or `hiddenByMerchant`, a head start on
+        // `helpfulCount`, or a date other than now.
         allow create: if isCustomer()
+          && reviewId == request.resource.data.orderId
+          && request.resource.data.keys().hasOnly(['merchantId', 'userId', 'userName', 'rating', 'text',
+               'dishTag', 'orderId', 'helpfulCount', 'createdAt'])
+          && request.resource.data.merchantId == merchantId
           && request.resource.data.userId == request.auth.uid
+          && request.resource.data.userName is string
+          && request.resource.data.userName.size() <= 80
           && request.resource.data.rating is number
           && request.resource.data.rating >= 1
           && request.resource.data.rating <= 5
+          && request.resource.data.text is string
+          && request.resource.data.text.size() <= 1000
+          && request.resource.data.helpfulCount == 0
+          && request.resource.data.createdAt is number
+          && request.resource.data.createdAt > request.time.toMillis() - 600000
+          && request.resource.data.createdAt < request.time.toMillis() + 60000
           && exists(/databases/$(database)/documents/orders/$(request.resource.data.orderId))
           && get(/databases/$(database)/documents/orders/$(request.resource.data.orderId)).data.userId == request.auth.uid
           && get(/databases/$(database)/documents/orders/$(request.resource.data.orderId)).data.merchantId == merchantId
           && get(/databases/$(database)/documents/orders/$(request.resource.data.orderId)).data.status == 'delivered';
 
-        allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+        // The author may revise their review — the stars and the words, nothing
+        // else. Who wrote it, which order it came from, when, its helpful count,
+        // the restaurant's reply and the owner's archive flag are not theirs to
+        // move.
+        allow update: if isSignedIn()
+          && resource.data.userId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'text'])
+          && request.resource.data.rating is number
+          && request.resource.data.rating >= 1
+          && request.resource.data.rating <= 5
+          && (!('text' in request.resource.data) || request.resource.data.text is string);
+
+        allow update: if ownsMerchant(merchantId) && ownerEditIsValid();
+
         allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
       }
     }
@@ -305,10 +378,13 @@ service cloud.firestore {
           // An offer the restaurant has switched off, or that has been claimed
           // as often as it allows, discounts nothing.
           && (!('active' in p) || p.active == true)
+          // Offers written before the editor learned to omit unset numbers carry
+          // `minOrder: null` / `usageLimit: null`; null means "no limit", so
+          // both checks treat it like an absent field rather than failing.
           && (!('usageLimit' in p) || p.usageLimit == null
-              || !('usedCount' in p) || p.usedCount < p.usageLimit)
+              || !('usedCount' in p) || p.usedCount == null || p.usedCount < p.usageLimit)
           && (!('merchantId' in p) || p.merchantId == d.merchantId)
-          && (!('minOrder' in p) || d.pricing.subtotal >= p.minOrder)
+          && (!('minOrder' in p) || p.minOrder == null || d.pricing.subtotal >= p.minOrder)
           && (
                p.type == 'fixed'
                  ? d.pricing.promoDiscount <= p.value
@@ -319,6 +395,9 @@ service cloud.firestore {
       function validNewOrder() {
         let d = request.resource.data;
         return d.userId == request.auth.uid
+          // The app stamps the server time; a client-chosen date could pin an
+          // order to the top of the restaurant's list or skew "Orders Today".
+          && (!('createdAt' in d) || d.createdAt == request.time)
           && d.module == 'food'
           && d.status == 'new'
           && d.orderType in ['delivery', 'pickup']
@@ -341,15 +420,77 @@ service cloud.firestore {
                (d.pricing.subtotal - d.pricing.promoDiscount)
                + d.pricing.deliveryFee + d.pricing.priorityFee
           // The merchant must exist, be open, and be the one whose fee is
-          // charged. Pickup is free; delivery uses the merchant's own fee
-          // unless the order clears their free-delivery threshold.
+          // charged. Pickup is free; delivery follows the merchant's terms.
           && exists(/databases/$(database)/documents/merchants/$(d.merchantId))
           && merchantDoc().isOpen == true
+          && (d.orderType == 'pickup' ? d.pricing.deliveryFee == 0 : validDelivery(d, merchantDoc()));
+      }
+
+      // ── Delivery terms — mirrors modules/food/services/deliveryPricing.ts ──
+      //
+      // Flat: the merchant's fee. By distance: free within freeKm, then the
+      // base fee plus perKm for each started km past it. maxKm (> 0) is the
+      // delivery radius. A big enough order (freeDeliveryOver) is free either
+      // way, but never extends the radius. Distance is measured from the
+      // merchant's pin to the pin on the order's address; without a merchant
+      // pin the terms can't apply and the flat fee does, as in the app.
+      function rulesOf(m) {
+        return m.get('deliveryRules', null);
+      }
+
+      function measured(m) {
+        let r = rulesOf(m);
+        return r != null && m.get('geo', null) != null
+          && (r.pricing == 'distance' || r.maxKm > 0);
+      }
+
+      // Straight-line km on the equirectangular approximation, cos() from its
+      // series (rules have no trig). Agrees with the app's figure to metres.
+      function kmTo(m, d) {
+        let rad = 0.017453292519943295;
+        let a = m.geo;
+        let b = d.address.geo;
+        let mid = (a.lat + b.lat) / 2 * rad;
+        let c = 1 - mid * mid / 2 + mid * mid * mid * mid / 24 - mid * mid * mid * mid * mid * mid / 720;
+        let x = (b.lng - a.lng) * rad * c;
+        let y = (b.lat - a.lat) * rad;
+        return math.sqrt(x * x + y * y) * 6371;
+      }
+
+      function hasAddressPin(d) {
+        return d.address != null
+          && d.address.get('geo', null) != null
+          && d.address.geo.lat is number
+          && d.address.geo.lng is number;
+      }
+
+      // The lowest fee the terms allow at `km` (callers pass the distance
+      // less the slack, so the app's own figure is always accepted).
+      function distanceFee(m, km) {
+        let r = rulesOf(m);
+        let units = math.ceil(km - r.freeKm - 0.000001);
+        return km <= r.freeKm ? 0 : m.deliveryFee + r.perKm * (units < 1 ? 1 : units);
+      }
+
+      function waived(d, m) {
+        let over = m.get('freeDeliveryOver', 0);
+        return over != null && over > 0 && d.pricing.subtotal >= over && d.pricing.deliveryFee == 0;
+      }
+
+      function validDelivery(d, m) {
+        return measured(m)
+          ? hasAddressPin(d) && validMeasuredDelivery(d, m, kmTo(m, d))
+          : d.pricing.deliveryFee == m.deliveryFee || waived(d, m);
+      }
+
+      function validMeasuredDelivery(d, m, km) {
+        let r = rulesOf(m);
+        return (r.maxKm <= 0 || km <= r.maxKm + 0.05)
           && (
-               d.orderType == 'pickup'
-                 ? d.pricing.deliveryFee == 0
-                 : d.pricing.deliveryFee == merchantDoc().deliveryFee
-                   || d.pricing.deliveryFee == 0
+               waived(d, m)
+               || (r.pricing == 'distance'
+                     ? d.pricing.deliveryFee >= distanceFee(m, km - 0.05)
+                     : d.pricing.deliveryFee == m.deliveryFee)
              );
       }
 
@@ -377,21 +518,43 @@ service cloud.firestore {
       }
 
       // Every transition appends exactly one timeline entry, and that entry
-      // must record the status actually being moved to — otherwise the audit
-      // trail could be made to disagree with the order.
+      // must record the status actually being moved to. The entries already
+      // there stay exactly as they were — otherwise the audit trail could be
+      // made to disagree with the order.
       function appendsMatchingTimelineEntry() {
         let before = resource.data.timeline;
         let after = request.resource.data.timeline;
         return after.size() == before.size() + 1
+          && after[0:before.size()] == before
           && after[after.size() - 1].status == request.resource.data.status;
       }
 
+      // Turning an order down may say why: a short string, and only on the
+      // write that cancels it (CANCEL_REASONS in supplier/services/orders.ts).
+      function validCancelReason() {
+        return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['cancelReason'])
+          || (request.resource.data.status == 'cancelled'
+              && request.resource.data.cancelReason is string
+              && request.resource.data.cancelReason.size() <= 120);
+      }
+
       // Only the fulfilling supplier advances an order, and only its status
-      // and timeline may move. The customer never edits a placed order.
+      // and timeline may move (plus the reason, when it cancels).
       allow update: if ownsMerchant(resource.data.merchantId)
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['status', 'timeline'])
+             .hasOnly(['status', 'timeline', 'cancelReason'])
         && validTransition(resource.data.status, request.resource.data.status)
+        && appendsMatchingTimelineEntry()
+        && validCancelReason();
+
+      // The customer who placed an order may call it off themselves — but only
+      // while it is still 'new', before the restaurant has accepted and started
+      // cooking. Nothing moves except the status (to 'cancelled') and one
+      // appended timeline entry; once accepted, only the restaurant can cancel.
+      allow update: if isSelf(resource.data.userId)
+        && resource.data.status == 'new'
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'timeline'])
         && appendsMatchingTimelineEntry();
 
       allow delete: if false;

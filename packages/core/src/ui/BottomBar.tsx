@@ -5,6 +5,8 @@ import { colors, SCREEN_PADDING, spacing } from '@core/theme';
 
 export type BottomBarProps = {
   children: ReactNode;
+  /** The tab bar already handles the home-indicator inset on tab screens. */
+  includeBottomInset?: boolean;
 };
 
 /**
@@ -14,10 +16,10 @@ export type BottomBarProps = {
  * Figma (414:2985, 414:3339): pad 14v / 16h · #FFFFFF · 1px top border #F3F4F6.
  * The home-indicator inset is added on top so the button never sits under it.
  */
-export function BottomBar({ children }: BottomBarProps) {
+export function BottomBar({ children, includeBottomInset = true }: BottomBarProps) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.bar, { paddingBottom: spacing[5] + insets.bottom }]}>{children}</View>
+    <View style={[styles.bar, { paddingBottom: spacing[5] + (includeBottomInset ? insets.bottom : 0) }]}>{children}</View>
   );
 }
 

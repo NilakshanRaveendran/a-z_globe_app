@@ -11,13 +11,19 @@ export const landingCuisines: Array<{ key: CuisineKey; label: string }> = [
   { key: 'seafood', label: 'Seafood' },
 ];
 
-export const landingCategories: Array<{ key: CategoryKey; label: string }> = [
-  { key: 'dine-out', label: 'Dine Out' },
-  { key: 'rice-curry', label: 'Rice & Curry' },
-  { key: 'kottu', label: 'Kottu' },
-  { key: 'seafood', label: 'Seafood' },
-  { key: 'drinks', label: 'Drinks' },
-  { key: 'desserts', label: 'Desserts' },
-  { key: 'quick-bites', label: 'Quick Bites' },
-  { key: 'pizza', label: 'Pizza' },
+/**
+ * The category circles. Each filters restaurants by the cuisine in `cuisine`
+ * (matched case-insensitively against `Merchant.cuisines`), and the landing
+ * page hides a circle no listed restaurant serves — Figma's "Dine Out",
+ * "Quick Bites" and "Pizza" used to lead to an empty page.
+ */
+export const landingCategories: Array<{ key: CategoryKey; label: string; cuisine: string }> = [
+  { key: 'dine-out', label: 'Dine Out', cuisine: 'Dine Out' },
+  { key: 'rice-curry', label: 'Rice & Curry', cuisine: 'Rice & Curry' },
+  { key: 'kottu', label: 'Kottu', cuisine: 'Kottu' },
+  { key: 'seafood', label: 'Seafood', cuisine: 'Seafood' },
+  { key: 'drinks', label: 'Drinks', cuisine: 'Drinks' },
+  { key: 'desserts', label: 'Desserts', cuisine: 'Desserts' },
+  { key: 'quick-bites', label: 'Quick Bites', cuisine: 'Quick Bites' },
+  { key: 'pizza', label: 'Pizza', cuisine: 'Pizza' },
 ];

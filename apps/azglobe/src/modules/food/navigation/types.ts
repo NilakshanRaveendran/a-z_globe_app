@@ -1,4 +1,3 @@
-import type { NavigatorScreenParams } from '@react-navigation/native';
 import type { AddressLabel, BuildingType } from '../types';
 
 /**
@@ -9,11 +8,23 @@ export type FoodStackParamList = {
   FoodLanding: undefined;
   Featured: { title?: string } | undefined;
   Restaurant: { merchantId: string; tab?: 'menu' | 'reviews' | 'info' };
-  MenuAll: { merchantId: string };
+  /** `offers` opens on the dishes the restaurant's running offer covers. */
+  MenuAll: { merchantId: string; offers?: boolean };
   ItemDetail: { merchantId: string; menuItemId: string };
   Cart: undefined;
   Checkout: undefined;
-  OrderPlaced: { orderId: string };
+  /** `orderIds` when one checkout placed an order at several restaurants. */
+  OrderPlaced: { orderId: string; orderIds?: string[] };
+  /** Live tracking and details for one order — opened from Home, Order Placed and My Orders. */
+  OrderTracking: { orderId: string };
+  /** The customer's past and current orders (Profile → My orders). */
+  MyOrders: undefined;
+  /**
+   * Search across restaurants and dishes — the Order Food search bar. With an
+   * empty query it lists the popular dishes, which is what Home's "Popular
+   * Dishes · See all" opens (`autoFocus: false`, so the keyboard stays down).
+   */
+  Search: { autoFocus?: boolean } | undefined;
   AddressInfo:
     | {
         /** Editing an existing address. */
@@ -30,4 +41,3 @@ export type FoodStackParamList = {
   BuildingType: { addressId?: string; current?: BuildingType };
 };
 
-export type FoodModuleParams = NavigatorScreenParams<FoodStackParamList>;

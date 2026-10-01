@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '@core/theme';
+import { APP_MAX_WIDTH, colors, radius, spacing } from '@core/theme';
 import { Icon } from './Icon';
 import { Text } from './Text';
 
@@ -64,9 +64,14 @@ export function Sheet({ visible, onClose, title, children }: SheetProps) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, justifyContent: 'flex-end' },
+  // Centred and capped to the app's column, so on a PC the sheet rises inside
+  // the app rather than across the whole window.
+  root: { flex: 1, justifyContent: 'flex-end', alignItems: 'center' },
   scrim: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: colors.overlay },
   panel: {
+    width: '100%',
+    maxWidth: APP_MAX_WIDTH,
+    maxHeight: '92%',
     backgroundColor: colors.surface,
     borderTopLeftRadius: radius['5xl'],
     borderTopRightRadius: radius['5xl'],

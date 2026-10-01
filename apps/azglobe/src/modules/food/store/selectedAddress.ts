@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { createMMKV } from 'react-native-mmkv';
+import { createStorage } from '@core/storage';
 
-const storage = createMMKV({ id: 'azglobe.food.selectedAddress' });
+const storage = createStorage({ id: 'azglobe.food.selectedAddress' });
 
 /**
  * Which saved address the customer is ordering to, remembered across launches.
@@ -15,12 +15,15 @@ const storage = createMMKV({ id: 'azglobe.food.selectedAddress' });
 type SelectedAddressState = {
   byUser: Record<string, string>;
   select: (uid: string, addressId: string | null) => void;
+  /** Forget every remembered choice — on sign-out, so the next person starts clean. */
+  reset: () => void;
 };
 
 export const useSelectedAddressStore = create<SelectedAddressState>()(
   persist(
     (set) => ({
       byUser: {},
+      reset: () => set({ byUser: {} }),
       select: (uid, addressId) =>
         set((s) => {
           const next = { ...s.byUser };

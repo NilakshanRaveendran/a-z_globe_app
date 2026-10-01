@@ -11,7 +11,7 @@
  * the emoji in the spice options). If a string differs from the design, it is a
  * bug.
  */
-import type { MenuItem, Merchant, Promotion, Review } from '../types';
+import type { MenuItem, Merchant, OptionGroup, Promotion, Review } from '../types';
 
 const HOURS_7_TO_10 = {
   mon: { open: '7:00 AM', close: '10:00 PM' },
@@ -176,6 +176,60 @@ const KOTTU_OPTIONS = [
   },
 ];
 
+/** Drinks: no spice level — size, sweetness and ice instead. */
+const DRINK_OPTIONS = [
+  {
+    key: 'size',
+    label: 'Size',
+    type: 'single' as const,
+    required: true,
+    defaultChoiceId: 'regular',
+    choices: [
+      { id: 'regular', label: 'Regular', priceDelta: 0 },
+      { id: 'large', label: 'Large', priceDelta: 150 },
+    ],
+  },
+  {
+    key: 'sweetness',
+    label: 'Sweetness',
+    type: 'single' as const,
+    required: true,
+    defaultChoiceId: 'regular',
+    choices: [
+      { id: 'regular', label: 'Regular', priceDelta: 0 },
+      { id: 'less', label: 'Less sugar', priceDelta: 0 },
+      { id: 'none', label: 'No sugar', priceDelta: 0 },
+    ],
+  },
+  {
+    key: 'ice',
+    label: 'Ice',
+    type: 'single' as const,
+    required: false,
+    defaultChoiceId: 'normal',
+    choices: [
+      { id: 'normal', label: 'Normal ice', priceDelta: 0 },
+      { id: 'less', label: 'Less ice', priceDelta: 0 },
+      { id: 'none', label: 'No ice', priceDelta: 0 },
+    ],
+  },
+];
+
+/** Snacks: sold by the plate, so no Size — spice and an extra dip. */
+const SNACK_OPTIONS: OptionGroup[] = [
+  KOTTU_OPTIONS.find((g) => g.key === 'spice')!,
+  {
+    key: 'addons',
+    label: 'Add-ons',
+    type: 'multi' as const,
+    required: false,
+    choices: [
+      { id: 'extra-chutney', label: 'Extra chutney', priceDelta: 40 },
+      { id: 'extra-piece', label: 'Extra piece', priceDelta: 80 },
+    ],
+  },
+];
+
 const item = (
   id: string,
   merchantId: string,
@@ -186,7 +240,8 @@ const item = (
   category: string,
   image: string,
   rating: number,
-  isBestseller = false
+  isBestseller = false,
+  optionGroups: MenuItem['optionGroups'] = KOTTU_OPTIONS
 ): MenuItem => ({
   id,
   merchantId,
@@ -199,24 +254,32 @@ const item = (
   rating,
   isBestseller,
   available: true,
-  optionGroups: KOTTU_OPTIONS,
+  optionGroups,
 });
 
 const KOTTU_DESC = 'Classic kottu with tender chicken, eggs & vegetables';
 const HOPPERS_DESC = 'Steamed string hoppers with coconut sambol & dhal curry';
+const SAMOSA_DESC = 'Crispy lentil fritters served with coconut chutney';
 
+/*
+ * Photos follow Figma: Classic Kottu uses the kottu shot (26:10198 layers it
+ * over the rice photo), Lime Juice the lime photo and Wood Apple Juice the
+ * juice jug. Mama's Samosa is Rs. 160 with the samosa copy (17:4787). Figma's
+ * juice rows reuse the hoppers description as placeholder text; the drinks get
+ * their own copy so the menu reads sensibly.
+ */
 export const menuItems: MenuItem[] = [
   item('mk-chicken-kottu', 'mamas-kitchen', "Mama's Kitchen", 'Chicken Kottu', 450, KOTTU_DESC, 'Popular', 'kottu', 5, true),
   item('mk-dosa', 'mamas-kitchen', "Mama's Kitchen", 'Dosa', 380, HOPPERS_DESC, 'Popular', 'dosa-platter', 4),
-  item('mk-samosa', 'mamas-kitchen', "Mama's Kitchen", 'Samosa', 450, KOTTU_DESC, 'Snacks', 'samosa', 4),
+  item('mk-samosa', 'mamas-kitchen', "Mama's Kitchen", 'Samosa', 160, SAMOSA_DESC, 'Snacks', 'samosa', 4, false, SNACK_OPTIONS),
   item('mk-rotty-set', 'mamas-kitchen', "Mama's Kitchen", 'Rotty Set', 380, HOPPERS_DESC, 'Rice & Curry', 'rotty-set', 4),
-  item('mk-classic-kottu', 'mamas-kitchen', "Mama's Kitchen", 'Classic Kottu', 450, KOTTU_DESC, 'Popular', 'rotty-set-alt', 4),
-  item('mk-lime-juice', 'mamas-kitchen', "Mama's Kitchen", 'Lime Juice', 380, HOPPERS_DESC, 'Drinks', 'pancakes', 4),
-  item('mk-wood-apple', 'mamas-kitchen', "Mama's Kitchen", 'Wood Apple Juice', 380, HOPPERS_DESC, 'Drinks', 'dosa', 4),
-  item('mk-pol-sambol', 'mamas-kitchen', "Mama's Kitchen", 'Pol Sambol Rice', 320, 'Steamed rice with fresh coconut sambol & papadam', 'Rice & Curry', 'pol-sambol-rice', 4),
+  item('mk-classic-kottu', 'mamas-kitchen', "Mama's Kitchen", 'Classic Kottu', 450, KOTTU_DESC, 'Popular', 'kottu-hero', 4),
+  item('mk-lime-juice', 'mamas-kitchen', "Mama's Kitchen", 'Lime Juice', 380, 'Fresh lime juice with mint, served chilled', 'Drinks', 'lime-juice', 4, false, DRINK_OPTIONS),
+  item('mk-wood-apple', 'mamas-kitchen', "Mama's Kitchen", 'Wood Apple Juice', 380, 'Creamy wood apple blended with jaggery', 'Drinks', 'rotty-set-alt', 4, false, DRINK_OPTIONS),
+  item('mk-pol-sambol', 'mamas-kitchen', "Mama's Kitchen", 'Pol Sambol Rice', 320, 'Steamed rice with fresh coconut sambol & papadam', 'Rice & Curry', 'curry-roti', 4),
 
-  item('ya-samosa', 'yaal-angaadi', 'Yaal Angaadi', 'Samosa', 160, 'Crispy lentil fritters served with coconut chutney', 'Snacks', 'samosa-alt', 4),
-  item('ya-kottu', 'yaal-angaadi', 'Yaal Angaadi', 'Chicken Kottu', 420, KOTTU_DESC, 'Popular', 'curry-roti', 5),
+  item('ya-samosa', 'yaal-angaadi', 'Yaal Angaadi', 'Samosa', 160, SAMOSA_DESC, 'Snacks', 'samosa-alt', 4, false, SNACK_OPTIONS),
+  item('ya-kottu', 'yaal-angaadi', 'Yaal Angaadi', 'Chicken Kottu', 420, KOTTU_DESC, 'Popular', 'kottu-hero', 5),
 
   item('tsh-rotty-set', 'trinco-spice-hub', 'Trinco Spice Hub', 'Rotty Set', 320, 'Steamed rice with fresh coconut sambol & papadam', 'Rice & Curry', 'curry-roti', 4),
 
@@ -270,15 +333,6 @@ export const reviews: Review[] = [
   },
 ];
 
-/** Figma's review summary bars: 68 / 19 / 8 / 3 / 2 percent. */
-export const ratingBreakdown = [
-  { stars: 5, percent: 68 },
-  { stars: 4, percent: 19 },
-  { stars: 3, percent: 8 },
-  { stars: 2, percent: 3 },
-  { stars: 1, percent: 2 },
-];
-
 export const promotions: Promotion[] = [
   {
     id: 'mama20',
@@ -290,9 +344,6 @@ export const promotions: Promotion[] = [
   },
 ];
 
-/** Cuisine filter row on the Order Food landing page (31:11648). */
-export const cuisineFilters = ['All', 'Sri Lankan', 'Cafe', 'Seafood'];
-
 /** Category circles below the cuisine row. */
 export const foodCategories = [
   { id: 'dine-out', label: 'Dine Out', tint: '#FEF3C7' },
@@ -302,9 +353,6 @@ export const foodCategories = [
   { id: 'drinks', label: 'Drinks', tint: '#F3E8FF' },
   { id: 'desserts', label: 'Desserts', tint: '#FCE7F3' },
 ];
-
-/** Menu category chips on the restaurant page and All Menu Items. */
-export const menuCategories = ['All', 'Popular', 'Rice & Curry', 'Snacks', 'Drinks'];
 
 function daysAgo(n: number): number {
   return Date.now() - n * 24 * 60 * 60 * 1000;

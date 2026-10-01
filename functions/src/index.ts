@@ -266,7 +266,8 @@ export const onOrderWrite = onDocumentWritten('orders/{orderId}', async (event) 
     await db.collection('customers').doc(after.userId).set({ activeOrderId: null }, { merge: true });
   }
 
-  const body = NOTIFICATION_COPY[status];
+  const body =
+    after.orderType === 'pickup' ? PICKUP_NOTIFICATION_COPY[status] ?? NOTIFICATION_COPY[status] : NOTIFICATION_COPY[status];
   if (!body) return;
 
   const userSnap = await db.collection('customers').doc(after.userId).get();
@@ -287,6 +288,13 @@ const NOTIFICATION_COPY: Partial<Record<OrderStatus, string>> = {
   picked_up: 'Your driver is on the way.',
   delivered: 'Your order has been delivered. Enjoy!',
   cancelled: 'Your order was cancelled.',
+};
+
+/** Takeaway has no driver. A collected order goes picked_up → delivered at once, so only one of those notifies. */
+const PICKUP_NOTIFICATION_COPY: Partial<Record<OrderStatus, string>> = {
+  ready_for_pickup: 'Your order is ready to collect.',
+  picked_up: '',
+  delivered: 'Order collected. Enjoy!',
 };
 
 /** Keep a merchant's rating and review count in step with its reviews. */

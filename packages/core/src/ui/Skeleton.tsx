@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { StyleSheet, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -34,11 +34,6 @@ export function Skeleton({ width = '100%', height = 12, borderRadius = radius.md
   const animated = useAnimatedStyle(() => ({ opacity: pulse.value }));
 
   return <Animated.View style={[styles.base, { width, height, borderRadius }, animated, style]} />;
-}
-
-/** Non-animated block, for composing bigger skeleton shapes. */
-export function SkeletonBlock({ style }: { style?: ViewStyle }) {
-  return <View style={[styles.base, style]} />;
 }
 
 const styles = StyleSheet.create({

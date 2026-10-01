@@ -1,16 +1,22 @@
 import { useMemo, useState } from 'react';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Chip, Icon, Screen, Text } from '@core/ui';
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { Chip, Screen, showToast, Text, ScreenHeader } from '@core/ui';
 import { SearchBar } from '@core/ui/SearchBar';
 import { colors, SCREEN_PADDING, spacing } from '@core/theme';
 import { MenuItemRow } from '../components/MenuItemRow';
-import { useMenu, useMerchant } from '../hooks/queries';
-import { useCart } from '../store/cart';
+import { useActiveOffers, useMenu, useMerchant } from '../hooks/queries';
+import { itemOffer } from '../services/promotions';
+import { useAddToCart } from '../hooks/useAddToCart';
 import type { FoodStackParamList } from '../navigation/types';
+import type { MenuItem } from '../types';
+import { HeroActions } from '../components/HeroActions';
 
 type Nav = NativeStackNavigationProp<FoodStackParamList>;
+
+/** The chip for dishes on offer. */
+const OFFERS = 'On offer';
 
 /**
  * All Menu Items — Figma 26:10198.
@@ -21,21 +27,33 @@ type Nav = NativeStackNavigationProp<FoodStackParamList>;
 export function MenuAllScreen() {
   const navigation = useNavigation<Nav>();
   const { params } = useRoute<RouteProp<FoodStackParamList, 'MenuAll'>>();
-  const [category, setCategory] = useState('All');
+  const [category, setCategory] = useState(params.offers ? OFFERS : 'All');
   const [search, setSearch] = useState('');
 
   const { data: merchant } = useMerchant(params.merchantId);
-  const { data } = useMenu(params.merchantId);
-  const addLine = useCart((s) => s.addFromMenuItem);
+  const { data, isLoading } = useMenu(params.merchantId);
+  const addToCart = useAddToCart();
+  const closed = merchant?.isOpen === false;
+  const add = (item: MenuItem) => {
+    if (closed) {
+      showToast(`${merchant?.name ?? 'This restaurant'} is closed right now`, { tone: 'error' });
+      return;
+    }
+    addToCart(item);
+  };
 
   const items = data ?? [];
+  // Dishes the restaurant's running offer covers get their own chip.
+  const { data: offers } = useActiveOffers(params.merchantId);
+  const offered = (i: MenuItem) => !!offers && i.available !== false && itemOffer(offers, i) !== null;
+  const hasOffers = items.some(offered);
   const categories = useMemo(
-    () => ['All', ...new Set(items.map((i) => i.category))],
-    [items]
+    () => ['All', ...(hasOffers ? [OFFERS] : []), ...new Set(items.map((i) => i.category))],
+    [items, hasOffers]
   );
 
   const visible = items.filter((i) => {
-    const byCategory = category === 'All' || i.category === category;
+    const byCategory = category === 'All' || (category === OFFERS ? offered(i) : i.category === category);
     const q = search.trim().toLowerCase();
     const bySearch = !q || i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q);
     return byCategory && bySearch;
@@ -44,27 +62,15 @@ export function MenuAllScreen() {
   return (
     <Screen>
       <View style={styles.top}>
-        <View style={styles.titleRow}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            onPress={navigation.goBack}
-            hitSlop={8}
-          >
-            <Icon name="arrowLeft" size={18} color={colors.textHeading} />
-          </Pressable>
-          <View style={styles.flex}>
-            <Text variant="h1" color={colors.textHeading} style={styles.title}>
-              All Menu Items
-            </Text>
-            <Text variant="bodyLg" color={colors.textMuted}>
-              {merchant?.name ?? ''}
-            </Text>
-          </View>
-        </View>
+        <ScreenHeader
+          title="All Menu Items"
+          subtitle={merchant ? (closed ? `${merchant.name} · Closed` : merchant.name) : undefined}
+          onBack={navigation.goBack}
+          action={<HeroActions />}
+        />
 
         <View style={styles.searchWrap}>
-          <SearchBar placeholder="Search dishes..." value={search} onChangeText={setSearch} />
+          <SearchBar placeholder="Search dishes…" value={search} onChangeText={setSearch} />
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
@@ -89,15 +95,22 @@ export function MenuAllScreen() {
                 menuItemId: item.id,
               })
             }
-            onAdd={() => addLine(item)}
+            addDisabled={closed}
+            onAdd={() => add(item)}
           />
         )}
         ListEmptyComponent={
-          <View style={styles.empty}>
-            <Text variant="bodyLg" color={colors.textMuted} align="center">
-              No dishes match “{search}”.
-            </Text>
-          </View>
+          isLoading ? null : (
+            <View style={styles.empty}>
+              <Text variant="bodyLg" color={colors.textMuted} align="center">
+                {search.trim()
+                  ? `No dishes match “${search.trim()}”.`
+                  : items.length
+                    ? 'Nothing in this category yet.'
+                    : 'This restaurant hasn’t added its menu yet.'}
+              </Text>
+            </View>
+          )
         }
       />
     </Screen>
@@ -106,17 +119,8 @@ export function MenuAllScreen() {
 
 const styles = StyleSheet.create({
   top: { borderBottomWidth: 1, borderBottomColor: colors.border, paddingBottom: spacing[3] },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing[4],
-    paddingHorizontal: SCREEN_PADDING,
-    paddingTop: spacing[4],
-  },
-  // Figma sets this at 24/30.
-  title: { fontSize: 24, lineHeight: 30 },
   flex: { flex: 1 },
-  searchWrap: { paddingHorizontal: SCREEN_PADDING, paddingTop: spacing[5] },
+  searchWrap: { paddingHorizontal: SCREEN_PADDING },
   chipRow: { gap: spacing[3], paddingHorizontal: SCREEN_PADDING, paddingTop: spacing[4] },
   list: { paddingHorizontal: SCREEN_PADDING, paddingBottom: spacing[9] },
   empty: { paddingVertical: spacing[12] },

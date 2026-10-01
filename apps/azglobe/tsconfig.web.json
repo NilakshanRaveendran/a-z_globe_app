@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleSuffixes": [".web", ""],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+  },
+  "exclude": ["node_modules", "app.config.ts", "../../packages/core/src/firebase/index.ts", "../../packages/core/src/storage.ts"]
+}

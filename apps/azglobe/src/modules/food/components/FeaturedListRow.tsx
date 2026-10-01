@@ -3,9 +3,10 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { AZBadge } from '@core/ui/AZBadge';
 import { Icon, Text } from '@core/ui';
 import { colors, radius, SCREEN_PADDING, spacing } from '@core/theme';
-import { formatMoney, formatPrepTime } from '@core/utils/currency';
+import { formatPrepTime } from '@core/utils/currency';
 import { resolveImage } from '../data/images';
 import type { Merchant } from '../types';
+import { deliveryPriceLabel } from '../utils/deliveryLabels';
 
 /**
  * A row on the "Featured on A-Z Globe" list — Figma 16:4256.
@@ -17,7 +18,8 @@ import type { Merchant } from '../types';
  *   divider 1px #F3F4F6
  *
  * A closed merchant greys the image and overlays "Currently Closed", and the
- * whole row dims.
+ * whole row dims. It still opens: the restaurant page shows when it opens
+ * again and keeps its dishes out of the cart until then.
  */
 export function FeaturedListRow({
   merchant,
@@ -28,17 +30,15 @@ export function FeaturedListRow({
   onPress: () => void;
   showDivider?: boolean;
 }) {
-  const fee =
-    merchant.deliveryFee === 0
-      ? 'Free delivery'
-      : `${formatMoney(merchant.deliveryFee)} Delivery Fee`;
+  const fee = deliveryPriceLabel(merchant, 'Delivery Fee');
   const badge = merchant.badges[0];
   const closed = !merchant.isOpen;
 
   return (
     <Pressable
       onPress={onPress}
-      disabled={closed}
+      accessibilityRole="button"
+      accessibilityLabel={closed ? `${merchant.name}, currently closed` : merchant.name}
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}
     >
       <View style={styles.imageWrap}>

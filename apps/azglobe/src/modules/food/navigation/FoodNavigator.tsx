@@ -4,9 +4,12 @@ import { FeaturedScreen } from '../screens/FeaturedScreen';
 import { RestaurantScreen } from '../screens/RestaurantScreen';
 import { MenuAllScreen } from '../screens/MenuAllScreen';
 import { ItemDetailScreen } from '../screens/ItemDetailScreen';
+import { SearchScreen } from '../screens/SearchScreen';
 import { CartScreen } from '../screens/CartScreen';
 import { CheckoutScreen } from '../screens/CheckoutScreen';
 import { OrderPlacedScreen } from '../screens/OrderPlacedScreen';
+import { OrderTrackingScreen } from '../screens/OrderTrackingScreen';
+import { MyOrdersScreen } from '../screens/MyOrdersScreen';
 import { AddressInfoScreen } from '../screens/AddressInfoScreen';
 import { BuildingTypeScreen } from '../screens/BuildingTypeScreen';
 import type { FoodStackParamList } from './types';
@@ -28,6 +31,7 @@ export function FoodNavigator() {
       <Stack.Screen name="Restaurant" component={RestaurantScreen} />
       <Stack.Screen name="MenuAll" component={MenuAllScreen} />
       <Stack.Screen name="ItemDetail" component={ItemDetailScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} />
       <Stack.Screen
@@ -36,6 +40,8 @@ export function FoodNavigator() {
         // The order is placed — back should not return to Checkout.
         options={{ gestureEnabled: false }}
       />
+      <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} />
+      <Stack.Screen name="MyOrders" component={MyOrdersScreen} />
       <Stack.Screen name="AddressInfo" component={AddressInfoScreen} />
       <Stack.Screen name="BuildingType" component={BuildingTypeScreen} />
     </Stack.Navigator>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Icon, Text } from '@core/ui';
 import { Sheet } from '@core/ui/Sheet';
@@ -20,6 +20,11 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
  *   add      "+ Add payment method" in a neutral well
  *   vouchers "Vouchers" heading with a "See details" pill, then "Add voucher code"
  *   footer   "Confirm"
+ *
+ * Saved cards and vouchers have no backend yet, so their rows are drawn as
+ * the design has them but marked "Coming soon" and inert — nothing here looks
+ * tappable without doing something. (A toast would not help: it renders
+ * beneath the sheet's modal.) Promo codes live in the cart.
  */
 export function PayWithSheet({
   visible,
@@ -33,6 +38,12 @@ export function PayWithSheet({
   onClose: () => void;
 }) {
   const [pending, setPending] = useState(selectedId);
+
+  // Closing with ✕ discards an unconfirmed choice: each opening starts from
+  // the method checkout is actually using.
+  useEffect(() => {
+    if (visible) setPending(selectedId);
+  }, [visible, selectedId]);
 
   return (
     <Sheet visible={visible} onClose={onClose} title="Pay with">
@@ -68,26 +79,13 @@ export function PayWithSheet({
                 </View>
 
                 <View style={[styles.radio, selected && styles.radioOn]}>
-                  {selected ? (
-                    <Text variant="labelSm" color={colors.onPrimary}>
-                      ✓
-                    </Text>
-                  ) : null}
+                  {selected ? <Icon name="check" size={11} color={colors.onPrimary} /> : null}
                 </View>
               </Pressable>
             );
           })}
 
-          <Pressable style={styles.methodRow}>
-            <View style={styles.methodLeft}>
-              <View style={[styles.well, styles.wellNeutral]}>
-                <Icon name="plus" size={18} color={colors.textSecondary} />
-              </View>
-              <Text variant="labelLg" color={colors.textSecondary}>
-                Add payment method
-              </Text>
-            </View>
-          </Pressable>
+          <ComingSoonRow label="Add payment method" />
         </View>
 
         <View style={styles.vouchersHead}>
@@ -95,22 +93,13 @@ export function PayWithSheet({
             Vouchers
           </Text>
           <View style={styles.seeDetails}>
-            <Text variant="bodySm" color={colors.textSecondary}>
-              See details
+            <Text variant="label" color={colors.textMuted}>
+              Coming soon
             </Text>
           </View>
         </View>
 
-        <Pressable style={styles.methodRow}>
-          <View style={styles.methodLeft}>
-            <View style={[styles.well, styles.wellNeutral]}>
-              <Icon name="plus" size={18} color={colors.textSecondary} />
-            </View>
-            <Text variant="labelLg" color={colors.textSecondary}>
-              Add voucher code
-            </Text>
-          </View>
-        </Pressable>
+        <ComingSoonRow label="Add voucher code" last />
 
         <Button
           label="Confirm"
@@ -122,6 +111,32 @@ export function PayWithSheet({
         />
       </View>
     </Sheet>
+  );
+}
+
+/** A row the design draws but the app cannot do yet — muted, inert, and says so. */
+function ComingSoonRow({ label, last }: { label: string; last?: boolean }) {
+  return (
+    <View
+      accessible
+      accessibilityState={{ disabled: true }}
+      accessibilityLabel={`${label}, coming soon`}
+      style={[styles.methodRow, last && styles.lastRow]}
+    >
+      <View style={[styles.methodLeft, styles.soon]}>
+        <View style={[styles.well, styles.wellNeutral]}>
+          <Icon name="plus" size={18} color={colors.textMuted} />
+        </View>
+        <View>
+          <Text variant="labelLg" color={colors.textSecondary}>
+            {label}
+          </Text>
+          <Text variant="caption" color={colors.textMuted}>
+            Coming soon
+          </Text>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -138,6 +153,8 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.surfaceAlt,
   },
   methodLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing[5] },
+  soon: { opacity: 0.7 },
+  lastRow: { borderBottomWidth: 0 },
   well: { width: 40, height: 40, borderRadius: radius.lg, alignItems: 'center', justifyContent: 'center' },
   wellCard: { backgroundColor: '#1A1F71' },
   wellCod: { backgroundColor: '#DCFCE7' },

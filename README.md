@@ -119,9 +119,12 @@ plugins are registered, and rules + indexes are deployed.
    a word of warning.
    `app.config.ts` registers the React Native Firebase plugins only when they exist, so
    `expo prebuild` works with or without them.
-2. Deploy rules and indexes after changing either:
+2. Deploy rules and indexes after changing either. The CLI package is `firebase-tools` —
+   plain `npx firebase` resolves to the JS SDK in this workspace, which has no executable —
+   and `.firebaserc` defines the project only as the `a-zglobe` alias, so name it:
    ```bash
-   npx firebase deploy --only firestore:rules,firestore:indexes
+   npx firebase-tools login
+   npx firebase-tools deploy --only firestore:rules,firestore:indexes --project a-zglobe
    ```
 3. **There is no seeding step.** The catalogue is created in the app: a supplier account adds a
    restaurant through Add Restaurant (Figma 385:4028), and that is what customers browse. Nothing
@@ -174,6 +177,27 @@ Never hand-edit `android/` — `expo prebuild --clean` regenerates it, and it is
 Firebase Console's "add the SDK" and "add initialization code" steps are already done by the config
 plugin (Gradle classpath, `apply plugin`, `FirebaseApp.configure()`, Podfile, and copying the
 config files into place).
+
+### Sharing it as a web app (PWA)
+
+```bash
+npm run build:web       # → apps/azglobe/dist, with the offline service worker
+npm run preview:web     # try the production build at http://localhost:4173
+npx firebase-tools deploy --only hosting --project a-zglobe
+```
+
+Hosting is configured in `firebase.json` (SPA rewrite; `sw.js`, the manifest and HTML are never
+cached; hashed `/_expo` and `/assets` files are cached for a year). The link is
+`https://a-z-globe-d0d4b.web.app`; on a phone, "Add to Home Screen" installs it.
+
+- **Demo or live data.** Without `EXPO_PUBLIC_FIREBASE_*` values (see `.env.example`, put real
+  ones in `apps/azglobe/.env.local`) the build runs in demo mode: every person's orders, offers and
+  messages stay on their own device. With them, it uses the Firebase project.
+- **Updates.** A new deploy shows "A new version of A-Z Globe is ready · Update" in an open app;
+  nothing switches over until it is tapped (`src/app/pwa.web.ts`).
+- **What downloads when.** The first visit caches the app shell (~4 MB) for offline use. Photos are
+  cached as they are viewed, and Messages and the emoji picker are separate files fetched when first
+  opened.
 
 ---
 

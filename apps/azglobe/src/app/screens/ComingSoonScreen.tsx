@@ -10,6 +10,10 @@ import type { RootStackParamList } from '@app/navigation/types';
  *
  * The Figma Home screen shows all six service tiles, so they all stay tappable;
  * the five that have no module land here instead of doing nothing.
+ *
+ * The copy below is the customer's. A caller for whom it is wrong — the
+ * business dashboard's bell and service toggles — passes `message` and
+ * `actionLabel` instead.
  */
 export function ComingSoonScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -17,17 +21,17 @@ export function ComingSoonScreen() {
 
   return (
     <Screen>
-      <ScreenHeader title={params.title} onBack={navigation.goBack} backStyle="circle" />
+      <ScreenHeader title={params.title} onBack={navigation.goBack} />
       <View style={styles.body}>
         <Text style={styles.glyph}>🚧</Text>
         <Text variant="h2" color={colors.textStrong} align="center">
           {params.title} is on the way
         </Text>
         <Text variant="bodyLg" color={colors.textSecondary} align="center">
-          This A-Z Globe service is not open yet. Order Food is available today.
+          {params.message ?? 'This A-Z Globe service is not open yet. Order Food is available today.'}
         </Text>
         <Button
-          label="Back to Home"
+          label={params.actionLabel ?? 'Back to Home'}
           onPress={navigation.goBack}
           fullWidth={false}
           style={styles.cta}

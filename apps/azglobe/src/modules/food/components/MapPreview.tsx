@@ -1,17 +1,31 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 import { Icon, Text } from '@core/ui';
-import { colors, radius, spacing } from '@core/theme';
+import { colors, radius, shadows, spacing } from '@core/theme';
 
 /**
- * The map panel on Checkout and Address info.
+ * The map panel on Checkout, Address info and the restaurant Info tab.
  *
  * Figma draws a stylised grey grid with a red pin and an address chip rather
  * than a live map (17:4787 / 400:4244 / 414:3339), so this reproduces that
  * exactly. Swapping in react-native-maps later means replacing only this file.
+ *
+ * `onDirections` adds the Info tab's pill (18:5218): bottom-right, 14 radius,
+ * #FFF with a #FFE2E2 hairline and the floating shadow, a navigation glyph 11
+ * and "Directions" Urbanist 700 11/16.5 #D42B2B, pad 6/12.
  */
-export function MapPreview({ label, height = 180 }: { label?: string; height?: number }) {
+export function MapPreview({
+  label,
+  height = 180,
+  onDirections,
+  style,
+}: {
+  label?: string;
+  height?: number;
+  onDirections?: () => void;
+  style?: ViewStyle;
+}) {
   return (
-    <View style={[styles.map, { height }]}>
+    <View style={[styles.map, { height }, style]}>
       {/* Grid lines, matching the design's two vertical and two horizontal rules. */}
       <View style={[styles.gridV, { left: '28%' }]} />
       <View style={[styles.gridV, { left: '68%' }]} />
@@ -32,6 +46,20 @@ export function MapPreview({ label, height = 180 }: { label?: string; height?: n
             {label}
           </Text>
         </View>
+      ) : null}
+
+      {onDirections ? (
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel="Get directions"
+          onPress={onDirections}
+          style={({ pressed }) => [styles.directions, pressed && styles.pressed]}
+        >
+          <Icon name="navigation" size={11} color={colors.primary} />
+          <Text variant="labelSm" color={colors.primary} style={styles.directionsLabel}>
+            Directions
+          </Text>
+        </Pressable>
       ) : null}
     </View>
   );
@@ -70,4 +98,21 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
   },
+  directions: {
+    position: 'absolute',
+    right: spacing[4],
+    bottom: spacing[4],
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[2],
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[2],
+    borderRadius: radius['2xl'],
+    borderWidth: 0.54,
+    borderColor: colors.palette.red75,
+    backgroundColor: colors.surface,
+    ...shadows.floating,
+  },
+  directionsLabel: { fontFamily: 'Urbanist_700Bold' },
+  pressed: { opacity: 0.85 },
 });

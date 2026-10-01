@@ -9,7 +9,7 @@ import { CalendarGrid } from './CalendarGrid';
  * "Filter by Date" — Figma 346:5312, opened from the Date chip on Order History.
  *
  *   header   pad 14/20 · "Filter by Date" Urbanist 700 17/25.5 #1F2937 ·
- *            30pt #F3F4F6 close button, 14pt glyph
+ *            30pt #F3F4F6 close button, 14pt #6B7280 glyph
  *   month    34pt #F3F4F6 chevron buttons · "August 2026" 700 15/22.5
  *   weekdays Su…Sa 500 11/16.5 #9CA3AF, 32pt rows
  *   days     7 equal columns · 40pt cells r10 · row gap 2 · 600 13/19.5 #1F2937
@@ -58,11 +58,11 @@ export function DateFilterSheet({ visible, onClose, value, onApply, loadOrderDay
   return (
     <Sheet visible={visible} onClose={onClose}>
       <View style={styles.header}>
-        <Text variant="h2" color={colors.text} style={styles.title}>
+        <Text variant="sectionTitle" color={colors.text}>
           Filter by Date
         </Text>
         <Pressable accessibilityRole="button" accessibilityLabel="Close" onPress={onClose} style={styles.close}>
-          <Icon name="close" size={14} color={colors.palette.gray700} />
+          <Icon name="close" size={14} color={colors.textSecondary} />
         </Pressable>
       </View>
 
@@ -120,7 +120,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[8],
     paddingVertical: spacing[5],
   },
-  title: { fontSize: 17, lineHeight: 25.5 },
   close: {
     width: 30,
     height: 30,

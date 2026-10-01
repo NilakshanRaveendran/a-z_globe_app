@@ -1,19 +1,21 @@
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StyleSheet, View } from 'react-native';
 import { Icon, Text } from '@core/ui';
 import { colors, radius, SCREEN_PADDING, spacing } from '@core/theme';
-import { formatDistance, formatMoney, formatPrepTime } from '@core/utils/currency';
+import { HeroTopBar } from './HeroTopBar';
+import { formatDistance, formatPrepTime } from '@core/utils/currency';
 import { resolveImage } from '../data/images';
 import type { Merchant } from '../types';
+import { deliveryPriceLabel } from '../utils/deliveryLabels';
 
 /**
  * Hero image + title block shared by all three restaurant tabs
  * (17:4787 / 18:5057 / 18:5218).
  *
  *   hero    282pt, image with a top-down scrim that fades into the white sheet
- *   back    40pt circular white button, inset to the safe area
+ *   back    36pt circle · #FFFFFF 90% · floating shadow · arrow 18, inset to
+ *           the safe area (pad 10/16 under the status bar)
  *   title   Urbanist 700 20/30 #1F2937 + tagline 400 13/19.5 #6B7280
  *   rating  pill pad 5/10 · r:pill · #F3F4F6 · star 13 · "4.8" 600 13/19.5 ·
  *           "(234)" 400 12/18 #6B7280
@@ -26,7 +28,6 @@ export function RestaurantHeader({
   merchant: Merchant;
   onBack: () => void;
 }) {
-  const insets = useSafeAreaInsets();
 
   return (
     <>
@@ -51,14 +52,7 @@ export function RestaurantHeader({
           style={StyleSheet.absoluteFill}
         />
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          onPress={onBack}
-          style={({ pressed }) => [styles.back, { top: insets.top + spacing[3] }, pressed && styles.pressed]}
-        >
-          <Icon name="arrowLeft" size={18} color={colors.palette.ink} />
-        </Pressable>
+        <HeroTopBar onBack={onBack} />
       </View>
 
       <View style={styles.titleBlock}>
@@ -89,11 +83,7 @@ export function RestaurantHeader({
           <Meta icon="clock" label={formatPrepTime(merchant.prepTimeMin, merchant.prepTimeMax)} />
           <Meta
             icon="bike"
-            label={
-              merchant.deliveryFee === 0
-                ? 'Free delivery'
-                : `${formatMoney(merchant.deliveryFee)} delivery`
-            }
+            label={deliveryPriceLabel(merchant)}
           />
           {merchant.distanceKm != null ? (
             <Meta icon="mapPin" label={formatDistance(merchant.distanceKm)} />
@@ -117,16 +107,6 @@ function Meta({ icon, label }: { icon: 'clock' | 'bike' | 'mapPin'; label: strin
 
 const styles = StyleSheet.create({
   hero: { height: 282, backgroundColor: colors.surfaceAlt },
-  back: {
-    position: 'absolute',
-    left: SCREEN_PADDING,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-  },
   pressed: { opacity: 0.8 },
 
   titleBlock: {

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SectionHeader } from '@core/ui/SectionHeader';
 import { Skeleton } from '@core/ui/Skeleton';
 import { EmptyState } from '@core/ui/EmptyState';
@@ -14,6 +14,11 @@ import { useMerchants } from '../hooks/queries';
  * row of 160×200 tiles.
  *
  * Figma: section gap 14 · pad 0/16 · tile row gap 12.
+ *
+ * Built from the real restaurant list in both modes — Figma's Hotel tiles
+ * (Trinco Blu, Hotel Hilton) belong to the Book a Hotel module, which has not
+ * shipped, so they are not faked here. A restaurant without a map pin has no
+ * distance, and the card leaves it out rather than printing "0.0 km".
  */
 export function PopularNearYouSection() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -23,15 +28,17 @@ export function PopularNearYouSection() {
     navigation.navigate('Food', { screen: 'Restaurant', params: { merchantId } });
 
   const merchants = data ?? [];
-  const [hero, ...rest] = merchants;
-  const tiles = rest.slice(0, 2);
+  // Open places first, then by rating (the list's own order).
+  const [hero, ...tiles] = [...merchants].sort((a, b) => Number(b.isOpen) - Number(a.isOpen));
 
   return (
     <View style={styles.section}>
       <SectionHeader
         title="Popular Near You"
         size="lg"
-        onSeeAll={() => navigation.navigate('Food', { screen: 'FoodLanding' })}
+        onSeeAll={() =>
+          navigation.navigate('Food', { screen: 'Featured', params: { title: 'Popular Near You' } })
+        }
       />
 
       {isLoading ? (
@@ -56,25 +63,26 @@ export function PopularNearYouSection() {
             image={hero.coverImage}
             rating={hero.rating}
             reviewCount={hero.reviewCount}
-            distanceKm={hero.distanceKm ?? 0}
+            distanceKm={hero.distanceKm}
             isOpen={hero.isOpen}
             onPress={() => open(hero.id)}
           />
-          <View style={styles.row}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.carousel} contentContainerStyle={styles.row}>
             {tiles.map((m) => (
               <PlaceCard
                 key={m.id}
+                style={styles.tile}
                 name={m.name}
                 category={m.tagline}
                 image={m.coverImage}
                 rating={m.rating}
                 reviewCount={m.reviewCount}
-                distanceKm={m.distanceKm ?? 0}
+                distanceKm={m.distanceKm}
                 isOpen={m.isOpen}
                 onPress={() => open(m.id)}
               />
             ))}
-          </View>
+          </ScrollView>
         </>
       )}
     </View>
@@ -87,5 +95,7 @@ const styles = StyleSheet.create({
     gap: spacing[5],
   },
   row: { flexDirection: 'row', gap: spacing[4] },
+  carousel: { height: 200, flexGrow: 0 },
+  tile: { flexGrow: 0, flexShrink: 0, flexBasis: 'auto', width: 160 },
   flex: { flex: 1 },
 });

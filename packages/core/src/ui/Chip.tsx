@@ -39,28 +39,6 @@ export function Chip({ label, selected = false, onPress, leadingIcon, style }: C
   );
 }
 
-/** Outlined variant used by the Pickup / Offers / Under Rs.500 filter row. */
-export function FilterChip({ label, selected = false, onPress, leadingIcon, style }: ChipProps) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.base,
-        selected ? styles.filterSelected : styles.filterUnselected,
-        pressed && styles.pressed,
-        style,
-      ]}
-    >
-      {leadingIcon}
-      <Text variant="label" color={selected ? colors.primary : colors.text}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
   base: {
     flexDirection: 'row',

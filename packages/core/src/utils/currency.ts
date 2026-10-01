@@ -3,14 +3,25 @@
  * Always format through here so no screen invents its own spacing or separator.
  */
 export function formatMoney(amount: number): string {
-  return `Rs. ${Math.round(amount).toLocaleString('en-US')}`;
+  return `Rs. ${amountText(amount)}`;
 }
 
 /** Option deltas render as "+Rs. 400". */
 export function formatDelta(amount: number): string {
   if (amount === 0) return '';
   const sign = amount > 0 ? '+' : '-';
-  return `${sign}Rs. ${Math.abs(Math.round(amount)).toLocaleString('en-US')}`;
+  return `${sign}Rs. ${amountText(Math.abs(amount))}`;
+}
+
+/**
+ * Whole rupees as the design draws them ("1,280"); cents only when a supplier
+ * has priced something in them ("12.50") so a total never silently rounds.
+ */
+function amountText(amount: number): string {
+  const cents = Math.round(amount * 100);
+  return (cents / 100).toLocaleString('en-US', cents % 100 === 0
+    ? { maximumFractionDigits: 0 }
+    : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 /** "20–30 min" — note the en dash used throughout the design. */

@@ -1,31 +1,45 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert } from '@core/ui/alert';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { colors, fontFamily, radius, SCREEN_PADDING, spacing } from '@core/theme';
-import { EmptyState, Icon, Screen, Skeleton, Text } from '@core/ui';
+import { EmptyState, Icon, Screen, Skeleton, Text, showToast } from '@core/ui';
 import { formatMoney } from '@core/utils/currency';
 import type { Promotion } from '@modules/food/types';
 import { DEFAULT_LOOK, OfferCard } from '@modules/food/components/OfferCard';
-import { discountLabel, offerHeadline, scopeLabel } from '@modules/food/services/promotions';
+import { discountLabel, isRunningOffer, offerHeadline, scopeLabel } from '@modules/food/services/promotions';
 import type { RootStackParamList } from '@app/navigation/types';
 import { deleteOffer, listOffers, setOfferActive } from '../services/offers';
 import { SupplierHeader } from '../components/SupplierHeader';
+import { ActionMenu, measureAnchor, type MenuAnchor } from '../components/ActionMenu';
 import { OfferEditorSheet } from './OfferEditorSheet';
 
 /**
  * Offers & Discounts — Figma 352:6743.
  *
- *   create   56h r14 #D42B2B · 18pt plus-circle · "Create New Offer Card" 700 15
- *   section  "ACTIVE" / "INACTIVE" 700 11/16.5 ls0.55 #9CA3AF + hairline, 20 above
- *   card     r16 · 0.5pt #E5E7EB · shadow 0 1 3 7% · the compact OfferCard in
- *            pad 12 · discount pill #FFF0F0, 0.5pt #D42B2B@15%, 800 11 #D42B2B
- *            + "on All items" 400 11 #6B7280 · footer pad 10/12: status pill
- *            (Active #F0FDF4/#16A34A, Inactive #F3F4F6/#9CA3AF, 4pt dot, 500 10)
- *            "34 used" 500 11 #6B7280 · "· Min Rs. 500" 400 10 #9CA3AF ·
- *            40×22 toggle · 30pt edit and ⋮ buttons · inactive cards at 70%
+ *   header   SupplierHeader — 36pt back, "Offers & Discounts" 700 22/33,
+ *            restaurant name 400 13/19.5 #D42B2B
+ *   create   56h r14 #D42B2B · 18pt plus-circle, gap 8 · "Create New Offer Card"
+ *            700 15/22.5
+ *   sections first label 44 under the button, then 32 between sections ·
+ *            "ACTIVE" / "INACTIVE" 700 11/16.5 ls0.55 #9CA3AF, pad 0/4, gap 8 to
+ *            a 0.5pt #E5E7EB rule · cards 10 below the label and 10 apart
+ *   card     r16 · 0.51 #E5E7EB · shadow 0 1 3 7% · the compact OfferCard in
+ *            pad 12 · discount row 8 below, gap 6: pill #FFF0F0, 0.51
+ *            #D42B2B@15%, pad 2/8, 800 11/16.5 #D42B2B + "on All items" 400 11
+ *            #6B7280 · footer pad 10/12: status pill pad 1/6 gap 3 (Active
+ *            #F0FDF4/#16A34A, Inactive #F3F4F6/#9CA3AF, 4pt dot, 500 10/15),
+ *            gap 6 · "34 used" 500 11/16.5 #6B7280 · "· Min Rs. 500" 400 10/15
+ *            #9CA3AF · 40×22 toggle (on #D42B2B, off #D1D5DB, 16pt knob inset 3)
+ *            · 30pt #F3F4F6 edit and ⋮ buttons, gap 6 · inactive cards at 70%
  *
  * A running offer is what customers see on this restaurant and get at checkout
  * automatically; an inactive or expired one does nothing.
+ *
+ * The ⋮ opens the shared provider popover (ActionMenu): Edit, Duplicate (a new
+ * offer prefilled from this one), Switch on/off and Delete — one confirmation
+ * for the delete, and a toast after every change. Each row's controls name the
+ * offer they act on, so a screen reader doesn't hear three identical "More".
  */
 export function OffersScreen() {
   const navigation = useNavigation();
@@ -36,8 +50,10 @@ export function OffersScreen() {
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [editing, setEditing] = useState<Promotion | null>(null);
+  const [template, setTemplate] = useState<Promotion | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
+  const [menu, setMenu] = useState<{ offer: Promotion; anchor: MenuAnchor } | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -54,7 +70,8 @@ export function OffersScreen() {
   }, [load]);
 
   const now = Date.now();
-  const running = (p: Promotion) => p.active !== false && p.validUntil > now;
+  // As the cart sees it: switched on, unexpired and not fully claimed.
+  const running = (p: Promotion) => isRunningOffer(p, now);
   const active = (offers ?? []).filter(running);
   const inactive = (offers ?? []).filter((p) => !running(p));
 
@@ -63,48 +80,64 @@ export function OffersScreen() {
       Alert.alert('This offer has ended', 'Edit it and choose a new "Valid Until" date to run it again.');
       return;
     }
+    if (offer.active === false && offer.usageLimit != null && (offer.usedCount ?? 0) >= offer.usageLimit) {
+      Alert.alert('This offer is fully claimed', 'Edit it and raise the usage limit to run it again.');
+      return;
+    }
+    const turningOn = offer.active === false;
     setPending(offer.id);
     try {
-      await setOfferActive(offer, offer.active === false);
+      await setOfferActive(offer, turningOn);
       await load();
+      showToast(turningOn ? `${discountLabel(offer)} offer is on` : `${discountLabel(offer)} offer is off`);
     } catch {
-      Alert.alert('Could not update the offer', 'Check your connection and try again.');
+      showToast('Could not update the offer. Try again.', { tone: 'error' });
     } finally {
       setPending(null);
     }
   };
 
-  const more = (offer: Promotion) =>
-    Alert.alert(discountLabel(offer), offerHeadline(offer), [
-      { text: 'Cancel', style: 'cancel' },
+  const confirmDelete = (offer: Promotion) =>
+    Alert.alert(`Delete the ${discountLabel(offer)} offer?`, 'Customers will stop seeing it. This cannot be undone.', [
       {
-        text: 'Delete offer',
+        text: 'Delete',
         style: 'destructive',
-        onPress: () =>
-          Alert.alert('Delete this offer?', 'Customers will stop seeing it. This cannot be undone.', [
-            { text: 'Keep', style: 'cancel' },
-            {
-              text: 'Delete',
-              style: 'destructive',
-              onPress: async () => {
-                setPending(offer.id);
-                try {
-                  await deleteOffer(offer);
-                  await load();
-                } catch {
-                  Alert.alert('Could not delete the offer', 'Check your connection and try again.');
-                } finally {
-                  setPending(null);
-                }
-              },
-            },
-          ]),
+        onPress: async () => {
+          setPending(offer.id);
+          try {
+            await deleteOffer(offer);
+            await load();
+            showToast('Offer deleted');
+          } catch {
+            showToast('Could not delete the offer. Try again.', { tone: 'error' });
+          } finally {
+            setPending(null);
+          }
+        },
       },
+      { text: 'Keep', style: 'cancel' },
     ]);
 
-  const openEditor = (offer: Promotion | null) => {
+  const openEditor = (offer: Promotion | null, from: Promotion | null = null) => {
     setEditing(offer);
+    setTemplate(from);
     setEditorOpen(true);
+  };
+
+  const menuItems = (offer: Promotion) => {
+    const isOn = running(offer);
+    return [
+      { label: 'Edit offer', icon: 'pencilSm' as const, onPress: () => openEditor(offer) },
+      { label: 'Duplicate', icon: 'plusCircle' as const, onPress: () => openEditor(null, offer) },
+      {
+        label: isOn ? 'Switch off' : 'Switch on',
+        icon: isOn ? ('xCircle' as const) : ('check' as const),
+        hint: !isOn && offer.validUntil <= now ? 'Ended — edit the date to run it again' : undefined,
+        disabled: !isOn && offer.validUntil <= now,
+        onPress: () => void toggle(offer),
+      },
+      { label: 'Delete offer', icon: 'trash' as const, destructive: true, onPress: () => confirmDelete(offer) },
+    ];
   };
 
   return (
@@ -135,66 +168,78 @@ export function OffersScreen() {
           </Text>
         </Pressable>
 
-        {offers === null ? (
-          <View style={styles.section}>
-            <Skeleton height={165} borderRadius={radius['3xl']} />
-          </View>
-        ) : offers.length === 0 ? (
-          <View style={styles.section}>
-            <EmptyState
-              title={error ? 'Something went wrong' : 'No offers yet'}
-              message={
-                error ??
-                'Create an offer card and switch it on — customers see it on your restaurant and get the discount at checkout automatically.'
-              }
-            />
-          </View>
-        ) : (
-          <>
-            {active.length ? (
-              <Section title="Active">
-                {active.map((o) => (
-                  <OfferRow
-                    key={o.id}
-                    offer={o}
-                    on
-                    busy={pending === o.id}
-                    onToggle={() => void toggle(o)}
-                    onEdit={() => openEditor(o)}
-                    onMore={() => more(o)}
-                  />
-                ))}
-              </Section>
-            ) : null}
-            {inactive.length ? (
-              <Section title="Inactive">
-                {inactive.map((o) => (
-                  <OfferRow
-                    key={o.id}
-                    offer={o}
-                    on={false}
-                    expired={o.validUntil <= now}
-                    busy={pending === o.id}
-                    onToggle={() => void toggle(o)}
-                    onEdit={() => openEditor(o)}
-                    onMore={() => more(o)}
-                  />
-                ))}
-              </Section>
-            ) : null}
-          </>
-        )}
+        <View style={styles.sections}>
+          {offers === null ? (
+            <View style={styles.section}>
+              <Skeleton height={165} borderRadius={radius['3xl']} />
+            </View>
+          ) : offers.length === 0 ? (
+            <View style={styles.section}>
+              <EmptyState
+                icon="offers"
+                title={error ? 'Something went wrong' : 'No offers yet'}
+                message={
+                  error ??
+                  'Create an offer card and switch it on — customers see it on your restaurant and get the discount at checkout automatically.'
+                }
+              />
+            </View>
+          ) : (
+            <>
+              {active.length ? (
+                <Section title="Active">
+                  {active.map((o) => (
+                    <OfferRow
+                      key={o.id}
+                      offer={o}
+                      on
+                      busy={pending === o.id}
+                      onToggle={() => void toggle(o)}
+                      onEdit={() => openEditor(o)}
+                      onMore={(anchor) => setMenu({ offer: o, anchor })}
+                    />
+                  ))}
+                </Section>
+              ) : null}
+              {inactive.length ? (
+                <Section title="Inactive">
+                  {inactive.map((o) => (
+                    <OfferRow
+                      key={o.id}
+                      offer={o}
+                      on={false}
+                      expired={o.validUntil <= now}
+                      busy={pending === o.id}
+                      onToggle={() => void toggle(o)}
+                      onEdit={() => openEditor(o)}
+                      onMore={(anchor) => setMenu({ offer: o, anchor })}
+                    />
+                  ))}
+                </Section>
+              ) : null}
+            </>
+          )}
+        </View>
       </ScrollView>
 
       <OfferEditorSheet
         visible={editorOpen}
         merchantId={merchantId}
         offer={editing}
+        template={template}
         onClose={() => setEditorOpen(false)}
-        onSaved={() => {
+        onSaved={(kind) => {
           setEditorOpen(false);
+          showToast(kind === 'created' ? 'Offer created' : 'Offer saved');
           void load();
         }}
+      />
+
+      <ActionMenu
+        anchor={menu?.anchor ?? null}
+        title={menu ? offerHeadline(menu.offer) : undefined}
+        items={menu ? menuItems(menu.offer) : []}
+        onClose={() => setMenu(null)}
       />
     </Screen>
   );
@@ -229,8 +274,11 @@ function OfferRow({
   busy: boolean;
   onToggle: () => void;
   onEdit: () => void;
-  onMore: () => void;
+  onMore: (anchor: MenuAnchor) => void;
 }) {
+  const more = useRef<View>(null);
+  // Every control names its offer by its headline: "Edit 10% OFF on All items · Until 30 Sept".
+  const name = offerHeadline(offer);
   return (
     <View style={[styles.card, !on && styles.cardOff]}>
       <View style={styles.preview}>
@@ -248,13 +296,13 @@ function OfferRow({
 
       <View style={styles.footer}>
         <View style={styles.meta}>
-          <View style={[styles.status, on ? styles.statusOn : styles.statusOff]}>
+          <View style={[styles.status, styles.noShrink, on ? styles.statusOn : styles.statusOff]}>
             <View style={[styles.statusDot, { backgroundColor: on ? colors.palette.green600 : colors.textMuted }]} />
             <Text variant="caption" color={on ? colors.palette.green600 : colors.textMuted}>
               {on ? 'Active' : expired ? 'Ended' : 'Inactive'}
             </Text>
           </View>
-          <Text variant="micro" color={colors.textSecondary}>
+          <Text variant="micro" color={colors.textSecondary} numberOfLines={1} style={styles.noShrink}>
             {offer.usageLimit
               ? `${offer.usedCount ?? 0}/${offer.usageLimit} used`
               : `${offer.usedCount ?? 0} used`}
@@ -269,7 +317,7 @@ function OfferRow({
         <View style={styles.actions}>
           <Pressable
             accessibilityRole="switch"
-            accessibilityLabel={on ? 'Switch offer off' : 'Switch offer on'}
+            accessibilityLabel={`${name} — ${on ? 'switch off' : 'switch on'}`}
             accessibilityState={{ checked: on, disabled: busy }}
             disabled={busy}
             onPress={onToggle}
@@ -277,11 +325,17 @@ function OfferRow({
           >
             <View style={[styles.knob, on && styles.knobOn]} />
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel="Edit offer" onPress={onEdit} style={styles.iconButton}>
+          <Pressable accessibilityRole="button" accessibilityLabel={`Edit ${name}`} onPress={onEdit} style={styles.iconButton}>
             <Icon name="pencilSm" size={13} color={colors.palette.gray700} />
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel="More" onPress={onMore} style={styles.iconButton}>
-            <Icon name="more" size={14} color={colors.palette.gray700} />
+          <Pressable
+            ref={more}
+            accessibilityRole="button"
+            accessibilityLabel={`More actions for ${name}`}
+            onPress={() => measureAnchor(more, onMore)}
+            style={styles.iconButton}
+          >
+            <Icon name="moreVertical" size={14} color={colors.palette.gray700} />
           </Pressable>
         </View>
       </View>
@@ -301,14 +355,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing[3],
   },
+  sections: { paddingTop: spacing[9], gap: spacing[4] },
   section: { paddingTop: spacing[8] },
   sectionHead: { flexDirection: 'row', alignItems: 'center', gap: spacing[3], paddingHorizontal: spacing[1.5] },
   hairline: { flex: 1, height: 0.5, backgroundColor: colors.border },
-  cards: { gap: spacing[4], paddingTop: spacing[3.5] },
+  cards: { gap: spacing[3.5], paddingTop: spacing[3.5] },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius['3xl'],
-    borderWidth: 0.5,
+    borderWidth: 0.51,
     borderColor: colors.border,
     overflow: 'hidden',
     boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.07)',
@@ -327,7 +382,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[0.5],
     borderRadius: radius.pill,
     backgroundColor: colors.palette.red25,
-    borderWidth: 0.5,
+    borderWidth: 0.51,
     borderColor: 'rgba(212,43,43,0.15)',
   },
   discountText: { fontFamily: fontFamily[800], fontSize: 11, lineHeight: 16.5, color: colors.primary },
@@ -337,7 +392,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3.5],
   },
-  meta: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: spacing[2.5] },
+  // On a narrow phone "· Min Rs. 500" drops to a second line rather than squeezing "12 used".
+  meta: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: spacing[2.5],
+    rowGap: spacing[0.5],
+  },
+  noShrink: { flexShrink: 0 },
   shrink: { flexShrink: 1 },
   status: {
     flexDirection: 'row',

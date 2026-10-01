@@ -33,9 +33,9 @@ const COPY = {
   },
   supplier: {
     title: 'Tell us about your business',
-    blurb: 'This is what customers will see on A-Z Globe.',
-    nameLabel: 'Business name',
-    namePlaceholder: "e.g. Mama's Kitchen",
+    blurb: 'Your name stays on your account; the business name is what customers see.',
+    nameLabel: 'Your name',
+    namePlaceholder: 'e.g. Vanan',
     emailPlaceholder: 'hello@yourbusiness.lk',
   },
 } as const;
@@ -46,12 +46,14 @@ export function CompleteProfileScreen() {
   // By this point the account exists, so the kind is known; default defensively
   // rather than rendering a blank screen if it somehow is not.
   const copy = COPY[accountKind ?? 'customer'];
+  const business = accountKind === 'supplier';
   const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
 
   const trimmed = name.trim();
   const emailLooksValid = !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const canSubmit = trimmed.length >= 2 && emailLooksValid;
+  const canSubmit = trimmed.length >= 2 && (!business || company.trim().length >= 2) && emailLooksValid;
 
   return (
     <Screen>
@@ -80,6 +82,16 @@ export function CompleteProfileScreen() {
               autoCapitalize="words"
               autoComplete="name"
             />
+            {business ? (
+              <Field
+                label="Business name"
+                placeholder="e.g. Mama's Kitchen (Pvt) Ltd"
+                value={company}
+                onChangeText={setCompany}
+                autoCapitalize="words"
+                autoComplete="organization"
+              />
+            ) : null}
             <Field
               label="Email (optional)"
               placeholder={copy.emailPlaceholder}
@@ -108,7 +120,8 @@ export function CompleteProfileScreen() {
             onPress={async () => {
               // updateProfile fires no auth-state event, so the session has to
               // be re-read before the shell will swap in the app.
-              if (await completeProfile(accountKind ?? 'customer', trimmed, email.trim())) await refreshUser();
+              if (await completeProfile(accountKind ?? 'customer', trimmed, email.trim(), business ? company.trim() : undefined))
+                await refreshUser();
             }}
             disabled={!canSubmit}
             loading={busy}

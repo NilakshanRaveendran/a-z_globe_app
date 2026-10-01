@@ -23,12 +23,33 @@ export function WriteReviewSheet({
   visible: boolean;
   merchantName: string;
   onClose: () => void;
-  onSubmit: (rating: number, text: string) => void;
+  /**
+   * Saves the review. The sheet stays open (with a spinner) until it settles,
+   * and closes only on success — a rejected promise keeps what was typed.
+   */
+  onSubmit: (rating: number, text: string) => Promise<void> | void;
 }) {
   const [rating, setRating] = useState(0);
   const [text, setText] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const close = () => {
+    if (saving) return;
+    setRating(0);
+    setText('');
+    onClose();
+  };
+
+  const submit = async () => {
+    setSaving(true);
+    try {
+      await onSubmit(rating, text.trim());
+    } catch {
+      // The caller reports the error; keep the draft so nothing is lost.
+      setSaving(false);
+      return;
+    }
+    setSaving(false);
     setRating(0);
     setText('');
     onClose();
@@ -62,19 +83,13 @@ export function WriteReviewSheet({
           onChangeText={(next) => setText(next.slice(0, MAX_LENGTH))}
           multiline
           textAlignVertical="top"
+          editable={!saving}
         />
         <Text variant="bodySm" color={colors.textMuted} align="right" style={styles.counter}>
           {text.length}/{MAX_LENGTH}
         </Text>
 
-        <Button
-          label="Submit Review"
-          disabled={rating === 0}
-          onPress={() => {
-            onSubmit(rating, text.trim());
-            close();
-          }}
-        />
+        <Button label="Submit Review" disabled={rating === 0} loading={saving} onPress={submit} />
       </View>
     </Sheet>
   );

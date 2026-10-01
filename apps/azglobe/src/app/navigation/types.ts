@@ -9,6 +9,14 @@ export type TabParamList = {
   Profile: undefined;
 };
 
+export type SupplierTabParamList = {
+  Messages: undefined;
+  Orders: undefined;
+  Home: NavigatorScreenParams<RootStackParamList> | undefined;
+  /** A stack: Business Profile, and Restaurant Information opened from its "Home" row. */
+  Profile: NavigatorScreenParams<RootStackParamList> | undefined;
+};
+
 /**
  * The root stack. Module navigators are mounted here under their own route —
  * `Food` today, and one entry per module as they ship.
@@ -20,8 +28,20 @@ export type TabParamList = {
 export type RootStackParamList = {
   Tabs: NavigatorScreenParams<TabParamList>;
   Food: NavigatorScreenParams<FoodStackParamList>;
-  ComingSoon: { title: string };
+  Messaging: { groupId?: string; created?: boolean } | undefined;
+  /**
+   * `message` and `actionLabel` replace the customer copy ("Order Food is
+   * available today", "Back to Home") where that would be wrong — the business
+   * screens pass their own.
+   */
+  ComingSoon: { title: string; message?: string; actionLabel?: string };
+  /** Profile → Notifications: the customer's notification preferences. */
+  NotificationSettings: undefined;
+  /** The identity row on either profile: personal details, or the business's. */
+  EditProfile: undefined;
   SupplierDashboard: undefined;
+  SupplierTabs: undefined;
+  SupplierOrdersOverview: undefined;
   SupplierRestaurants: undefined;
   SupplierRestaurantHub: { merchantId: string };
   SupplierMenu: { merchantId: string; merchantName: string };
@@ -29,6 +49,8 @@ export type RootStackParamList = {
   SupplierOrderHistory: { merchantId: string; merchantName: string };
   SupplierOffers: { merchantId: string; merchantName: string };
   SupplierRestaurantInfo: { merchantId: string };
+  SupplierReviews: { merchantId: string; merchantName: string };
+  SupplierProfile: undefined;
 };
 
 declare global {

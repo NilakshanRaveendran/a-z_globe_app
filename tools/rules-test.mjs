@@ -71,18 +71,20 @@ function encode(v) {
 }
 const fields = (obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, encode(v)]));
 
-async function request(method, path, { as = null, body, updateMask } = {}) {
+async function request(method, path, { as = null, body, updateMask, rawBody } = {}) {
   const token = tokenFor(as);
   const qs = updateMask
     ? '?' + updateMask.map((f) => `updateMask.fieldPaths=${encodeURIComponent(f)}`).join('&')
     : '';
-  const res = await fetch(`${BASE}/${path}${qs}`, {
+  // `:runQuery` hangs off the documents root, not a document path.
+  const url = path.startsWith(':') ? `${BASE}${path}` : `${BASE}/${path}${qs}`;
+  const res = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    ...(body ? { body: JSON.stringify({ fields: fields(body) }) } : {}),
+    ...(rawBody ? { body: JSON.stringify(rawBody) } : body ? { body: JSON.stringify({ fields: fields(body) }) } : {}),
   });
   return res;
 }
@@ -306,6 +308,8 @@ await deny('an anonymous visitor may not place an order', () =>
   set('orders/o2', orderBody(), null));
 await deny("an order may not be placed in another user's name", () =>
   set('orders/o3', orderBody({ userId: OTHER }), CUSTOMER));
+await deny('an order may not carry a date the client chose', () =>
+  set('orders/o3b', orderBody({ createdAt: Date.now() + 86_400_000 * 365 }), CUSTOMER));
 await deny('an order may not start at a status other than new', () =>
   set('orders/o4', orderBody({ status: 'delivered', timeline: [{ status: 'delivered', at: 1 }] }), CUSTOMER));
 await deny("the delivery fee may not undercut the merchant's own fee", () =>
@@ -316,6 +320,72 @@ await deny('a promo may not exceed the subtotal', () =>
   set('orders/o7', orderBody(price({ promoDiscount: 999, total: 80 })), CUSTOMER));
 await deny('an order may not be placed with a closed restaurant', () =>
   set('orders/o8', orderBody({ merchantId: 'closed-shop', merchantName: 'Closed Shop' }), CUSTOMER));
+// The fields `placeOrder()` snapshots on top: the customer's phone (so the
+// restaurant can call), the longer ref, the payment label, explicit nulls.
+await allow('an order may carry the customer phone, ref and payment snapshot', () =>
+  set('orders/o9', orderBody({
+    userPhone: '+94711109390', ref: 'AZG-7K3Q9P', paymentMethod: 'Cash on delivery',
+    noteToRestaurant: null, promoCode: null,
+  }), CUSTOMER));
+
+// ── Delivery terms: free zone, per km, radius ──────────────────────────────
+section('delivery terms');
+// Pinned in Trincomalee; free within 1 km, then Rs. 50 per started km, up to
+// 5 km; orders of Rs. 2,000+ deliver free (inside the radius only).
+const SHOP_PIN = { lat: 8.5874, lng: 81.2152, geohash: 'tc9bb57' };
+const kmNorth = (km) => ({ lat: SHOP_PIN.lat + km / 111.19493, lng: SHOP_PIN.lng });
+await seedDoc('merchants/zone-shop', merchant({
+  name: 'Zone Shop', deliveryFee: 0, freeDeliveryOver: 2000, geo: SHOP_PIN,
+  deliveryRules: { pricing: 'distance', freeKm: 1, perKm: 50, maxKm: 5 },
+}));
+await seedDoc('merchants/radius-shop', merchant({
+  name: 'Radius Shop', deliveryFee: 120, geo: SHOP_PIN,
+  deliveryRules: { pricing: 'flat', freeKm: 0, perKm: 0, maxKm: 3 },
+}));
+const zoneOrder = (km, fee, subtotal = 420, over = {}) => orderBody({
+  merchantId: 'zone-shop', merchantName: 'Zone Shop',
+  address: km === null ? { line1: 'No pin', city: 'Trinco' } : { line1: 'Pinned', city: 'Trinco', geo: kmNorth(km) },
+  pricing: { subtotal, deliveryFee: fee, priorityFee: 0, promoDiscount: 0, total: subtotal + fee, currency: 'LKR' },
+  ...over,
+});
+await allow('inside the free zone delivery costs nothing', () =>
+  set('orders/z1', zoneOrder(0.6, 0), CUSTOMER));
+await allow('past the free zone: Rs. 50 per started km (3.4 km → Rs. 150)', () =>
+  set('orders/z2', zoneOrder(3.4, 150), CUSTOMER));
+await deny('past the free zone the fee may not be dropped', () =>
+  set('orders/z3', zoneOrder(3.4, 0), CUSTOMER));
+await deny('past the free zone the fee may not be undercut (3.4 km at Rs. 100)', () =>
+  set('orders/z4', zoneOrder(3.4, 100), CUSTOMER));
+await deny('beyond the 5 km radius the restaurant does not deliver', () =>
+  set('orders/z5', zoneOrder(6, 300), CUSTOMER));
+await deny('an address without a pin cannot be priced, so is refused', () =>
+  set('orders/z6', zoneOrder(null, 0), CUSTOMER));
+await allow('a Rs. 2,000+ order delivers free inside the radius', () =>
+  set('orders/z7', zoneOrder(4.5, 0, 2400), CUSTOMER));
+await deny('a big order does not extend the radius', () =>
+  set('orders/z8', zoneOrder(7, 0, 2400), CUSTOMER));
+await allow('takeaway ignores the radius and the fee', () =>
+  set('orders/z9', zoneOrder(null, 0, 420, { orderType: 'pickup', address: null }), CUSTOMER));
+await allow('a flat-fee restaurant with a radius: its fee, inside it', () =>
+  set('orders/z10', orderBody({
+    merchantId: 'radius-shop', merchantName: 'Radius Shop', address: { line1: 'x', city: 'y', geo: kmNorth(2.5) },
+    pricing: { subtotal: 420, deliveryFee: 120, priorityFee: 0, promoDiscount: 0, total: 540, currency: 'LKR' },
+  }), CUSTOMER));
+await deny('a flat-fee restaurant with a radius: nothing outside it', () =>
+  set('orders/z11', orderBody({
+    merchantId: 'radius-shop', merchantName: 'Radius Shop', address: { line1: 'x', city: 'y', geo: kmNorth(3.5) },
+    pricing: { subtotal: 420, deliveryFee: 120, priorityFee: 0, promoDiscount: 0, total: 540, currency: 'LKR' },
+  }), CUSTOMER));
+await deny('a flat fee may not be dropped below the threshold', () =>
+  set('orders/z12', orderBody(price({ deliveryFee: 0, total: 420 })), CUSTOMER));
+await allow('the owner may set delivery terms', () =>
+  update('merchants/open-shop', { deliveryRules: { pricing: 'distance', freeKm: 1, perKm: 40, maxKm: 6 } }, SUPPLIER));
+await deny('delivery terms may not be malformed (negative per km)', () =>
+  update('merchants/open-shop', { deliveryRules: { pricing: 'distance', freeKm: 1, perKm: -5, maxKm: 6 } }, SUPPLIER));
+await deny('a free zone may not reach past the radius', () =>
+  update('merchants/open-shop', { deliveryRules: { pricing: 'distance', freeKm: 8, perKm: 40, maxKm: 6 } }, SUPPLIER));
+await allow('the owner may clear its delivery terms', () =>
+  update('merchants/open-shop', { deliveryRules: null }, SUPPLIER));
 
 // ── Promotions ─────────────────────────────────────────────────────────────
 section('promotions');
@@ -381,6 +451,15 @@ await allow('a running offer discounts the order', () =>
 await seedDoc('promotions/claimed', offer({ usageLimit: 3, usedCount: 3 }));
 await deny('a fully claimed offer discounts nothing', () =>
   set('orders/q3', orderBody({ promoCode: 'claimed', ...price({ promoDiscount: 84, total: 416 }) }), CUSTOMER));
+// Offers saved before the editor learned to omit unset numbers carry explicit
+// nulls. Null means "no minimum" / "no limit", so such an offer must still
+// discount — before `promoTermsHold` was null-safe it failed every order.
+await seedDoc('promotions/nulls', offer({ minOrder: null, usageLimit: null }));
+await allow('an offer stored with minOrder/usageLimit null still discounts', () =>
+  set('orders/q4', orderBody({ promoCode: 'nulls', ...price({ promoDiscount: 84, total: 416 }) }), CUSTOMER));
+await seedDoc('promotions/big-min', offer({ minOrder: 1000 }));
+await deny('an order below the offer minimum is refused', () =>
+  set('orders/q5', orderBody({ promoCode: 'big-min', ...price({ promoDiscount: 84, total: 416 }) }), CUSTOMER));
 await allow('the owner may count a use when accepting', () =>
   set('promotions/live', offer({ usedCount: 1 }), SUPPLIER));
 await allow('the owner may delete an offer', () => remove('promotions/live', SUPPLIER));
@@ -452,6 +531,231 @@ await deny('the price may not be edited while advancing', () =>
 
 await givenOrder('t10');
 await deny('nobody may delete an order', () => remove('orders/t10', SUPPLIER));
+
+await givenOrder('t11');
+await deny('earlier timeline entries may not be rewritten while advancing', () =>
+  advance('t11', 'accepted', [{ status: 'new', at: 999 }, { status: 'accepted', at: 2 }], SUPPLIER));
+
+// The EXACT write `advanceOrder(order, 'cancelled', { reason })` sends.
+await givenOrder('t12');
+await allow('the supplier may cancel with a reason', () =>
+  update('orders/t12', {
+    status: 'cancelled',
+    timeline: [...t, { status: 'cancelled', at: 2, by: 'restaurant' }],
+    cancelReason: 'Items out of stock',
+  }, SUPPLIER));
+
+await givenOrder('t13');
+await deny('a reason may only accompany a cancellation', () =>
+  update('orders/t13', {
+    status: 'accepted', timeline: [...t, { status: 'accepted', at: 2 }], cancelReason: 'Sneaky',
+  }, SUPPLIER));
+
+await givenOrder('t14');
+await deny('a cancel reason may not exceed 120 characters', () =>
+  update('orders/t14', {
+    status: 'cancelled',
+    timeline: [...t, { status: 'cancelled', at: 2 }],
+    cancelReason: 'x'.repeat(121),
+  }, SUPPLIER));
+
+// ── Customer cancelling ────────────────────────────────────────────────────
+// `cancelOrder()` in modules/food/services/orders.ts: the customer may call off
+// their own order only while it is still 'new'.
+section('customer cancelling');
+const customerCancel = (id, as, extra = {}) =>
+  update(`orders/${id}`, {
+    status: 'cancelled',
+    timeline: [...t, { status: 'cancelled', at: 2, by: 'customer' }],
+    ...extra,
+  }, as);
+
+await givenOrder('c1');
+await allow('the customer may cancel their own order while it is new', () =>
+  customerCancel('c1', CUSTOMER));
+
+await givenOrder('c2', { status: 'accepted', timeline: [...t, { status: 'accepted', at: 2 }] });
+await deny('the customer may not cancel once the restaurant accepted', () =>
+  update('orders/c2', {
+    status: 'cancelled',
+    timeline: [...t, { status: 'accepted', at: 2 }, { status: 'cancelled', at: 3, by: 'customer' }],
+  }, CUSTOMER));
+
+await givenOrder('c3');
+await deny("a customer may not cancel someone else's order", () => customerCancel('c3', OTHER));
+
+await givenOrder('c4');
+await deny('the customer may not move their order to any other status', () =>
+  advance('c4', 'delivered', [...t, { status: 'delivered', at: 2 }], CUSTOMER));
+
+await givenOrder('c5');
+await deny('the customer may not change anything else while cancelling', () =>
+  customerCancel('c5', CUSTOMER, { pricing: { subtotal: 0, deliveryFee: 0, priorityFee: 0, promoDiscount: 0, total: 0, currency: 'LKR' } }));
+
+await givenOrder('c6');
+await deny('the customer may not give a restaurant cancel reason', () =>
+  customerCancel('c6', CUSTOMER, { cancelReason: 'Changed my mind' }));
+
+await givenOrder('c7');
+await deny('the customer cancel must append exactly one matching entry', () =>
+  update('orders/c7', { status: 'cancelled', timeline: [...t, { status: 'accepted', at: 2 }] }, CUSTOMER));
+
+await givenOrder('c8', { status: 'cancelled', timeline: [...t, { status: 'cancelled', at: 2 }] });
+await deny('an already-cancelled order cannot be cancelled again', () =>
+  update('orders/c8', {
+    status: 'cancelled',
+    timeline: [...t, { status: 'cancelled', at: 2 }, { status: 'cancelled', at: 3 }],
+  }, CUSTOMER));
+
+// The customer's own order list — `listMyOrders()` queries userId == uid.
+await allow('the customer may list their own orders', () =>
+  request('POST', ':runQuery', {
+    as: CUSTOMER,
+    rawBody: {
+      structuredQuery: {
+        from: [{ collectionId: 'orders' }],
+        where: { fieldFilter: { field: { fieldPath: 'userId' }, op: 'EQUAL', value: { stringValue: CUSTOMER } } },
+        limit: 50,
+      },
+    },
+  }));
+
+// The supplier's live list — `watchActiveOrders()` queries merchantId == X && status in ACTIVE.
+const activeQuery = (merchantId) => ({
+  structuredQuery: {
+    from: [{ collectionId: 'orders' }],
+    where: {
+      compositeFilter: {
+        op: 'AND',
+        filters: [
+          { fieldFilter: { field: { fieldPath: 'merchantId' }, op: 'EQUAL', value: { stringValue: merchantId } } },
+          {
+            fieldFilter: {
+              field: { fieldPath: 'status' },
+              op: 'IN',
+              value: encode(['new', 'accepted', 'preparing', 'ready_for_pickup', 'picked_up']),
+            },
+          },
+        ],
+      },
+    },
+    limit: 200,
+  },
+});
+await allow("the supplier may query its restaurant's active orders", () =>
+  request('POST', ':runQuery', { as: SUPPLIER, rawBody: activeQuery('open-shop') }));
+await deny("a rival may not query another restaurant's active orders", () =>
+  request('POST', ':runQuery', { as: RIVAL, rawBody: activeQuery('open-shop') }));
+
+// ── Reviews ────────────────────────────────────────────────────────────────
+// Customers write reviews; the restaurant's owner may only reply to them and
+// archive them on its own Reviews screen (Figma 385:5924) — see
+// apps/azglobe/src/supplier/services/reviews.ts.
+section('reviews');
+const REVIEW = 'merchants/open-shop/reviews/rv1';
+const reviewBody = (over = {}) => ({
+  userId: CUSTOMER,
+  userName: 'Vanan',
+  orderId: 'o1',
+  merchantId: 'open-shop',
+  rating: 4,
+  text: 'Great kottu',
+  dishTag: 'Chicken Kottu',
+  helpfulCount: 0,
+  createdAt: 1,
+  ...over,
+});
+const replyOf = (text, createdAt = 2) => ({ reply: { text, createdAt } });
+// REST semantics: a masked field missing from the body is deleted.
+const clearReply = (as) => request('PATCH', REVIEW, { as, body: {}, updateMask: ['reply'] });
+await seedDoc(REVIEW, reviewBody());
+
+await allow('anyone may read a restaurant’s reviews', () => list('merchants/open-shop/reviews', null));
+
+// The owner's side.
+await allow('the owner may reply to a review', () =>
+  update(REVIEW, replyOf('Thank you, Vanan!'), SUPPLIER));
+await allow('the owner may edit that reply', () =>
+  update(REVIEW, replyOf('Thank you so much, Vanan! 🙏', 3), SUPPLIER));
+await allow('a reply of exactly 1000 characters is accepted', () =>
+  update(REVIEW, replyOf('x'.repeat(1000), 4), SUPPLIER));
+await allow('the owner may hide a review from their list', () =>
+  update(REVIEW, { hiddenByMerchant: true }, SUPPLIER));
+await allow('the owner may unhide it', () => update(REVIEW, { hiddenByMerchant: false }, SUPPLIER));
+await allow('the owner may delete their reply', () => clearReply(SUPPLIER));
+await deny('a reply may not be blank', () => update(REVIEW, replyOf('   '), SUPPLIER));
+await deny('a reply may not exceed 1000 characters', () =>
+  update(REVIEW, replyOf('x'.repeat(1001)), SUPPLIER));
+await deny('a reply is { text, createdAt } and nothing more', () =>
+  update(REVIEW, { reply: { text: 'Hi', createdAt: 2, pinned: true } }, SUPPLIER));
+await deny('a reply must carry when it was written', () =>
+  update(REVIEW, { reply: { text: 'Hi' } }, SUPPLIER));
+await deny('a reply may not be a bare string', () => update(REVIEW, { reply: 'Thanks' }, SUPPLIER));
+await deny('hiddenByMerchant must be a boolean', () =>
+  update(REVIEW, { hiddenByMerchant: 'yes' }, SUPPLIER));
+await deny('the owner may not change the stars', () => update(REVIEW, { rating: 5 }, SUPPLIER));
+await deny('the owner may not rewrite the review', () =>
+  update(REVIEW, { text: 'Best place ever' }, SUPPLIER));
+await deny('the owner may not change the stars while replying', () =>
+  update(REVIEW, { rating: 5, ...replyOf('Thanks') }, SUPPLIER));
+await deny('the owner may not delete a customer review', () => remove(REVIEW, SUPPLIER));
+await deny('a rival restaurant may not reply', () =>
+  update(REVIEW, replyOf('Try us instead'), RIVAL));
+await deny('a rival restaurant may not hide it', () =>
+  update(REVIEW, { hiddenByMerchant: true }, RIVAL));
+await seedDoc('merchants/mis-seeded-shop/reviews/rv9', reviewBody({ merchantId: 'mis-seeded-shop' }));
+await deny('a customer named on a merchant still may not reply as it', () =>
+  request('PATCH', 'merchants/mis-seeded-shop/reviews/rv9', {
+    as: CUSTOMER, body: replyOf('Fake reply'), updateMask: ['reply'],
+  }));
+
+// The author's side.
+await allow('the author may change their stars and words', () =>
+  update(REVIEW, { rating: 5, text: 'Even better the second time' }, CUSTOMER));
+await deny('the author may not rate above 5', () => update(REVIEW, { rating: 6 }, CUSTOMER));
+await deny('the author may not rate below 1', () => update(REVIEW, { rating: 0 }, CUSTOMER));
+await deny('the rating must stay a number', () => update(REVIEW, { rating: 'five' }, CUSTOMER));
+await deny('the author may not inflate the helpful count', () =>
+  update(REVIEW, { helpfulCount: 99 }, CUSTOMER));
+await deny('the author may not reassign the review', () => update(REVIEW, { userId: OTHER }, CUSTOMER));
+await deny('the author may not move it to another order', () =>
+  update(REVIEW, { orderId: 'o2' }, CUSTOMER));
+await deny('the author may not move it to another restaurant', () =>
+  update(REVIEW, { merchantId: 'closed-shop' }, CUSTOMER));
+await deny('the author may not backdate it', () => update(REVIEW, { createdAt: 0 }, CUSTOMER));
+await deny("the author may not write the restaurant's reply", () =>
+  update(REVIEW, replyOf('Glad you liked it — The Management'), CUSTOMER));
+await deny('the author may not un-hide or hide it for the owner', () =>
+  update(REVIEW, { hiddenByMerchant: true }, CUSTOMER));
+await deny('another customer may not edit it', () => update(REVIEW, { text: 'Terrible' }, OTHER));
+await deny('a supplier account may not write a review', () =>
+  set('merchants/open-shop/reviews/rv2', reviewBody({ userId: SUPPLIER }), SUPPLIER));
+
+// Creating a review: one per delivered order, stored under the order's id.
+await givenOrder('rvo1', { status: 'delivered', timeline: [{ status: 'delivered', at: 1 }] });
+await givenOrder('rvo2', { status: 'delivered', timeline: [{ status: 'delivered', at: 1 }] });
+await givenOrder('rvo3', { status: 'preparing', timeline: [{ status: 'preparing', at: 1 }] });
+const fresh = (over = {}) => reviewBody({ createdAt: Date.now(), ...over });
+await allow('the customer may review a delivered order, under its id', () =>
+  set('merchants/open-shop/reviews/rvo1', fresh({ orderId: 'rvo1' }), CUSTOMER));
+await deny('a second review of the same order is refused', () =>
+  set('merchants/open-shop/reviews/rvo1', fresh({ orderId: 'rvo1', text: 'Again' }), CUSTOMER));
+await deny('a review stored under another id is refused', () =>
+  set('merchants/open-shop/reviews/extra', fresh({ orderId: 'rvo2' }), CUSTOMER));
+await deny('a review may not arrive with a restaurant reply', () =>
+  set('merchants/open-shop/reviews/rvo2', fresh({ orderId: 'rvo2', ...replyOf('Thanks!') }), CUSTOMER));
+await deny('a review may not arrive hidden', () =>
+  set('merchants/open-shop/reviews/rvo2', fresh({ orderId: 'rvo2', hiddenByMerchant: true }), CUSTOMER));
+await deny('a review may not start with helpful votes', () =>
+  set('merchants/open-shop/reviews/rvo2', fresh({ orderId: 'rvo2', helpfulCount: 50 }), CUSTOMER));
+await deny('a review may not be dated in the future', () =>
+  set('merchants/open-shop/reviews/rvo2', fresh({ orderId: 'rvo2', createdAt: Date.now() + 86_400_000 * 365 }), CUSTOMER));
+await deny('a review may not be backdated', () =>
+  set('merchants/open-shop/reviews/rvo2', fresh({ orderId: 'rvo2', createdAt: 1 }), CUSTOMER));
+await deny('an order that is not delivered cannot be reviewed', () =>
+  set('merchants/open-shop/reviews/rvo3', fresh({ orderId: 'rvo3' }), CUSTOMER));
+await allow('another delivered order may be reviewed', () =>
+  set('merchants/open-shop/reviews/rvo2', fresh({ orderId: 'rvo2' }), CUSTOMER));
 
 // ── Customer profiles ──────────────────────────────────────────────────────
 section('customer profiles');

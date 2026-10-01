@@ -35,6 +35,14 @@ const config: ExpoConfig = {
   icon: './assets/icon.png',
   userInterfaceStyle: 'light',
 
+  web: {
+    bundler: 'metro',
+    output: 'single',
+    name: 'A-Z Globe',
+    shortName: 'A-Z Globe',
+    favicon: './assets/icon.png',
+  },
+
   ios: {
     bundleIdentifier: 'com.azglobe.app',
     supportsTablet: false,

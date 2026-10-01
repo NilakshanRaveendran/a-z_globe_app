@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
-import { Icon, StarRow, Text } from '@core/ui';
+import { Icon, Text } from '@core/ui';
 import { colors, gradients, radius, shadows, spacing } from '@core/theme';
 import { formatDistance } from '@core/utils/currency';
 import { resolveImage } from '../data/images';
@@ -14,7 +14,8 @@ export type PlaceCardProps = {
   rating: number;
   /** 0 means nobody has reviewed it yet — the card shows "New" instead of 0.0. */
   reviewCount?: number;
-  distanceKm: number;
+  /** Hidden when unknown — a restaurant without a map pin has no distance. */
+  distanceKm?: number;
   isOpen: boolean;
   onPress: () => void;
   /** 'hero' is the full-width 140pt card; 'tile' is the 160×200 pair below it. */
@@ -47,6 +48,8 @@ export function PlaceCard({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={isOpen ? name : `${name}, closed`}
       style={({ pressed }) => [
         styles.card,
         hero ? styles.hero : styles.tile,
@@ -64,7 +67,7 @@ export function PlaceCard({
         style={StyleSheet.absoluteFill}
       />
 
-      <View style={[styles.statusPill, isOpen ? styles.openPill : styles.closedPill]}>
+      <View style={[styles.statusPill, !hero && styles.tileStatus, isOpen ? styles.openPill : styles.closedPill]}>
         <Text variant="captionBold" color={colors.onPrimary}>
           {isOpen ? 'Open' : 'Closed'}
         </Text>
@@ -92,19 +95,21 @@ export function PlaceCard({
               </Text>
             ) : (
               <>
-                <StarRow rating={rating} size={10} />
+                <Icon name="star" size={10} color={colors.star} />
                 <Text variant="labelSm" color={colors.textInverse}>
                   {rating.toFixed(1)}
                 </Text>
               </>
             )}
           </View>
-          <View style={styles.metaItem}>
-            <Icon name="mapPin" size={10} color={colors.textInverse} />
-            <Text variant="micro" color="rgba(255,255,255,0.80)">
-              {formatDistance(distanceKm)}
-            </Text>
-          </View>
+          {distanceKm != null && distanceKm > 0 ? (
+            <View style={styles.metaItem}>
+              <Icon name="mapPin" size={10} color={colors.textInverse} />
+              <Text variant="micro" color="rgba(255,255,255,0.80)">
+                {formatDistance(distanceKm)}
+              </Text>
+            </View>
+          ) : null}
         </View>
       </View>
     </Pressable>
@@ -131,6 +136,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
   },
   openPill: { backgroundColor: colors.primary },
+  tileStatus: { left: 'auto', right: spacing[4] },
   closedPill: { backgroundColor: 'rgba(0,0,0,0.55)' },
   body: { gap: spacing[1.5] },
   // Figma tightens the line height on these overlay titles.

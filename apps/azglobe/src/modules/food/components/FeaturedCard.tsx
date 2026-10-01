@@ -4,9 +4,10 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { AZBadge } from '@core/ui/AZBadge';
 import { Icon, Text } from '@core/ui';
 import { colors, gradients, radius, spacing } from '@core/theme';
-import { formatMoney, formatPrepTime } from '@core/utils/currency';
+import { formatPrepTime } from '@core/utils/currency';
 import { resolveImage } from '../data/images';
 import type { Merchant } from '../types';
+import { deliveryPriceLabel } from '../utils/deliveryLabels';
 
 /**
  * The large "Featured on A-Z Globe" card on the Order Food landing page.
@@ -18,8 +19,7 @@ import type { Merchant } from '../types';
  *   meta row     AZ badge · "20–30 min" · "·" · "Rs. 80 delivery" (400 12/18 80%)
  */
 export function FeaturedCard({ merchant, onPress }: { merchant: Merchant; onPress: () => void }) {
-  const delivery =
-    merchant.deliveryFee === 0 ? 'Free delivery' : `${formatMoney(merchant.deliveryFee)} delivery`;
+  const delivery = deliveryPriceLabel(merchant);
 
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.pressed]}>

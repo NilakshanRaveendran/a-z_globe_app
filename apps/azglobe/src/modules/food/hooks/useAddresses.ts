@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useSession } from '@app/providers/SessionProvider';
-import { listAddresses } from '../services/addresses';
+import { listAddresses, removeAddress, saveAddress, type AddressInput } from '../services/addresses';
 import { useSelectedAddressStore } from '../store/selectedAddress';
 import type { Address } from '../types';
 
@@ -14,6 +14,10 @@ export const addressesKey = (uid: string) => ['addresses', uid] as const;
  * the chosen one was deleted), and is null only when the address book is empty
  * — in which case checkout asks the customer to add one rather than inventing a
  * destination.
+ *
+ * `save` and `remove` work in both modes (demo mode keeps the address book on
+ * the device) and throw on failure, so a caller can report it rather than
+ * treat a failed write as done.
  */
 export function useAddresses() {
   const { user } = useSession();
@@ -38,5 +42,29 @@ export function useAddresses() {
     [qc, uid]
   );
 
-  return { uid, addresses, selected, select, refresh, isLoading: query.isLoading };
+  /** Create or update an address, select it, and refresh the list. Returns it. */
+  const save = useCallback(
+    async (input: AddressInput): Promise<Address> => {
+      const saved = await saveAddress(uid, input);
+      selectStore(uid, saved.id);
+      await qc.invalidateQueries({ queryKey: addressesKey(uid) });
+      return saved;
+    },
+    [qc, selectStore, uid]
+  );
+
+  /**
+   * Delete an address. The selection is cleared only when it was the one
+   * removed (audit C38), so checkout falls back to the first remaining one.
+   */
+  const remove = useCallback(
+    async (id: string): Promise<void> => {
+      await removeAddress(uid, id);
+      if (useSelectedAddressStore.getState().byUser[uid] === id) selectStore(uid, null);
+      await qc.invalidateQueries({ queryKey: addressesKey(uid) });
+    },
+    [qc, selectStore, uid]
+  );
+
+  return { uid, addresses, selected, select, refresh, save, remove, isLoading: query.isLoading };
 }

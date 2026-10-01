@@ -10,7 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { BottomBar, Button, Icon, Screen, Text } from '@core/ui';
+import { BackButton, BottomBar, Button, Screen, Text } from '@core/ui';
 import { colors, radius, SCREEN_PADDING, spacing, typography } from '@core/theme';
 import { useAuthActions } from '../useAuthActions';
 import type { AuthStackParamList } from '../types';
@@ -59,14 +59,7 @@ export function OtpScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={styles.header}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            onPress={navigation.goBack}
-            style={({ pressed }) => [styles.back, pressed && styles.pressed]}
-          >
-            <Icon name="arrowLeft" size={18} color={colors.text} />
-          </Pressable>
+          <BackButton onPress={navigation.goBack} />
         </View>
 
         <ScrollView
@@ -152,15 +145,6 @@ export function OtpScreen() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   header: { paddingHorizontal: SCREEN_PADDING, paddingVertical: spacing[4] },
-  back: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surfaceAlt,
-  },
-  pressed: { opacity: 0.7 },
 
   content: { paddingHorizontal: SCREEN_PADDING, paddingTop: spacing[6], gap: spacing[3] },
   title: { fontSize: 26, lineHeight: 34 },

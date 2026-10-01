@@ -18,11 +18,23 @@ export const foodImages = {
   'pol-sambol-rice': require('../../../../assets/images/food/pol-sambol-rice.jpg'),
   'curry-roti': require('../../../../assets/images/food/curry-roti.jpg'),
   'pancakes': require('../../../../assets/images/food/pancakes.jpg'),
+  // Lime Juice row on All Menu Items (26:10198). The file historically saved as
+  // `pol-sambol-rice.jpg` is this same photo; the key stays for saved menus.
+  'lime-juice': require('../../../../assets/images/food/lime-juice.jpg'),
   'merchant-mamas-kitchen': require('../../../../assets/images/food/merchant-mamas-kitchen.jpg'),
-  'merchant-mamas-kitchen-wide': require('../../../../assets/images/food/merchant-mamas-kitchen-wide.png'),
+  'merchant-mamas-kitchen-wide': require('../../../../assets/images/food/merchant-mamas-kitchen-wide.jpg'),
   'merchant-namma-ooru-cafe': require('../../../../assets/images/food/merchant-namma-ooru-cafe.jpg'),
   'merchant-trinco-blu': require('../../../../assets/images/food/merchant-trinco-blu.jpg'),
   'merchant-trinco-blu-restaurant': require('../../../../assets/images/food/merchant-trinco-blu-restaurant.jpg'),
+  // Menu Management dish photos — Figma 176:2923. Mango Lassi and Chocolate
+  // Lava Cake are portrait shots Figma crops to the card; that crop is baked in.
+  'grilled-chicken-burger': require('../../../../assets/images/food/grilled-chicken-burger.jpg'),
+  'margherita-pizza': require('../../../../assets/images/food/margherita-pizza.jpg'),
+  'spicy-tuna-roll': require('../../../../assets/images/food/spicy-tuna-roll.jpg'),
+  'mix-nasi-goreng': require('../../../../assets/images/food/mix-nasi-goreng.jpg'),
+  'caesar-salad': require('../../../../assets/images/food/caesar-salad.jpg'),
+  'mango-lassi': require('../../../../assets/images/food/mango-lassi.jpg'),
+  'chocolate-lava-cake': require('../../../../assets/images/food/chocolate-lava-cake.jpg'),
 } as const;
 
 export type FoodImageKey = keyof typeof foodImages;
