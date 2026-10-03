@@ -46,16 +46,10 @@ import { averageRating, businessStats, loadRatings, StatCards } from '../compone
  * Behaviour the frame only implies:
  *   - the bell's dot means orders are waiting; the bell then opens the Orders
  *     tab. With nothing waiting it has no dot and explains notifications.
- *   - the location opens where the address is edited: the restaurant's
- *     information, or Restaurant Management when there are several.
- *   - with two or more restaurants the card names "N restaurants" and the
- *     pencil opens Restaurant Management rather than editing only the first.
- *   - below 360pt the three controls drop under the text, which otherwise
- *     wraps to "Order / Food".
  */
 
 export function SupplierDashboardScreen() {
-  const { user, location } = useSession();
+  const { user } = useSession();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { width } = useWindowDimensions();
   const narrow = width < 360;
@@ -97,12 +91,6 @@ export function SupplierDashboardScreen() {
   const awaiting = orders.filter((o) => ACTIVE_STATUSES.includes(o.status)).length;
 
   const openRestaurants = () => navigation.navigate('SupplierRestaurants');
-  // One restaurant: edit it. Several: the pencil can't know which one.
-  const editPrimary = () =>
-    primary && !several
-      ? navigation.navigate('SupplierRestaurantInfo', { merchantId: primary.id })
-      : openRestaurants();
-
   const openNotifications = () =>
     awaiting
       ? navigation.getParent()?.navigate('Orders')
@@ -131,22 +119,6 @@ export function SupplierDashboardScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.headerTop}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`Location: ${location}`}
-            accessibilityHint={several || !primary ? 'Opens Restaurant Management' : 'Opens restaurant information'}
-            onPress={editPrimary}
-            hitSlop={8}
-            style={({ pressed }) => [styles.locationRow, pressed && styles.pressed]}
-          >
-            <Icon name="mapPin" size={14} color={colors.primary} />
-            <Text variant="bodySm" color={colors.textSecondary} numberOfLines={1} style={styles.shrink}>
-              {location}
-            </Text>
-            <View style={styles.chevronDown}>
-              <Icon name="chevronRight" size={13} color={colors.textSecondary} />
-            </View>
-          </Pressable>
           <View style={styles.headerActions}>
             <HeaderButton
               icon="bell"
@@ -232,17 +204,6 @@ export function SupplierDashboardScreen() {
               </Pressable>
               <View style={[styles.controls, narrow && styles.controlsNarrow]}>
                 <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={
-                    several ? `Manage ${count} restaurants` : primary ? `Edit ${primary.name}` : 'Add a restaurant'
-                  }
-                  onPress={editPrimary}
-                  hitSlop={6}
-                  style={({ pressed }) => [styles.circleBtn, pressed && styles.pressed]}
-                >
-                  <Icon name="pencilSm" size={12} color={colors.textSecondary} />
-                </Pressable>
-                <Pressable
                   accessibilityRole="switch"
                   accessibilityState={{ checked: true }}
                   accessibilityLabel={`${food.title} service`}
@@ -316,7 +277,7 @@ const styles = StyleSheet.create({
 
   headerTop: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     gap: spacing[4],
     // 12 above the buttons, as on every header.

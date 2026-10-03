@@ -688,7 +688,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceSunken,
     fontFamily: fontFamily[400],
   },
-  textarea: { height: 108, paddingTop: spacing[4], ...text(14, 400) },
+  textarea: { height: 108, paddingTop: spacing[4], ...text(16, 400, 24) },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
   chip: {
     minWidth: 60,
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
   chipOn: { backgroundColor: colors.primary },
   chipInput: {
     width: 120,
-    ...text(12, 600, 18),
+    ...text(14, 600, 20),
     color: colors.text,
   },
   footer: {

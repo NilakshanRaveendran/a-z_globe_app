@@ -208,7 +208,7 @@ export function MessagingHome({ onBack }: { onBack?: () => void }) {
                       </span>
                     )}
                     {!joined ? (
-                      <span className="azm-wa-join">Join</span>
+                      <span className="azm-wa-join"><MIcon name="add" size={16} />Join</span>
                     ) : g.muted ? (
                       <span className="azm-wa-muted" aria-label="Muted">
                         <MIcon name="muted" size={16} />

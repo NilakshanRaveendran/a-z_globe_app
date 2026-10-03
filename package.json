@@ -14,7 +14,7 @@
     "build:web": "npm run build:web --workspace @azglobe/app",
     "preview:web": "node tools/serve-web.mjs",
     "typecheck:web": "tsc --noEmit --project apps/azglobe/tsconfig.web.json",
-    "test:web": "node --test tools/web.test.mjs tools/messaging.test.mjs tools/restaurants.test.mjs tools/delivery.test.mjs",
+    "test:web": "node --test tools/web.test.mjs tools/messaging.test.mjs tools/restaurants.test.mjs tools/delivery.test.mjs tools/order-steps.test.mjs tools/order-flow.test.mjs tools/messaging-interactions.test.mjs",
     "check:firebase": "node tools/check-firebase.mjs",
     "clear:catalogue": "node tools/clear-catalogue.mjs",
     "figma": "node tools/figma-spec.mjs",

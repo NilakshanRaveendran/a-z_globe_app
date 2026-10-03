@@ -37,12 +37,14 @@ import KeyboardArrowUpRounded from "@mui/icons-material/KeyboardArrowUpRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import DoneAllRounded from "@mui/icons-material/DoneAllRounded";
 import LockRounded from "@mui/icons-material/LockRounded";
-import DeleteOutlineRounded from "@mui/icons-material/DeleteOutlineRounded";
+import BlockOutlined from "@mui/icons-material/BlockOutlined";
+import DeleteForeverOutlined from "@mui/icons-material/DeleteForeverOutlined";
 import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
 import PauseRounded from "@mui/icons-material/PauseRounded";
 import ErrorOutlineRounded from "@mui/icons-material/ErrorOutlineRounded";
 import ContentCopyRounded from "@mui/icons-material/ContentCopyRounded";
 import ForwardRounded from "@mui/icons-material/ForwardRounded";
+import StarRounded from "@mui/icons-material/StarRounded";
 import StarOutlineRounded from "@mui/icons-material/StarOutlineRounded";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import EditRounded from "@mui/icons-material/EditRounded";
@@ -88,13 +90,15 @@ const icons = {
   sent: DoneRounded,
   read: DoneAllRounded,
   lock: LockRounded,
-  delete: DeleteOutlineRounded,
+  delete: DeleteForeverOutlined,
+  unavailable: BlockOutlined,
   play: PlayArrowRounded,
   pause: PauseRounded,
   error: ErrorOutlineRounded,
   copy: ContentCopyRounded,
   forward: ForwardRounded,
   star: StarOutlineRounded,
+  starFilled: StarRounded,
   info: InfoOutlined,
   edit: EditRounded,
   leave: LogoutRounded,

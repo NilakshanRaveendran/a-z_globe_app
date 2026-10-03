@@ -65,6 +65,7 @@ export function statusLabel(status: OrderStatus, orderType?: Order['orderType'])
     if (status === 'ready_for_pickup') return 'Ready to Collect';
     if (status === 'picked_up' || status === 'delivered') return 'Collected';
   }
+  if (status === 'accepted' || status === 'preparing' || status === 'ready_for_pickup') return 'Restaurant';
   return STATUS_STYLE[status].label;
 }
 

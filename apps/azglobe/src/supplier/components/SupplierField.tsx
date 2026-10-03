@@ -96,18 +96,18 @@ export function SupplierField({
 const styles = StyleSheet.create({
   field: { gap: spacing[3] },
   control: {
-    height: 46,
+    minHeight: 52,
     borderRadius: radius.xl,
     borderWidth: 1,
     borderColor: colors.border,
     paddingHorizontal: 14,
     paddingVertical: spacing[4],
     fontFamily: fontFamily[600],
-    fontSize: 14,
-    lineHeight: 16.8,
+    fontSize: 16,
+    lineHeight: 24,
     color: colors.text,
   },
-  multiline: { height: 83.5, paddingTop: spacing[4], fontSize: 13, lineHeight: 19.5 },
+  multiline: { minHeight: 100, paddingTop: spacing[4], fontSize: 16, lineHeight: 24 },
   invalid: { borderColor: '#D74C4D' },
   // The field's own gap already separates it from the box; pull the note in.
   note: { marginTop: -spacing[1] },

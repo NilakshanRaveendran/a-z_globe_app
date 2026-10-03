@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { BottomBar, Button, Icon, Screen, ScreenHeader, showToast, Text } from '@core/ui';
 import { Field } from '@core/ui/Field';
-import { colors, SCREEN_PADDING, shadows, spacing } from '@core/theme';
+import { colors, SCREEN_PADDING, spacing } from '@core/theme';
 import { firstGrapheme } from '@core/utils/text';
 import { useSession } from '@app/providers/SessionProvider';
 
@@ -83,6 +83,7 @@ export function EditProfileScreen() {
             <Text variant="h3" color={colors.text} numberOfLines={1}>
               {name.trim() || 'Your name'}
             </Text>
+            {!business && <Text variant="bodySm" color={colors.textSecondary}>Personal account</Text>}
             {business && company.trim() ? (
               <Text variant="body" color={colors.textSecondary} numberOfLines={1}>
                 {company.trim()}
@@ -91,9 +92,12 @@ export function EditProfileScreen() {
           </View>
 
           <View style={styles.card}>
-            <Text variant="eyebrowSm" color={colors.textMuted}>
-              {business ? 'YOU' : 'PERSONAL DETAILS'}
-            </Text>
+            <View style={styles.sectionHeading}>
+              <Text variant="h3">{business ? 'Your details' : 'Contact details'}</Text>
+              <Text variant="bodySm" color={colors.textSecondary}>
+                {business ? 'Keep your contact information up to date.' : 'Use the name and contact details you want associated with your account.'}
+              </Text>
+            </View>
             <Field
               label="Full name"
               value={name}
@@ -191,25 +195,26 @@ export function EditProfileScreen() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: { padding: SCREEN_PADDING, gap: spacing[6], paddingBottom: spacing[9] },
-  identity: { alignItems: 'center', gap: spacing[1.5], paddingVertical: spacing[4] },
+  identity: { alignItems: 'center', gap: spacing[2], paddingVertical: spacing[6], paddingHorizontal: spacing[4], borderRadius: 24, backgroundColor: '#FFF4F2' },
+  sectionHeading: { gap: spacing[2], marginBottom: spacing[2] },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 72,
+    height: 72,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.primary,
     marginBottom: spacing[3],
-    ...shadows.floating,
+
   },
   card: {
     gap: spacing[5],
     padding: spacing[6],
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.surfaceAlt,
+    borderColor: colors.border,
     backgroundColor: colors.surface,
-    ...shadows.raised,
+
   },
   locked: { backgroundColor: colors.surfaceAlt, color: colors.textSecondary },
   hint: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing[2] },

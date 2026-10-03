@@ -17,17 +17,18 @@ import { Alert } from '@core/ui/alert';
 import { formatClock } from '@core/utils/datetime';
 import type { Order, OrderStatus } from '@modules/food/types';
 import {
-  ACTIVE_STATUSES,
-  advanceOrder,
+  advanceOrderStage,
   CANCEL_REASONS,
   canCancel,
   cancelOrder,
   listActiveOrders,
-  listTodayOrders,
+  listClosedOrders,
   nextStep,
   watchActiveOrders,
+  watchClosedOrders,
 } from '../services/orders';
 import { customerName, displayRef, OrderCard } from './OrderCard';
+import { businessStage } from '../services/orderSteps';
 
 /**
  * The status chips and live order list of Active Orders (335:4972), shared
@@ -47,21 +48,18 @@ import { customerName, displayRef, OrderCard } from './OrderCard';
  * The browser has no pull-to-refresh, so the web build also shows a
  * "Refresh" control and when the list last updated.
  *
- * The step button is derived from `nextStep()`, which mirrors the state
- * machine in firestore.rules, so it can only offer a move the database will
- * accept. Each step confirms itself with a toast (S12). Cancelling (not on
+ * The step button offers one of three milestones via `nextStep()`.
+ * `advanceOrderStage()` records the legal database transitions behind each tap. Each step confirms itself with a toast (S12). Cancelling (not on
  * the frame, but a restaurant must be able to turn an order down) is a
  * confirmed text action at the end of the ETA row, with an optional reason.
  */
 
-const FILTERS: Array<{ key: string; label: string; statuses: OrderStatus[] }> = [
-  { key: 'active', label: 'Active', statuses: ACTIVE_STATUSES },
-  { key: 'new', label: 'New', statuses: ['new'] },
-  { key: 'accepted', label: 'Accepted', statuses: ['accepted'] },
-  { key: 'preparing', label: 'Preparing', statuses: ['preparing'] },
-  { key: 'ready', label: 'Ready', statuses: ['ready_for_pickup'] },
-  { key: 'picked_up', label: 'Picked up', statuses: ['picked_up'] },
-  { key: 'delivered', label: 'Delivered', statuses: ['delivered'] },
+const FILTERS = [
+  { key: 'active', label: 'Active' },
+  { key: 'restaurant', label: 'Restaurant' },
+  { key: 'pickup', label: 'Pickup' },
+  { key: 'completed', label: 'Completed' },
+  { key: 'cancelled', label: 'Cancelled' },
 ];
 
 export type OrderMerchant = { id: string; name: string };
@@ -79,11 +77,11 @@ function stepToast(order: Order, to: OrderStatus): string {
     case 'ready_for_pickup':
       return order.orderType === 'pickup' ? `${ref} is ready for the customer to collect` : `${ref} is ready for pickup`;
     case 'picked_up':
-      return order.orderType === 'pickup' ? `${ref} collected · moved to History` : `${ref} picked up`;
+      return order.orderType === 'pickup' ? `${ref} collected · shown in Completed` : `${ref} picked up`;
     case 'delivered':
-      return `${ref} delivered · moved to History`;
+      return `${ref} ${order.orderType === 'pickup' ? 'collected' : 'delivered'} · shown in Completed`;
     case 'cancelled':
-      return `${ref} cancelled · moved to History`;
+      return `${ref} cancelled · shown in Cancelled`;
     default:
       return `${ref} updated`;
   }
@@ -115,7 +113,8 @@ export function LiveOrderList({
 }) {
   const [active, setActive] = useState<Order[] | null>(null);
   const [delivered, setDelivered] = useState<Order[] | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [activeFailed, setActiveFailed] = useState(false);
+  const [completedFailed, setCompletedFailed] = useState(false);
   const [filter, setFilter] = useState('active');
   const [refreshing, setRefreshing] = useState(false);
   const [updatedAt, setUpdatedAt] = useState<number | null>(null);
@@ -130,6 +129,7 @@ export function LiveOrderList({
   const seen = useRef<Set<string> | null>(null);
   // Only the newest one-shot read may write — a slow earlier one must not overwrite it.
   const loadSeq = useRef(0);
+  const completedSeq = useRef(0);
   const listRef = useRef<ScrollView>(null);
   const chipsRef = useRef<ScrollView>(null);
   const chipX = useRef(new Map<string, number>());
@@ -162,66 +162,72 @@ export function LiveOrderList({
       else if (fresh.length > 1) showToast(`${fresh.length} new orders`);
     }
     seen.current = new Set(rows.map((o) => o.id));
-    setActive(rows);
-    setFailed(false);
+    // Firestore can remove a pending delivery from its active query before
+    // the write resolves. Keep its busy card until we can open Completed.
+    setActive((prev) => [
+      ...rows,
+      ...(prev ?? []).filter((o) => busy.current.has(o.id) && !rows.some((row) => row.id === o.id)),
+    ].sort(newestFirst));
+    setActiveFailed(false);
     setUpdatedAt(Date.now());
   }, []);
 
-  /** Today's delivered orders, for the "Delivered" chip. */
-  const loadDelivered = useCallback(async () => {
-    const rows = await Promise.all(ids.map((id) => listTodayOrders(id).catch(() => [] as Order[])));
-    setDelivered(rows.flat().filter((o) => o.status === 'delivered').sort(newestFirst));
-  }, [ids]);
+  const receiveCompleted = useCallback((rows: Order[]) => {
+    setDelivered(rows.sort(newestFirst));
+    setCompletedFailed(false);
+    setUpdatedAt(Date.now());
+  }, []);
 
-  /** A one-shot read of everything — the refresh control, and after each step. */
+  /** Each feed has its own revision so neither stale reads nor another feed's
+   * snapshot can overwrite it. Failed reads preserve the last known orders. */
   const refresh = useCallback(async () => {
     if (!merchants) return;
-    const token = ++loadSeq.current;
-    const results = await Promise.all(
-      ids.map((id) =>
-        listActiveOrders(id).then(
-          (rows) => ({ ok: true, rows }),
-          () => ({ ok: false, rows: [] as Order[] })
-        )
-      )
-    );
-    await loadDelivered();
-    if (token !== loadSeq.current) return;
-    if (results.length > 0 && results.every((r) => !r.ok)) {
-      setFailed(true);
-      setActive((prev) => prev ?? []);
-      return;
-    }
-    receiveActive(results.flatMap((r) => r.rows).sort(newestFirst));
-    // `merchants` is keyed by content: a parent re-render with the same
-    // restaurants must not refetch.
+    const activeToken = ++loadSeq.current;
+    const completedToken = ++completedSeq.current;
+    await Promise.all([
+      Promise.all(ids.map(listActiveOrders)).then((rows) => {
+        if (activeToken === loadSeq.current) receiveActive(rows.flat().sort(newestFirst));
+      }).catch(() => {
+        if (activeToken === loadSeq.current) setActiveFailed(true);
+      }),
+      Promise.all(ids.map(listClosedOrders)).then((rows) => {
+        if (completedToken === completedSeq.current) receiveCompleted(rows.flat());
+      }).catch(() => {
+        if (completedToken === completedSeq.current) setCompletedFailed(true);
+      }),
+    ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [merchantKey, ids, loadDelivered, receiveActive]);
+  }, [merchantKey, ids, receiveActive, receiveCompleted]);
 
-  // Stream while in view; detach on blur so a backgrounded tab holds no
-  // listener. A tab is never remounted, so this re-attaches on every return.
   useFocusEffect(
     useCallback(() => {
       if (!merchants) return;
-      void loadDelivered();
-      // A stream update is newer than any one-shot read still in flight, so it
-      // bumps the sequence and that read's result is dropped.
-      return watchActiveOrders(
-        ids,
-        (rows) => {
-          loadSeq.current += 1;
-          receiveActive(rows);
-        },
-        () => setFailed(true)
-      );
+      let live = true;
+      const stopActive = watchActiveOrders(ids, (rows) => {
+        if (!live) return;
+        loadSeq.current += 1;
+        receiveActive(rows);
+      }, () => live && setActiveFailed(true));
+      const stopCompleted = watchClosedOrders(ids, (rows) => {
+        if (!live) return;
+        completedSeq.current += 1;
+        receiveCompleted(rows);
+      }, () => live && setCompletedFailed(true));
+      return () => {
+        live = false;
+        loadSeq.current += 1;
+        completedSeq.current += 1;
+        stopActive();
+        stopCompleted();
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [merchantKey, ids, loadDelivered, receiveActive])
+    }, [merchantKey, ids, receiveActive, receiveCompleted])
   );
 
   const visible = useMemo(() => {
-    if (filter === 'delivered') return delivered ?? [];
-    const spec = FILTERS.find((f) => f.key === filter) ?? FILTERS[0]!;
-    return (active ?? []).filter((o) => spec.statuses.includes(o.status));
+    if (filter === 'completed') return (delivered ?? []).filter((o) => o.status === 'delivered');
+    if (filter === 'cancelled') return (delivered ?? []).filter((o) => o.status === 'cancelled' || o.status === 'refunded');
+    return (active ?? []).filter((o) => filter === 'active' || businessStage(o) === filter);
   }, [active, delivered, filter]);
 
   const setBusy = (id: string, on: boolean) => {
@@ -233,25 +239,33 @@ export function LiveOrderList({
   const move = async (order: Order, to: OrderStatus, reason?: string) => {
     if (busy.current.has(order.id)) return;
     setBusy(order.id, true);
-    // Anything already in flight read the order before this move; drop it.
+    // Keep the real status visible while saving. The write returns the actual
+    // timeline; never invent an optimistic one that omits intermediate steps.
     loadSeq.current += 1;
-    // Optimistic, timeline included, so the card and any follow-up write see
-    // the same document the server will hold. The refresh reconciles it.
-    const at = Date.now();
-    // A collected takeaway is finished: picked_up and delivered in one go.
-    const collect = to === 'picked_up' && order.orderType === 'pickup';
-    setActive((prev) =>
-      prev
-        ? prev.map((o) =>
-            o.id === order.id ? { ...o, status: to, timeline: [...(o.timeline ?? []), { status: to, at }] } : o
-          )
-        : prev
-    );
+    completedSeq.current += 1;
     try {
-      if (to === 'cancelled') await cancelOrder(order, reason);
-      else {
-        const timeline = await advanceOrder(order, to);
-        if (collect) await advanceOrder({ ...order, status: to, timeline }, 'delivered');
+      if (to === 'cancelled') {
+        const timeline = await cancelOrder(order, reason);
+        const updated: Order = { ...order, status: 'cancelled', timeline, cancelReason: reason };
+        completedSeq.current += 1;
+        setDelivered((prev) => [updated, ...(prev ?? []).filter((o) => o.id !== updated.id)].sort(newestFirst));
+        setOpen(updated.id);
+        chooseFilter('cancelled');
+        setActive((prev) => prev?.filter((o) => o.id !== order.id) ?? null);
+      } else {
+        const updated = await advanceOrderStage(order, to);
+        loadSeq.current += 1;
+        completedSeq.current += 1;
+        if (updated.status === 'delivered') {
+          setDelivered((prev) => [updated, ...(prev ?? []).filter((o) => o.id !== updated.id)].sort(newestFirst));
+          setActive((prev) => prev?.filter((o) => o.id !== updated.id) ?? null);
+          setOpen(updated.id);
+          chooseFilter('completed');
+        } else {
+          setActive((prev) => prev?.map((o) => o.id === updated.id ? updated : o) ?? null);
+          // A filtered card follows the milestone that was just saved.
+          if (filter !== 'active') chooseFilter(businessStage(updated) ?? 'active');
+        }
       }
       showToast(stepToast(order, to));
     } catch (error) {
@@ -277,7 +291,8 @@ export function LiveOrderList({
     setRefreshing(false);
   };
 
-  const loading = merchants === null || active === null;
+  const failed = (filter === 'completed' || filter === 'cancelled') ? completedFailed : activeFailed;
+  const loading = merchants === null || (!failed && ((filter === 'completed' || filter === 'cancelled') ? delivered === null : active === null));
 
   return (
     <>
@@ -340,6 +355,11 @@ export function LiveOrderList({
           <RefreshControl refreshing={refreshing} tintColor={colors.primary} onRefresh={() => void onRefresh()} />
         }
       >
+        {failed && visible.length > 0 ? (
+          <Text accessibilityRole="alert" variant="bodySm" color={colors.primary}>
+            Could not update these orders. Showing the last known status. Refresh to try again.
+          </Text>
+        ) : null}
         {loading ? (
           [0, 1, 2].map((i) => <Skeleton key={i} height={77} borderRadius={radius['3xl']} />)
         ) : visible.length === 0 ? (
@@ -350,9 +370,9 @@ export function LiveOrderList({
                 ? `Could not load your orders. ${isWeb ? 'Tap Refresh' : 'Pull down'} to try again.`
                 : filter === 'active'
                   ? 'When a customer places an order, it shows up here straight away.'
-                  : filter === 'delivered'
-                    ? 'Nothing delivered yet today. Earlier orders are in Order History.'
-                    : 'Nothing at this stage right now.'
+                  : filter === 'completed'
+                    ? 'Completed deliveries and collected takeaway orders will appear here.'
+                    : filter === 'cancelled' ? 'Cancelled and refunded orders will appear here.' : 'Nothing at this stage right now.'
             }
           />
         ) : (

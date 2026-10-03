@@ -24,6 +24,8 @@ import {
 import { findDemoRestaurant } from '@modules/food/services/demoCatalogue';
 import { countOfferUse } from './offers';
 import { isSeededDemoRestaurant } from './restaurants';
+import { stageTransitions } from './orderSteps';
+export { nextStep } from './orderSteps';
 
 /**
  * Supplier-side reads and writes for the orders placed with a restaurant.
@@ -57,26 +59,6 @@ const NEXT: Partial<Record<OrderStatus, { to: OrderStatus; label: string }>> = {
   ready_for_pickup: { to: 'picked_up', label: 'Mark as Picked Up' },
   picked_up: { to: 'delivered', label: 'Mark as Delivered' },
 };
-
-/**
- * Takeaway has no rider: once it's ready the customer collects it, and that
- * one tap finishes the order (LiveOrderList moves it through picked_up to
- * delivered, the two steps the rules require).
- */
-const NEXT_PICKUP: Partial<Record<OrderStatus, { to: OrderStatus; label: string }>> = {
-  ...NEXT,
-  preparing: { to: 'ready_for_pickup', label: 'Ready for Collection' },
-  ready_for_pickup: { to: 'picked_up', label: 'Mark as Collected' },
-  picked_up: { to: 'delivered', label: 'Complete Order' },
-};
-
-/** The single forward step available from a status, or null at the end. */
-export function nextStep(
-  status: OrderStatus,
-  orderType: Order['orderType'] = 'delivery'
-): { to: OrderStatus; label: string } | null {
-  return (orderType === 'pickup' ? NEXT_PICKUP : NEXT)[status] ?? null;
-}
 
 /** Statuses that still need the restaurant to do something. */
 export const ACTIVE_STATUSES: OrderStatus[] = [
@@ -449,6 +431,11 @@ export async function listMerchantOrders(
 /** Everything still in progress at one restaurant. */
 export const listActiveOrders = (merchantId: string) => listMerchantOrders(merchantId, ACTIVE_STATUSES);
 
+/** Recent completed orders, including orders placed before today. */
+export const listClosedOrders = (merchantId: string) => listMerchantOrders(merchantId, ['delivered', 'cancelled', 'refunded']);
+
+export const listCompletedOrders = (merchantId: string) => listMerchantOrders(merchantId, ['delivered']);
+
 /**
  * Every order placed at one restaurant since local midnight, in any status —
  * the stats' own read, separate from the live list (audit S3).
@@ -521,6 +508,33 @@ export function watchActiveOrders(
   onChange: (orders: Order[]) => void,
   onError?: (error: unknown) => void
 ): () => void {
+  return watchOrdersByStatus(merchantIds, ACTIVE_STATUSES, onChange, onError);
+}
+
+/** Completion is live too: it must not depend on a manual refresh or creation date. */
+export function watchCompletedOrders(
+  merchantIds: string[],
+  onChange: (orders: Order[]) => void,
+  onError?: (error: unknown) => void
+): () => void {
+  return watchOrdersByStatus(merchantIds, ['delivered'], onChange, onError);
+}
+
+/** Terminal orders stay live in both the Completed and Cancelled tabs. */
+export function watchClosedOrders(
+  merchantIds: string[],
+  onChange: (orders: Order[]) => void,
+  onError?: (error: unknown) => void
+): () => void {
+  return watchOrdersByStatus(merchantIds, ['delivered', 'cancelled', 'refunded'], onChange, onError);
+}
+
+function watchOrdersByStatus(
+  merchantIds: string[],
+  statuses: OrderStatus[],
+  onChange: (orders: Order[]) => void,
+  onError?: (error: unknown) => void
+): () => void {
   const ids = [...new Set(merchantIds.filter(Boolean))];
   if (!ids.length) {
     onChange([]);
@@ -532,7 +546,7 @@ export function watchActiveOrders(
     const emit = () => {
       const rows = ids
         .flatMap((id) => demoOrders(id))
-        .filter((o) => ACTIVE_STATUSES.includes(o.status))
+        .filter((o) => statuses.includes(o.status))
         .sort(newestFirst);
       const key = rows.map((o) => `${o.id}:${o.status}:${o.timeline?.length ?? 0}`).join('|');
       if (key === last) return;
@@ -570,11 +584,12 @@ export function watchActiveOrders(
         query(
           collection(db, ORDERS),
           where('merchantId', '==', merchantId),
-          where('status', 'in', ACTIVE_STATUSES),
+          where('status', 'in', statuses),
           orderBy('createdAt', 'desc'),
           fsLimit(200)
         ),
         (snap) => {
+          if (stopped) return;
           attempt = 0;
           failed.delete(merchantId);
           const rows = (snap?.docs ?? []).map((d) => ({ id: d.id, ...(d.data() as object) }) as Order);
@@ -582,6 +597,7 @@ export function watchActiveOrders(
           emit();
         },
         (error) => {
+          if (stopped) return;
           failed.add(merchantId);
           latest.set(merchantId, latest.get(merchantId) ?? []);
           emit();
@@ -698,6 +714,17 @@ export async function advanceOrder(
   // status and timeline in the order update.
   if (to === 'accepted') await countOfferUse(order.promoCode, order.merchantId);
   return change.timeline;
+}
+
+/** One staff action may cross several legacy statuses. Resume from the latest
+ * stored status after a partial failure; never skip the database's rules. */
+export async function advanceOrderStage(order: Order, to: OrderStatus): Promise<Order> {
+  let current = order;
+  for (const status of stageTransitions(order, to)) {
+    const timeline = await advanceOrder(current, status);
+    current = { ...current, status, timeline };
+  }
+  return current;
 }
 
 export const cancelOrder = (order: Order, reason?: string) => advanceOrder(order, 'cancelled', { reason });

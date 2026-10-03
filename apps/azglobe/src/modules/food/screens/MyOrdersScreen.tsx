@@ -63,9 +63,9 @@ export function MyOrdersScreen() {
     }, [load])
   );
 
-  const [current, past] = useMemo(() => {
+  const [current, past, cancelled] = useMemo(() => {
     const rows = orders ?? [];
-    return [rows.filter((o) => !isTerminalStatus(o.status)), rows.filter((o) => isTerminalStatus(o.status))];
+    return [rows.filter((o) => !isTerminalStatus(o.status)), rows.filter((o) => o.status === 'delivered'), rows.filter((o) => o.status === 'cancelled' || o.status === 'refunded')];
   }, [orders]);
 
   const open = (order: Order) => navigation.navigate('OrderTracking', { orderId: order.id });
@@ -107,7 +107,8 @@ export function MyOrdersScreen() {
         ) : (
           <>
             {current.length ? <Section title="Current" orders={current} onOpen={open} /> : null}
-            {past.length ? <Section title="Past orders" orders={past} onOpen={open} /> : null}
+            {past.length ? <Section title="Completed" orders={past} onOpen={open} /> : null}
+            {cancelled.length ? <Section title="Cancelled" orders={cancelled} onOpen={open} /> : null}
           </>
         )}
       </ScrollView>

@@ -61,7 +61,7 @@ export function Button({
       ) : (
         <>
           {leadingIcon ? <View style={styles.icon}>{leadingIcon}</View> : null}
-          <Text variant={size === 'lg' ? 'h4' : 'h5'} color={labelColor[variant]} align="center">
+          <Text variant="labelLg" color={labelColor[variant]} align="center">
             {label}
           </Text>
           {trailingIcon ? <View style={styles.icon}>{trailingIcon}</View> : null}

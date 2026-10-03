@@ -25,11 +25,42 @@ export function Highlight({
     </>
   );
 }
+/** Only web URLs become links; never activate arbitrary URI schemes. */
+export function linkParts(text: string): { text: string; href?: string }[] {
+  const parts: { text: string; href?: string }[] = [];
+  const pattern = /(?:https?:\/\/|www\.)[^\s<>]+/gi;
+  let cursor = 0;
+  for (const match of text.matchAll(pattern)) {
+    const start = match.index!;
+    if (start > cursor) parts.push({ text: text.slice(cursor, start) });
+    const label = match[0].replace(/[.,!?;:)\]}]+$/, "");
+    try {
+      const url = new URL(/^www\./i.test(label) ? `https://${label}` : label);
+      parts.push(url.hostname.includes(".") ? { text: label, href: url.href } : { text: label });
+    } catch { parts.push({ text: label }); }
+    cursor = start + label.length;
+  }
+  if (cursor < text.length) parts.push({ text: text.slice(cursor) });
+  return parts;
+}
+
+export function MessageText({ text, query }: { text: string; query?: string }) {
+  return <>{linkParts(text).map((part, i) => part.href ? (
+    <a key={i} className="azm-message-link" href={part.href} target="_blank" rel="noopener noreferrer">
+      <Highlight text={part.text} query={query} />
+    </a>
+  ) : <Highlight key={i} text={part.text} query={query} />)}</>;
+}
+
 export function MessageBubble({
   message: m,
   user,
   reply,
   selected,
+  selectionMode = false,
+  checked = false,
+  starred = false,
+  onSelect,
   query,
   onMenu,
   onJump,
@@ -44,6 +75,10 @@ export function MessageBubble({
   user: Identity;
   reply?: Message;
   selected?: boolean;
+  selectionMode?: boolean;
+  checked?: boolean;
+  starred?: boolean;
+  onSelect: () => void;
   query?: string;
   onMenu: () => void;
   onJump: (id: string) => void;
@@ -55,6 +90,7 @@ export function MessageBubble({
   onRetry: () => void;
 }) {
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const held = useRef(false);
   const origin = useRef({ x: 0, y: 0 });
   const stop = () => clearTimeout(timer.current);
   useEffect(() => stop, []);
@@ -69,12 +105,20 @@ export function MessageBubble({
   return (
     <div
       id={`message-${m.id}`}
-      className={`azm-message ${own ? "own" : ""} ${selected ? "selected" : ""}`}
+      className={`azm-message ${own ? "own" : ""} ${selected ? "selected" : ""} ${selectionMode ? "selecting" : ""} ${checked ? "checked" : ""}`}
+      onClickCapture={(e) => {
+        if (held.current) { held.current = false; e.preventDefault(); e.stopPropagation(); return; }
+        if (selectionMode) { e.preventDefault(); e.stopPropagation(); onSelect(); }
+      }}
     >
+      {selectionMode && <button className="azm-select-check" role="checkbox" aria-checked={checked}
+        aria-label={`Select message from ${m.name}: ${preview(m)}`} onKeyDown={(e) => {
+          if (e.key === " " || e.key === "Enter") { e.preventDefault(); e.stopPropagation(); onSelect(); }
+        }}>{checked ? <MIcon name="success" size={22} /> : <span className="azm-select-empty" />}</button>}
       {!own && <Avatar name={m.name} />}
       <div className="azm-message-wrap">
         <div
-          className="azm-bubble"
+          className={`azm-bubble${deleted ? " azm-bubble-deleted" : ""}`}
           tabIndex={0}
           aria-label={`Message from ${m.name}: ${preview(m)}`}
           onKeyDown={(e) => {
@@ -83,23 +127,25 @@ export function MessageBubble({
               (e.key === "Enter" || e.key === " ")
             ) {
               e.preventDefault();
-              onMenu();
+              if (selectionMode) onSelect(); else onMenu();
             }
           }}
           onContextMenu={(e) => {
             e.preventDefault();
             stop();
-            onMenu();
+            if (held.current) return;
+            if (selectionMode) onSelect(); else onMenu();
           }}
           onPointerDown={(e) => {
             if (
               e.button !== 0 ||
-              (e.target as HTMLElement).closest("button,a,audio,video")
+              (e.target as HTMLElement).closest("audio,video,input,textarea")
             )
               return;
             stop();
+            held.current = false;
             origin.current = { x: e.clientX, y: e.clientY };
-            timer.current = setTimeout(onMenu, 480);
+            timer.current = setTimeout(() => { held.current = true; if (selectionMode) onSelect(); else onMenu(); }, 480);
           }}
           onPointerMove={(e) => {
             if (
@@ -118,7 +164,7 @@ export function MessageBubble({
               {m.name}
             </div>
           )}
-          {m.forwarded && (
+          {m.forwarded && !deleted && (
             <small>
               <MIcon name="forward" size={12} /> Forwarded
             </small>
@@ -130,8 +176,8 @@ export function MessageBubble({
             </button>
           )}
           {deleted ? (
-            <p>
-              <MIcon name="delete" size={14} /> This message was deleted
+            <p className="azm-deleted-message">
+              <MIcon name="unavailable" size={18} /><span>Message deleted</span>
             </p>
           ) : (
             <>
@@ -184,7 +230,7 @@ export function MessageBubble({
               )}
               {m.text && (
                 <p dir="auto">
-                  <Highlight text={m.text} query={query} />
+                  <MessageText text={m.text} query={query} />
                 </p>
               )}
               {m.poll && (
@@ -279,10 +325,11 @@ export function MessageBubble({
             </>
           )}
           <div className="azm-stamp">
-            {m.edited && <span>edited</span>}
+            {m.edited && !deleted && <span>edited</span>}
+            {starred && !deleted && <span className="azm-starred" aria-label="Starred"><MIcon name="starFilled" size={13} /></span>}
             <span>{time(m.at)}</span>
-            {own && (
-              <span title={m.status ?? "Sent"} aria-label={m.status ?? "Sent"}>
+            {own && !deleted && (
+              <span className={`azm-receipt ${m.status ?? "sent"}`} title={m.status === "read" ? "Read" : m.status === "delivered" ? "Delivered" : m.status === "sending" ? "Sending" : m.status === "failed" ? "Failed to send" : "Sent"} aria-label={m.status ?? "sent"}>
                 {m.status === "failed" ? (
                   <button aria-label="Retry message" onClick={onRetry}>
                     <MIcon name="error" />

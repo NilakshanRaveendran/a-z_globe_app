@@ -191,8 +191,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  // Figma's greeting is 24/36 — larger than the h1 preset used elsewhere.
-  greeting: { fontSize: 24, lineHeight: 36 },
+  // A readable greeting that can wrap on narrow screens.
+  greeting: { fontSize: 28, lineHeight: 36 },
 
   services: {
     paddingHorizontal: SCREEN_PADDING,
@@ -200,6 +200,6 @@ const styles = StyleSheet.create({
     gap: spacing[4],
   },
   // Figma: 21.7 between columns (106-wide tiles across 361).
-  serviceRow: { flexDirection: 'row', gap: 21.7 },
+  serviceRow: { flexDirection: 'row', gap: 12 },
   serviceSpacer: { flex: 1 },
 });

@@ -233,80 +233,43 @@ export function text(size: number, weight: FontWeight, lineHeight?: number) {
   } as const;
 }
 
-/**
- * Named presets for the combinations that actually recur in the design, with
- * the Figma usage count that justifies each one.
- */
+/** Readable app-wide type scale. Sizes are logical pixels; native text keeps system scaling. */
 export const typography = {
-  /**
-   * Provider screen titles — "Vanan's Dashboard" (385:3033), "Restaurant
-   * Management" (385:3424), the restaurant name on the hub (385:5072). Larger
-   * than the customer h1 because the provider screens lead with them.
-   */
-  display: text(24, 700), // 24/36
-  // Provider page titles — Order History, Offers & Discounts, Reviews (22/33).
-  pageTitle: text(22, 700),
-  /** The big average on the provider Reviews summary — "4.8" (385:5530). */
+  display: text(28, 700, 36),
+  pageTitle: text(24, 700, 32),
   ratingHero: text(40, 700, 48),
-
-  /** Screen titles — "Order Food", "Your Cart", "Checkout" */
-  h1: text(20, 700), // 20/30
-  h2: text(18, 700), // 18/27
-  h3: text(16, 700), // 16/24
-  /** Section headings — "Our Services", "Popular Dishes" */
-  h4: text(15, 700), // 15/22.5  (27 uses)
-  h5: text(14, 700), // 14/21
-
-  /** Card titles — dish and restaurant names */
-  cardTitle: text(13, 700, 18), // 13/18   (12 uses)
-  /** Dish name on the provider menu card (176:2923) — one clipped line. */
-  cardTitleTight: text(13, 700, 16.25), // 13/16.25
-  price: text(13, 700, 19.5), // 13/19.5 (14 uses)
-  /** The heavier price on the provider menu cards (176:2923). */
-  priceLg: text(14, 800), // 14/21
-
-  bodyLg: text(14, 500), // 14/21
-  body: text(13, 500), // 13/19.5
-  bodySm: text(12, 500), // 12/18   (30 uses)
-  bodyRegular: text(12, 400), // 12/18   (32 uses)
-
-  label: text(12, 600), // 12/18   (29 uses)
-  labelLg: text(14, 600), // 14/21   (32 uses)
-  labelSm: text(11, 600), // 11/16.5
-  /** "Upload Photo" in the Add New Item sheet (463:2991). */
-  labelMd: text(13, 600), // 13/19.5
-  /** The order card's step button ("Mark as Ready") and "Total" (335:5771). */
-  labelBold: text(12, 700), // 12/18
-
-  /** Meta lines — merchant name above a dish, "2 days ago" */
-  caption: text(10, 500), // 10/15   (68 uses — the single most common style)
-  captionTight: text(10, 500, 14), // 10/14 — 2-line dish descriptions
-  captionBold: text(10, 600), // 10/15
-  captionRegular: text(10, 400), // 10/15
-
-  micro: text(11, 500), // 11/16.5 (25 uses)
-  microRegular: text(11, 400), // 11/16.5
-
-  /**
-   * Provider-side eyebrow labels — the tracked, muted headings that organise
-   * the supplier screens ("Active Services" 385:3033, "Restaurant Name *"
-   * 385:4028). The customer screens never use them.
-   */
-  eyebrow: { ...text(11, 700, 16.5), letterSpacing: 0.55 },
-  eyebrowSm: { ...text(10, 700, 15), letterSpacing: 0.55 },
-
-  /** Pill badges — "Bestseller", "Open", "AZ" */
-  badge: { ...text(9, 700, 13.5), letterSpacing: 0.22 },
-
-  /**
-   * Business Profile (147:4611): the settings row title / subtitle, the
-   * "App Preferences" section heading and the 56pt avatar's initial.
-   */
-  settingsTitle: text(15, 600), // 15/22.5
-  settingsSubtitle: text(13, 500, 17.875),
-  sectionTitle: text(17, 700), // 17/25.5
+  h1: text(24, 700, 32),
+  h2: text(22, 700, 30),
+  h3: text(20, 700, 28),
+  h4: text(20, 700, 28),
+  h5: text(18, 700, 26),
+  cardTitle: text(17, 700, 24),
+  cardTitleTight: text(16, 700, 22),
+  price: text(17, 700, 24),
+  priceLg: text(18, 800, 26),
+  bodyLg: text(17, 500, 26),
+  body: text(16, 500, 24),
+  bodySm: text(15, 500, 22),
+  bodyRegular: text(16, 400, 24),
+  label: text(14, 600, 20),
+  labelLg: text(16, 600, 24),
+  labelSm: text(13, 600, 18),
+  labelMd: text(15, 600, 22),
+  labelBold: text(14, 700, 20),
+  caption: text(13, 500, 18),
+  captionTight: text(13, 500, 18),
+  captionBold: text(13, 600, 18),
+  captionRegular: text(13, 400, 18),
+  micro: text(13, 500, 18),
+  microRegular: text(13, 400, 18),
+  eyebrow: { ...text(13, 700, 18), letterSpacing: 0.55 },
+  eyebrowSm: { ...text(12, 700, 18), letterSpacing: 0.55 },
+  badge: { ...text(12, 700, 16), letterSpacing: 0.22 },
+  settingsTitle: text(17, 600, 24),
+  settingsSubtitle: text(15, 500, 22),
+  sectionTitle: text(20, 700, 28),
   avatarInitial: text(22.4, 700, 22.4),
-  tabLabel: text(10, 500), // BottomNav labels
+  tabLabel: text(12, 500, 18),
 } as const;
 
 // ── Spacing ────────────────────────────────────────────────────────────────

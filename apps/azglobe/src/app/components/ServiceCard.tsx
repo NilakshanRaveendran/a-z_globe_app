@@ -23,14 +23,15 @@ export type ServiceCardProps = {
 export function ServiceCard({ module, onPress }: ServiceCardProps) {
   const comingSoon = module.status === 'coming-soon';
 
-  // Figma draws all six tiles identically, so a coming-soon module is NOT dimmed
-  // here — tapping it opens the coming-soon screen instead.
+  // Coming-soon services remain visible, but are dimmed and cannot be opened.
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={comingSoon ? `${module.title} — coming soon` : module.title}
-      onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      disabled={comingSoon}
+      accessibilityState={{ disabled: comingSoon }}
+      onPress={comingSoon ? undefined : onPress}
+      style={({ pressed }) => [styles.card, comingSoon && styles.unavailable, pressed && styles.pressed]}
     >
       <Image source={module.icon} style={styles.icon} contentFit="contain" />
       <Text variant="bodySm" color={colors.text} align="center">
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
     backgroundColor: colors.surfaceAlt,
   },
+  unavailable: { opacity: 0.45 },
   pressed: { opacity: 0.75 },
   icon: { width: 36, height: 36 },
 });

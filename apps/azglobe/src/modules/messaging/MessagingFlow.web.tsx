@@ -65,13 +65,14 @@ type Modal =
   | "reactions"
   | "votes"
   | "respond"
+  | "deleteSelected"
   | "forward"
   | "messageInfo"
   | "saved"
   | "leave"
   | "report"
   | "editGroup";
-const reactions = ["❤️", "😂", "😮", "😢", "🙏", "👍"];
+const reactions = ["👍", "❤️", "😂", "😮", "😢", "🙏", "😌"];
 
 // The picker and its emoji data load when the emoji sheet first opens.
 const EmojiPicker = lazy(() => import("./EmojiPicker.web").then((m) => ({ default: m.EmojiPicker })));
@@ -106,6 +107,12 @@ function GroupExperience({
   const [page, setPage] = useState<Page>("chat");
   const [modal, setModal] = useState<Modal>("");
   const [selectedId, setSelectedId] = useState("");
+  const [selectionIds, setSelectionIds] = useState<string[]>([]);
+  const toggleSelection = (id: string) => {
+    setModal("");
+    setSelectionIds((ids) => ids.includes(id) ? ids.filter((value) => value !== id) : [...ids, id]);
+    inputRef.current?.blur();
+  };
   const [replyId, setReplyId] = useState("");
   const [editingId, setEditingId] = useState("");
   const [text, setText] = useState("");
@@ -147,7 +154,16 @@ function GroupExperience({
   const unreadStart = useRef(
     initialUnread.current ? messages.at(-initialUnread.current)?.id : undefined,
   );
+  const selection = messages.filter((m) => selectionIds.includes(m.id) && m.kind !== "system");
+  const selecting = selection.length > 0;
   const selected = messages.find((m) => m.id === selectedId);
+  const forwarding = selecting ? selection.filter((m) => m.kind !== "deleted" && m.status !== "failed") : selected ? [selected] : [];
+  useEffect(() => {
+    if (!selecting) return;
+    const escape = (e: KeyboardEvent) => { if (e.key === "Escape") { setSelectionIds([]); setModal(""); } };
+    document.addEventListener("keydown", escape);
+    return () => document.removeEventListener("keydown", escape);
+  }, [selecting]);
   const reply = messages.find((m) => m.id === replyId);
   const matches = query.trim()
     ? messages.filter(
@@ -862,6 +878,10 @@ function GroupExperience({
                   highlight === m.id ||
                   (modal === "actions" && selectedId === m.id)
                 }
+                selectionMode={selecting}
+                checked={selectionIds.includes(m.id)}
+                starred={state.saved.includes(m.id)}
+                onSelect={() => toggleSelection(m.id)}
                 query={query}
                 onMenu={() => openMenu(m)}
                 onJump={jump}
@@ -892,7 +912,7 @@ function GroupExperience({
             </Fragment>
           ))}
         </div>
-        {showLatest && (
+        {showLatest && !selecting && (
           <button
             className="azm-latest"
             aria-label="Scroll to latest messages"
@@ -902,7 +922,29 @@ function GroupExperience({
             {newCount || ""}
           </button>
         )}
-        {canSend(group, user) ? (
+        {selecting ? (
+          <footer className="azm-header azm-selection-bar" aria-label="Selected messages">
+            <div className="azm-selection-title">
+            <IconButton name="close" label="Cancel message selection" onClick={() => setSelectionIds([])} />
+            <strong aria-live="polite">{selection.length} selected</strong>
+            </div>
+            <div className="azm-selection-actions" role="group" aria-label="Message selection actions">
+            <button type="button" className="azm-selection-action" aria-label="Copy selected messages" onClick={() => {
+              if (!navigator.clipboard) { notify("Clipboard unavailable"); return; }
+              void navigator.clipboard.writeText(selection.map((m) => m.text || preview(m)).join("\n"))
+                .catch(() => notify("Clipboard unavailable"));
+            }} ><MIcon name="copy" size={22} /><span>Copy</span></button>
+            <button type="button" className="azm-selection-action" aria-label="Forward selected messages" disabled={forwarding.length !== selection.length}
+              onClick={() => setModal("forward")} ><MIcon name="forward" size={22} /><span>Forward</span></button>
+            <button type="button" className="azm-selection-action" aria-label="Star selected messages" onClick={() => {
+              if (commit((s) => ({ ...s, saved: [...new Set([...s.saved, ...selectionIds])] }))) {
+                setSelectionIds([]);
+              }
+            }} ><MIcon name="star" size={22} /><span>Star</span></button>
+            <button type="button" className="azm-selection-action danger" aria-label="Delete selected messages" onClick={() => setModal("deleteSelected")} ><MIcon name="delete" size={22} /><span>Delete</span></button>
+            </div>
+          </footer>
+        ) : canSend(group, user) ? (
           <>
             {(reply || editingId) && (
               <div className="azm-reply-preview">
@@ -1127,7 +1169,6 @@ function GroupExperience({
                       }
                       void navigator.clipboard
                         .writeText(selected.text || preview(selected))
-                        .then(() => notify("Copied"))
                         .catch(() => notify("Clipboard unavailable. Select the message text to copy."));
                     },
                   },
@@ -1161,6 +1202,7 @@ function GroupExperience({
                   },
                 ],
             [
+              { icon: "success" as const, label: "Select", onPress: () => toggleSelection(selected.id) },
               {
                 icon: "delete" as const,
                 label: selected.sender === user.id && selected.kind !== "deleted" ? "Delete for me" : "Delete",
@@ -1315,47 +1357,59 @@ function GroupExperience({
           ))}
         </Sheet>
       )}
-      {modal === "forward" && selected && (
+      {modal === "forward" && forwarding.length > 0 && (
         <Sheet title="Forward to a group" onClose={closeModal}>
           {state.groups
-            .filter((g) => canSend(g, user, selected.kind))
+            .filter((g) => forwarding.every((m) => canSend(g, user, m.kind)))
             .map((g) => (
               <button
                 className="azm-row"
                 key={g.id}
                 onClick={() => {
-                  const forwarded = {
-                    ...selected,
+                  const forwarded = forwarding.map((item, index) => ({
+                    ...item,
                     id: crypto.randomUUID(),
                     groupId: g.id,
                     sender: user.id,
                     name: user.name,
-                    at: Date.now(),
+                    at: Date.now() + index,
                     status: "sent" as const,
                     reactions: {},
                     replyTo: undefined,
                     forwarded: true,
-                    poll: selected.poll
-                      ? { ...selected.poll, votes: {} }
+                    poll: item.poll
+                      ? { ...item.poll, votes: {} }
                       : undefined,
-                    event: selected.event
-                      ? { ...selected.event, responses: {} }
+                    event: item.event
+                      ? { ...item.event, responses: {} }
                       : undefined,
-                  };
+                  }));
                   if (
                     commit((s) => ({
                       ...s,
-                      messages: [...s.messages, forwarded],
+                      messages: [...s.messages, ...forwarded],
                     }))
-                  )
-                    notify(`Forwarded to ${g.name}`);
-                  closeModal();
+                  ) {
+                    setSelectionIds([]);
+                    closeModal();
+                  }
                 }}
               >
                 <Avatar name={g.name} image={g.image} />
                 <span>{g.name}</span>
               </button>
             ))}
+        </Sheet>
+      )}
+      {modal === "deleteSelected" && selecting && (
+        <Sheet title={`Delete ${selection.length} messages?`} onClose={closeModal}>
+          <p>These messages will be removed from your view on this device.</p>
+          <Primary onClick={() => {
+            if (commit((s) => ({ ...s, hidden: [...new Set([...s.hidden, ...selectionIds])] }))) {
+              setFailed((items) => items.filter((m) => !selectionIds.includes(m.id)));
+              setSelectionIds([]); closeModal();
+            }
+          }}>Delete for me</Primary>
         </Sheet>
       )}
       {modal === "messageInfo" && selected && (
