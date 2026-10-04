@@ -37,6 +37,10 @@ const RIVAL = 'rival-supplier-uid';
 const NEW_PERSON = 'new-person-uid';
 const NEW_BUSINESS = 'new-business-uid';
 
+// The sign-in number each account's token carries — what the messaging
+// directory is keyed on. Accounts not listed have no phone number.
+const PHONES = { [CUSTOMER]: '+94770000001', [OTHER]: '+94770000002' };
+
 // ── Emulator auth ──────────────────────────────────────────────────────────
 // The emulator does not verify signatures, so an unsigned JWT is enough to
 // present a given uid. `owner` is the emulator's bypass token, used for setup.
@@ -53,6 +57,7 @@ function tokenFor(uid) {
     exp: now + 3600,
     auth_time: now,
     firebase: { sign_in_provider: 'custom', identities: {} },
+    ...(PHONES[uid] ? { phone_number: PHONES[uid] } : {}),
   };
   return `${b64({ alg: 'none', typ: 'JWT' })}.${b64(payload)}.`;
 }
@@ -766,6 +771,121 @@ await deny('a customer may not create a profile carrying activeOrderId', () =>
 await deny('a customer may not read another profile', () => read(`customers/${CUSTOMER}`, OTHER));
 await deny('a customer may not set their own activeOrderId', () =>
   update(`customers/${CUSTOMER}`, { activeOrderId: 'o1' }, CUSTOMER));
+
+// ── A-Z Groups (messaging) ─────────────────────────────────────────────────
+section('messaging groups');
+const chatMembers = (over = {}) => ({
+  [SUPPLIER]: { name: "Mama's Kitchen", role: 'Service Provider' },
+  ...over,
+});
+const chatGroup = (over = {}) => ({
+  name: 'Regulars',
+  description: 'News for our regulars',
+  category: 'Food',
+  image: '',
+  creator: "Mama's Kitchen",
+  owner: SUPPLIER,
+  rules: 'Be kind.',
+  permissions: { posting: 'everyone', editing: 'admins', joining: 'anyone', polls: true, events: true },
+  members: chatMembers(),
+  memberIds: [SUPPLIER],
+  createdAt: 1,
+  updatedAt: 1,
+  ...over,
+});
+const chatMessage = (sender, over = {}) => ({
+  groupId: 'g1', sender, name: 'X', text: 'Hello', kind: 'text', at: 5, reactions: {}, ...over,
+});
+const withCustomer = { members: chatMembers({ [CUSTOMER]: { name: 'Vanan', role: 'Member' } }), memberIds: [SUPPLIER, CUSTOMER] };
+
+await allow('a supplier may create a group as its sole member and owner', () =>
+  set('chatGroups/g1', chatGroup(), SUPPLIER));
+await deny('a CUSTOMER may not create a group', () =>
+  set('chatGroups/g2', chatGroup({ owner: CUSTOMER, memberIds: [CUSTOMER], members: { [CUSTOMER]: { name: 'V', role: 'Service Provider' } } }), CUSTOMER));
+await deny('a supplier may not create a group owned by another account', () =>
+  set('chatGroups/g2', chatGroup({ owner: RIVAL }), SUPPLIER));
+await deny('a non-member may not read a group', () => read('chatGroups/g1', CUSTOMER));
+await deny('a non-member may not add themselves to a group', () =>
+  update('chatGroups/g1', withCustomer, CUSTOMER));
+await allow('the owner may add a person', () => update('chatGroups/g1', withCustomer, SUPPLIER));
+await allow('a member may read their group', () => read('chatGroups/g1', CUSTOMER));
+await deny('a plain member may not add people', () =>
+  update('chatGroups/g1', {
+    members: chatMembers({ [CUSTOMER]: { name: 'Vanan', role: 'Member' }, [OTHER]: { name: 'O', role: 'Member' } }),
+    memberIds: [SUPPLIER, CUSTOMER, OTHER],
+  }, CUSTOMER));
+await deny('a plain member may not make themselves an admin', () =>
+  update('chatGroups/g1', { members: chatMembers({ [CUSTOMER]: { name: 'Vanan', role: 'Admin' } }) }, CUSTOMER));
+await deny('a plain member may not rename the group while editing is admins-only', () =>
+  update('chatGroups/g1', { name: 'Mine now' }, CUSTOMER));
+
+await allow('a member may post a message as themselves', () =>
+  set('chatGroups/g1/messages/m1', chatMessage(CUSTOMER), CUSTOMER));
+await deny("a member may not post in another member's name", () =>
+  set('chatGroups/g1/messages/m2', chatMessage(SUPPLIER), CUSTOMER));
+await deny('a non-member may not post', () =>
+  set('chatGroups/g1/messages/m2', chatMessage(OTHER), OTHER));
+await deny('a non-member may not read messages', () => read('chatGroups/g1/messages/m1', OTHER));
+await allow('another member may read a message', () => read('chatGroups/g1/messages/m1', SUPPLIER));
+await allow('a member may react to another member’s message', () =>
+  update('chatGroups/g1/messages/m1', { reactions: { '👍': [SUPPLIER] } }, SUPPLIER));
+await allow('the sender may edit their own message', () =>
+  update('chatGroups/g1/messages/m1', { text: 'Hello there', edited: true }, CUSTOMER));
+await deny('a message may not be reassigned to another sender', () =>
+  update('chatGroups/g1/messages/m1', { sender: SUPPLIER }, CUSTOMER));
+
+await allow('a member may store a file for their group', () =>
+  set('chatFiles/f1', { groupId: 'g1', sender: CUSTOMER, mime: 'image/jpeg', data: 'AAAA', at: 5 }, CUSTOMER));
+await deny('a non-member may not read a group’s file', () => read('chatFiles/f1', OTHER));
+await allow('a member may read a group’s file', () => read('chatFiles/f1', SUPPLIER));
+await deny('a non-member may not store a file in a group', () =>
+  set('chatFiles/f2', { groupId: 'g1', sender: OTHER, mime: 'image/jpeg', data: 'AAAA', at: 5 }, OTHER));
+
+await allow('the owner may promote a member to admin', () =>
+  update('chatGroups/g1', { members: chatMembers({ [CUSTOMER]: { name: 'Vanan', role: 'Admin' } }) }, SUPPLIER));
+await allow('an admin may add a person', () =>
+  update('chatGroups/g1', {
+    members: chatMembers({ [CUSTOMER]: { name: 'Vanan', role: 'Admin' }, [OTHER]: { name: 'O', role: 'Member' } }),
+    memberIds: [SUPPLIER, CUSTOMER, OTHER],
+  }, CUSTOMER));
+await deny('an admin may not remove the owner', () =>
+  update('chatGroups/g1', {
+    members: { [CUSTOMER]: { name: 'Vanan', role: 'Admin' }, [OTHER]: { name: 'O', role: 'Member' } },
+    memberIds: [CUSTOMER, OTHER],
+  }, CUSTOMER));
+await deny('an admin may not take ownership', () => update('chatGroups/g1', { owner: CUSTOMER }, CUSTOMER));
+await deny('members and memberIds may not drift apart', () =>
+  update('chatGroups/g1', { memberIds: [SUPPLIER, CUSTOMER] }, CUSTOMER));
+await deny('a member may not remove somebody else by "leaving"', () =>
+  update('chatGroups/g1', {
+    members: chatMembers({ [OTHER]: { name: 'O', role: 'Member' } }),
+    memberIds: [SUPPLIER, OTHER],
+  }, OTHER));
+await allow('a member may leave', () =>
+  update('chatGroups/g1', {
+    members: chatMembers({ [CUSTOMER]: { name: 'Vanan', role: 'Admin' } }),
+    memberIds: [SUPPLIER, CUSTOMER],
+  }, OTHER));
+await deny('someone who left can no longer read the group', () => read('chatGroups/g1', OTHER));
+await deny('someone who left can no longer read its messages', () =>
+  read('chatGroups/g1/messages/m1', OTHER));
+
+section('messaging directory');
+await allow('an account may list itself under its own sign-in number', () =>
+  set(`chatDirectory/${encodeURIComponent(PHONES[CUSTOMER])}`, { uid: CUSTOMER, name: 'Vanan', kind: 'customer' }, CUSTOMER));
+await deny("an account may not claim somebody else's number", () =>
+  set(`chatDirectory/${encodeURIComponent(PHONES[OTHER])}`, { uid: CUSTOMER, name: 'Vanan', kind: 'customer' }, CUSTOMER));
+await deny('an account may not list another uid under its number', () =>
+  set(`chatDirectory/${encodeURIComponent(PHONES[CUSTOMER])}`, { uid: OTHER, name: 'Vanan', kind: 'customer' }, CUSTOMER));
+await allow('a signed-in account may look up a number it knows', () =>
+  read(`chatDirectory/${encodeURIComponent(PHONES[CUSTOMER])}`, SUPPLIER));
+await deny('nobody may list the directory', () => list('chatDirectory', SUPPLIER));
+await deny('an anonymous visitor may not look up a number', () =>
+  read(`chatDirectory/${encodeURIComponent(PHONES[CUSTOMER])}`, null));
+await allow('a member keeps their own chat settings', () =>
+  set(`chatUsers/${CUSTOMER}`, { muted: ['g1'] }, CUSTOMER));
+await deny("a member may not read another member's chat settings", () =>
+  read(`chatUsers/${CUSTOMER}`, SUPPLIER));
 
 console.log('\nfirestore.rules\n');
 console.log(results.join('\n'));

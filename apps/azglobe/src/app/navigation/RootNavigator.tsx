@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
@@ -13,6 +14,8 @@ import { useSession } from '@app/providers/SessionProvider';
 import { SupplierNavigator } from '@/supplier/navigation/SupplierNavigator';
 import type { RootStackParamList } from './types';
 import { MessagingFlow } from '@modules/messaging/entry';
+import { publishToDirectory } from '@modules/messaging/remote';
+import { isFirebaseReady } from '@core/firebase';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -56,7 +59,18 @@ const navTheme = {
  * to swipe back into the app.
  */
 export function RootNavigator() {
-  const { stage, accountKind } = useSession();
+  const { stage, accountKind, user } = useSession();
+
+  // A group admin adds people by phone number, so an account has to be
+  // findable from the moment it is usable — not only once it opens Messages.
+  useEffect(() => {
+    if (stage !== 'ready' || !accountKind || !isFirebaseReady()) return;
+    void publishToDirectory({
+      id: user.uid,
+      name: user.fullName,
+      provider: accountKind === 'supplier',
+    }).catch(() => undefined);
+  }, [stage, accountKind, user.uid, user.fullName]);
 
   return (
     <NavigationContainer theme={navTheme}>

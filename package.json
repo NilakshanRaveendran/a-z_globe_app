@@ -8,9 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "android": "npm run android --workspace @azglobe/app",
-    "app": "npm start --workspace @azglobe/app",
+    "android": "npm run build:messaging && npm run android --workspace @azglobe/app",
+    "app": "npm run build:messaging && npm start --workspace @azglobe/app",
     "web": "npm run web --workspace @azglobe/app",
+    "build:messaging": "node tools/build-messaging-embed.mjs",
     "build:web": "npm run build:web --workspace @azglobe/app",
     "preview:web": "node tools/serve-web.mjs",
     "typecheck:web": "tsc --noEmit --project apps/azglobe/tsconfig.web.json",
@@ -18,7 +19,8 @@
     "check:firebase": "node tools/check-firebase.mjs",
     "clear:catalogue": "node tools/clear-catalogue.mjs",
     "figma": "node tools/figma-spec.mjs",
-    "ios": "npm run ios --workspace @azglobe/app",
+    "ios": "npm run build:messaging && npm run ios --workspace @azglobe/app",
+    "postinstall": "node tools/build-messaging-embed.mjs",
     "migrate:accounts": "node tools/migrate-accounts.mjs",
     "posttest:rules": "node tools/free-port.mjs 8085",
     "pretest:rules": "node tools/free-port.mjs 8085",

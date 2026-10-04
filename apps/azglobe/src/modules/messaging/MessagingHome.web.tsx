@@ -11,6 +11,7 @@ import {
   type Message,
 } from "./model";
 import { useGroupSession } from "./session.web";
+import { sharedGroups } from "./store.web";
 import {
   Avatar,
   Empty,
@@ -25,6 +26,8 @@ import { GroupForm } from "./forms.web";
 
 type Filter = "All" | "Unread" | "Joined" | "Discover";
 const FILTERS: Filter[] = ["All", "Unread", "Joined", "Discover"];
+/** Shared groups are private — you are in every group you can see — so there is nothing to discover. */
+const SHARED_FILTERS: Filter[] = ["All", "Unread"];
 
 /** WhatsApp's list stamp: the time today, "Yesterday", then a short date. */
 function stamp(at: number): string {
@@ -54,7 +57,8 @@ function stamp(at: number): string {
 export function MessagingHome({ onBack }: { onBack?: () => void }) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { user, state, update } = useGroupSession();
+  const { user, state, update, loading } = useGroupSession();
+  const shared = sharedGroups();
   const [filter, setFilter] = useState<Filter>("All");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
@@ -108,7 +112,7 @@ export function MessagingHome({ onBack }: { onBack?: () => void }) {
           )}
         </label>
         <nav className="azm-wa-filters" aria-label="Filter groups">
-          {FILTERS.map((f) => (
+          {(shared ? SHARED_FILTERS : FILTERS).map((f) => (
             <button
               key={f}
               aria-pressed={filter === f}
@@ -137,14 +141,14 @@ export function MessagingHome({ onBack }: { onBack?: () => void }) {
       </div>
 
       <div className="azm-scroll azm-wa-list" ref={list}>
-        {!groups.length ? (
+        {loading ? null : !groups.length ? (
           <Empty
             title={
               q
                 ? "No groups found"
                 : filter === "Unread"
                   ? "You're all caught up"
-                  : filter === "Joined"
+                  : filter === "Joined" || shared
                     ? "No groups yet"
                     : "No groups to discover"
             }
@@ -153,10 +157,14 @@ export function MessagingHome({ onBack }: { onBack?: () => void }) {
                 ? "Try another group name or keyword."
                 : filter === "Unread"
                   ? "New messages in your groups will show here."
-                  : "Join an A-Z Group and start connecting with your community."
+                  : shared
+                    ? user.provider
+                      ? "Create a group and add people by their phone number."
+                      : "When a business adds you to a group, it will show here."
+                    : "Join an A-Z Group and start connecting with your community."
             }
           >
-            {!q && filter !== "Unread" && (
+            {!q && filter !== "Unread" && !shared && (
               <Primary
                 onClick={() => {
                   setFilter("Discover");
@@ -224,7 +232,10 @@ export function MessagingHome({ onBack }: { onBack?: () => void }) {
         )}
         {groups.length > 0 && (
           <p className="azm-wa-note">
-            <MIcon name="lock" size={12} /> A-Z Groups are saved on this device.
+            <MIcon name="lock" size={12} />{" "}
+            {shared
+              ? "Only members of a group can see its messages."
+              : "A-Z Groups are saved on this device."}
           </p>
         )}
       </div>

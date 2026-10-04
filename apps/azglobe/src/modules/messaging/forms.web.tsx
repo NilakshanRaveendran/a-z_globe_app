@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { categories, type Group, type Message } from "./model";
 import { Avatar, Field, IconButton, MIcon, Primary, Sheet } from "./ui.web";
+import { sharedGroups } from "./store.web";
 
 /**
  * On/off row with the app's switch (Restaurant Info's 44×24 red pill), so
@@ -497,15 +498,18 @@ export function GroupForm({
             ]}
             onChange={(editing) => setPermissions((p) => ({ ...p, editing }))}
           />
-          <Choice
-            label="Joining"
-            value={permissions.joining}
-            options={[
-              ["anyone", "Anyone can join"],
-              ["approval", "Require approval"],
-            ]}
-            onChange={(joining) => setPermissions((p) => ({ ...p, joining }))}
-          />
+          {/* A shared group is private: people are added by an admin, so there is nothing to choose. */}
+          {!sharedGroups() && (
+            <Choice
+              label="Joining"
+              value={permissions.joining}
+              options={[
+                ["anyone", "Anyone can join"],
+                ["approval", "Require approval"],
+              ]}
+              onChange={(joining) => setPermissions((p) => ({ ...p, joining }))}
+            />
+          )}
           <div className="azm-field">
             <span>Members can</span>
             <Toggle

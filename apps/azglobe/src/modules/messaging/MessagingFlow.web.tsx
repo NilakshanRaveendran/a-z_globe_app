@@ -8,8 +8,9 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@app/navigation/types";
 import { MessagingHome } from "./MessagingHome.web";
 import { useGroupSession } from "./session.web";
-import { deleteFiles } from "./store.web";
+import { deleteFiles, findPerson, onSyncError, setFileGroup, sharedGroups } from "./store.web";
 import {
+  adminOf,
   canEditInfo,
   canManage,
   canSend,
@@ -21,6 +22,7 @@ import {
   vote,
   type Attachment,
   type Group,
+  type Member,
   type Message,
 } from "./model";
 import {
@@ -71,7 +73,9 @@ type Modal =
   | "saved"
   | "leave"
   | "report"
-  | "editGroup";
+  | "editGroup"
+  | "addPeople"
+  | "member";
 const reactions = ["👍", "❤️", "😂", "😮", "😢", "🙏", "😌"];
 
 // The picker and its emoji data load when the emoji sheet first opens.
@@ -102,8 +106,9 @@ function GroupExperience({
   created?: boolean;
   onBack: () => void;
 }) {
-  const { user, state, update } = useGroupSession();
+  const { user, state, update, loading } = useGroupSession();
   const group = state.groups.find((g) => g.id === groupId);
+  const [memberId, setMemberId] = useState("");
   const [page, setPage] = useState<Page>("chat");
   const [modal, setModal] = useState<Modal>("");
   const [selectedId, setSelectedId] = useState("");
@@ -209,6 +214,12 @@ function GroupExperience({
       ?.scrollIntoView({ block: "center", behavior: "smooth" });
     setHighlight(id);
   };
+  // Files sent from this chat belong to this group; a change the server
+  // refuses is said out loud rather than silently undone.
+  useEffect(() => {
+    setFileGroup(groupId);
+    return onSyncError(setToast);
+  }, [groupId]);
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 4000);
@@ -263,10 +274,49 @@ function GroupExperience({
   if (!group)
     return (
       <Frame>
-        <Header title="Group unavailable" onBack={onBack} />
-        <Empty title="This group is no longer available" />
+        <Header title={loading ? "" : "Group unavailable"} onBack={onBack} />
+        {!loading && <Empty title="This group is no longer available" />}
       </Frame>
     );
+  /** A line in the chat that records what happened to the group, as WhatsApp does. */
+  const systemMessage = (text: string): Message => ({
+    id: crypto.randomUUID(),
+    groupId,
+    sender: user.id,
+    name: user.name,
+    text,
+    kind: "system",
+    at: Date.now(),
+    reactions: {},
+  });
+  const addMember = (person: Member) =>
+    commit((s) => ({
+      ...s,
+      groups: s.groups.map((g) =>
+        g.id === groupId && !g.members.some((m) => m.id === person.id)
+          ? { ...g, count: g.count + 1, members: [...g.members, { ...person, role: "Member" }] }
+          : g,
+      ),
+      messages: [...s.messages, systemMessage(`${user.name} added ${person.name}`)],
+    }));
+  const removeMember = (person: Member) =>
+    commit((s) => ({
+      ...s,
+      groups: s.groups.map((g) =>
+        g.id === groupId
+          ? { ...g, count: Math.max(1, g.count - 1), members: g.members.filter((m) => m.id !== person.id) }
+          : g,
+      ),
+      messages: [...s.messages, systemMessage(`${user.name} removed ${person.name}`)],
+    }));
+  const setAdmin = (person: Member, admin: boolean) =>
+    setGroup((g) => ({
+      ...g,
+      members: g.members.map((m) =>
+        m.id === person.id ? { ...m, role: admin ? "Admin" : "Member" } : m,
+      ),
+    }));
+  const member = group.members.find((m) => m.id === memberId);
 
   const send = (extra: Partial<Message> = {}) => {
     const kind = extra.kind ?? "text";
@@ -557,6 +607,8 @@ function GroupExperience({
           </div>
         </div>
         <div className="azm-scroll azm-padding">
+          {adminOf(group, user) &&
+            action("add", "Add people", () => setModal("addPeople"))}
           {group.members
             .filter((m) =>
               m.name.toLowerCase().includes(memberQuery.toLowerCase()),
@@ -568,19 +620,22 @@ function GroupExperience({
                   <strong>
                     {m.id === user.id ? `${m.name} (You)` : m.name}
                   </strong>
-                  <small>{m.role}</small>
+                  <small>
+                    {m.id === group.owner
+                      ? "Group admin · Creator"
+                      : m.role === "Admin"
+                        ? "Group admin"
+                        : m.role}
+                  </small>
                 </div>
-                {canManage(group, user) && m.id !== user.id && (
+                {adminOf(group, user) && m.id !== user.id && m.id !== group.owner && (
                   <IconButton
-                    name="delete"
-                    label={`Remove ${m.name}`}
-                    onClick={() =>
-                      setGroup((g) => ({
-                        ...g,
-                        members: g.members.filter((p) => p.id !== m.id),
-                        count: Math.max(1, g.count - 1),
-                      }))
-                    }
+                    name="more"
+                    label={`Options for ${m.name}`}
+                    onClick={() => {
+                      setMemberId(m.id);
+                      setModal("member");
+                    }}
                   />
                 )}
               </div>
@@ -1420,25 +1475,43 @@ function GroupExperience({
           </small>
           <div className="azm-info-section">
             <p>Status: {selected.status ?? "Received"}</p>
-            <small>Stored on this device</small>
+            <small>{sharedGroups() ? "Sent to everyone in this group" : "Stored on this device"}</small>
           </div>
         </Sheet>
       )}
       {modal === "leave" && (
         <Sheet title="Leave Group?" onClose={closeModal}>
-          <p>You can discover and join {group.name} again.</p>
+          <p>
+            {sharedGroups()
+              ? `You will stop receiving messages from ${group.name}. An admin can add you again.`
+              : `You can discover and join ${group.name} again.`}
+          </p>
           <div className="azm-padding">
             <Primary
               onClick={() => {
                 if (group.owner === user.id) return;
                 if (
-                  setGroup((g) => ({
-                    ...g,
-                    members: g.members.filter((m) => m.id !== user.id),
-                    count: Math.max(0, g.count - 1),
-                    unread: 0,
+                  commit((s) => ({
+                    ...s,
+                    groups: s.groups.map((g) =>
+                      g.id === groupId
+                        ? {
+                            ...g,
+                            members: g.members.filter((m) => m.id !== user.id),
+                            count: Math.max(0, g.count - 1),
+                            unread: 0,
+                          }
+                        : g,
+                    ),
+                    messages: sharedGroups()
+                      ? [...s.messages, systemMessage(`${user.name} left`)]
+                      : s.messages,
                   }))
                 ) {
+                  if (sharedGroups()) {
+                    onBack();
+                    return;
+                  }
                   setModal("");
                   setReplyId("");
                   setText("");
@@ -1478,7 +1551,9 @@ function GroupExperience({
               ) {
                 closeModal();
                 notify(
-                  "Report saved on this device. Not sent to a moderation team.",
+                  sharedGroups()
+                    ? "Report sent."
+                    : "Report saved on this device. Not sent to a moderation team.",
                 );
               }
             }}
@@ -1512,6 +1587,42 @@ function GroupExperience({
           }}
         />
       )}
+      {modal === "addPeople" && adminOf(group, user) && (
+        <AddPeople
+          group={group}
+          onClose={closeModal}
+          onAdd={(person) => {
+            if (addMember(person)) {
+              closeModal();
+              notify(`${person.name} added`);
+            }
+          }}
+        />
+      )}
+      {modal === "member" && member && adminOf(group, user) && (
+        <Sheet title={member.name} onClose={closeModal}>
+          <div className="azm-actions">
+            {member.role === "Admin"
+              ? action("person", "Dismiss as admin", () => {
+                  setAdmin(member, false);
+                  closeModal();
+                })
+              : action("starFilled", "Make group admin", () => {
+                  setAdmin(member, true);
+                  closeModal();
+                })}
+            {action(
+              "delete",
+              "Remove from group",
+              () => {
+                removeMember(member);
+                closeModal();
+              },
+              true,
+            )}
+          </div>
+        </Sheet>
+      )}
       {viewer && (
         <MediaViewer
           files={viewer.files}
@@ -1520,5 +1631,79 @@ function GroupExperience({
         />
       )}
     </Frame>
+  );
+}
+
+/**
+ * Add someone to the group by their phone number — the number they sign in to
+ * A-Z Globe with. There is no contact list to pick from: the directory can be
+ * asked about one number at a time and nothing else.
+ */
+function AddPeople({
+  group,
+  onClose,
+  onAdd,
+}: {
+  group: Group;
+  onClose: () => void;
+  onAdd: (person: Member) => void;
+}) {
+  const [phone, setPhone] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [person, setPerson] = useState<Member>();
+  const find = async () => {
+    setBusy(true);
+    setError("");
+    setPerson(undefined);
+    try {
+      const found = await findPerson(phone);
+      if (!found)
+        setError("No A-Z Globe account uses this number yet. Ask them to install the app and sign in.");
+      else if (group.members.some((m) => m.id === found.id))
+        setError(`${found.name} is already in this group.`);
+      else setPerson(found);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not look up this number.");
+    }
+    setBusy(false);
+  };
+  return (
+    <Sheet title="Add people" onClose={onClose}>
+      <Field label="Phone number">
+        <input
+          type="tel"
+          inputMode="tel"
+          placeholder="077 123 4567"
+          value={phone}
+          onChange={(e) => {
+            setPhone(e.target.value);
+            setPerson(undefined);
+            setError("");
+          }}
+        />
+      </Field>
+      {error && (
+        <p role="alert" className="azm-error">
+          {error}
+        </p>
+      )}
+      {person ? (
+        <>
+          <div className="azm-member">
+            <Avatar name={person.name} />
+            <div>
+              <strong>{person.name}</strong>
+              <small>A-Z Globe account</small>
+            </div>
+          </div>
+          <Primary onClick={() => onAdd(person)}>Add to group</Primary>
+        </>
+      ) : (
+        <Primary disabled={busy || !phone.trim()} onClick={() => void find()}>
+          {busy ? "Searching..." : "Find"}
+        </Primary>
+      )}
+    </Sheet>
   );
 }

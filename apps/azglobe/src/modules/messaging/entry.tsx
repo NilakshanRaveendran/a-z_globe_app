@@ -1,3 +1,3 @@
-// Native: Messages is part of the app bundle (see entry.web.tsx for the web split).
-export { MessagingFlow } from './MessagingFlow';
-export { MessagesScreen } from '@app/screens/MessagesScreen';
+// Native: Messages runs the browser module in a WebView (see MessagingEmbed;
+// entry.web.tsx is the web split).
+export { MessagingFlow, MessagesScreen } from './MessagingEmbed';

@@ -59,6 +59,9 @@ apps/*/dist/
 apps/*/.expo/
 design/reference/
 
+# The messaging page bundled for the native WebView — tools/build-messaging-embed.mjs
+apps/*/src/modules/messaging/embed/generated/
+
 # Firestore emulator
 firestore-debug.log
 firebase-debug.log

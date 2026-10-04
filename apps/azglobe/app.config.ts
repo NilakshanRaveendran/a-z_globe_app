@@ -50,6 +50,8 @@ const config: ExpoConfig = {
     infoPlist: {
       NSLocationWhenInUseUsageDescription:
         'A-Z Globe uses your location to show restaurants and services near you and to deliver your orders.',
+      NSCameraUsageDescription: 'A-Z Globe uses the camera to take photos and videos you share in a chat.',
+      NSMicrophoneUsageDescription: 'A-Z Globe uses the microphone to record voice notes and videos you share in a chat.',
       UIBackgroundModes: ['remote-notification'],
     },
   },
@@ -66,7 +68,16 @@ const config: ExpoConfig = {
       monochromeImage: './assets/android-icon-monochrome.png',
     },
     predictiveBackGestureEnabled: false,
-    permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION', 'POST_NOTIFICATIONS'],
+    // CAMERA and RECORD_AUDIO are for Messages: photos, video and voice notes
+    // taken inside a chat (the messaging page asks through the WebView).
+    permissions: [
+      'ACCESS_COARSE_LOCATION',
+      'ACCESS_FINE_LOCATION',
+      'POST_NOTIFICATIONS',
+      'CAMERA',
+      'RECORD_AUDIO',
+      'MODIFY_AUDIO_SETTINGS',
+    ],
   },
 
   plugins: [

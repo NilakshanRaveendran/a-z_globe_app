@@ -559,5 +559,145 @@ service cloud.firestore {
 
       allow delete: if false;
     }
+
+    // ── A-Z Groups (messaging) ───────────────────────────────────────────
+    //
+    // A group is private, as in WhatsApp: only its members can read it, and
+    // people get in by being added by an admin. A business (supplier account)
+    // creates a group and is its permanent owner; it and any member it
+    // promotes are the admins.
+    //
+    //   chatGroups/{id}            members { uid: { name, role } }, memberIds[]
+    //   chatGroups/{id}/messages   one document per message
+    //   chatFiles/{id}             an attachment's bytes
+    //   chatDirectory/{phone}      phone number → account, for adding people
+    //   chatUsers/{uid}            one member's own mutes, stars, read marks
+    //   chatReports/{id}           a report about a group
+    //
+    // `memberIds` mirrors the keys of `members` because a list is what a query
+    // (`array-contains`) and `in` can test; every write that changes one must
+    // keep the other in step.
+
+    function chatGroup(groupId) {
+      return get(/databases/$(database)/documents/chatGroups/$(groupId)).data;
+    }
+
+    function isChatMember(group) {
+      return isSignedIn() && request.auth.uid in group.memberIds;
+    }
+
+    function isChatAdmin(group) {
+      return isChatMember(group)
+        && (group.owner == request.auth.uid
+            || group.members[request.auth.uid].role == 'Admin');
+    }
+
+    match /chatGroups/{groupId} {
+      allow read: if isChatMember(resource.data);
+
+      // Only a business creates a group, as its sole member and owner.
+      allow create: if isSupplier()
+        && request.resource.data.owner == request.auth.uid
+        && request.resource.data.memberIds == [request.auth.uid]
+        && request.resource.data.members.keys().hasOnly([request.auth.uid])
+        && request.resource.data.members[request.auth.uid].role == 'Service Provider'
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 80;
+
+      // An admin adds and removes people, promotes and dismisses admins, and
+      // edits the group. The owner can never be removed, replaced or demoted.
+      allow update: if isChatAdmin(resource.data)
+        && request.resource.data.owner == resource.data.owner
+        && resource.data.owner in request.resource.data.memberIds
+        && request.resource.data.members[resource.data.owner].role == 'Service Provider'
+        && request.resource.data.members.keys().toSet()
+             == request.resource.data.memberIds.toSet();
+
+      // Anyone but the owner may leave: exactly their own entry goes, nothing
+      // else moves.
+      allow update: if isChatMember(resource.data)
+        && resource.data.owner != request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['members', 'memberIds', 'updatedAt'])
+        && request.resource.data.memberIds.toSet()
+             == resource.data.memberIds.toSet().difference([request.auth.uid].toSet())
+        && request.resource.data.members.diff(resource.data.members).affectedKeys()
+             .hasOnly([request.auth.uid]);
+
+      // Where the owner has opened editing to everyone, a member may change
+      // how the group is described — never who is in it or what they may do.
+      allow update: if isChatMember(resource.data)
+        && resource.data.permissions.editing == 'everyone'
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['name', 'description', 'category', 'image', 'updatedAt']);
+
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if isChatMember(chatGroup(groupId));
+
+        // A member posts as themselves; where posting is admins-only, only an
+        // admin does.
+        allow create: if isChatMember(chatGroup(groupId))
+          && request.resource.data.sender == request.auth.uid
+          && request.resource.data.groupId == groupId
+          && (chatGroup(groupId).permissions.posting == 'everyone'
+              || isChatAdmin(chatGroup(groupId)));
+
+        // The sender edits or withdraws their own message; an admin may
+        // withdraw anyone's. Who sent it, and where, never changes.
+        allow update: if isChatMember(chatGroup(groupId))
+          && (resource.data.sender == request.auth.uid || isChatAdmin(chatGroup(groupId)))
+          && request.resource.data.sender == resource.data.sender
+          && request.resource.data.groupId == resource.data.groupId;
+
+        // Any member reacts, votes in a poll and answers an event. Rules
+        // cannot check that only the caller's own entry moved (no loops), so
+        // those three fields are trusted to members of the group.
+        allow update: if isChatMember(chatGroup(groupId))
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['reactions', 'poll', 'event']);
+
+        allow delete: if isChatMember(chatGroup(groupId))
+          && (resource.data.sender == request.auth.uid || isChatAdmin(chatGroup(groupId)));
+      }
+    }
+
+    // An attachment, readable by the members of the group it was sent to.
+    // Never listable: a file is reached by the id on its message.
+    match /chatFiles/{fileId} {
+      allow get: if isChatMember(chatGroup(resource.data.groupId));
+      allow list: if false;
+      allow create: if isChatMember(chatGroup(request.resource.data.groupId))
+        && request.resource.data.sender == request.auth.uid
+        && request.resource.data.data is string
+        && request.resource.data.data.size() <= 1000000;
+      allow update: if false;
+      allow delete: if isSignedIn() && resource.data.sender == request.auth.uid;
+    }
+
+    // Phone number → account. An admin who knows somebody's number can find
+    // them; nobody can browse the directory. Only the number's own signed-in
+    // account can write its entry — the phone number comes from the token.
+    match /chatDirectory/{phone} {
+      allow get: if isSignedIn();
+      allow list: if false;
+      allow create, update: if isSignedIn()
+        && request.auth.token.phone_number == phone
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 80;
+      allow delete: if false;
+    }
+
+    match /chatUsers/{uid} {
+      allow read, write: if isSelf(uid);
+    }
+
+    match /chatReports/{reportId} {
+      allow create: if isSignedIn() && request.resource.data.by == request.auth.uid;
+      allow read, update, delete: if false;
+    }
   }
 }
