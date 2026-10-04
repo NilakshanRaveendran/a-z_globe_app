@@ -192,7 +192,7 @@ export function ItemDetailScreen() {
               <Text variant="labelMd" color={colors.text} numberOfLines={1} style={styles.merchantName}>
                 {merchant.name}
               </Text>
-              <Icon name="star" size={12} color={colors.palette.amber400} />
+              <Icon name="star" size={16} color={colors.palette.amber400} />
               <Text variant="bodySm" color={colors.textSecondary}>
                 {merchant.rating.toFixed(1)} · {merchant.prepTimeMin}–{merchant.prepTimeMax} min
               </Text>
@@ -234,8 +234,8 @@ export function ItemDetailScreen() {
               </View>
 
               {group.type === 'multi' ? (
-                <View>
-                  {group.choices.map((choice, i, arr) => {
+                <View style={styles.addonList}>
+                  {group.choices.map((choice) => {
                     const checked = (selection[group.key] ?? []).includes(choice.id);
                     return (
                       <Pressable
@@ -243,21 +243,24 @@ export function ItemDetailScreen() {
                         accessibilityRole="checkbox"
                         accessibilityState={{ checked }}
                         onPress={() => toggle(group, choice.id)}
-                        style={[styles.addonRow, i < arr.length - 1 && styles.addonDivider]}
+                        accessibilityLabel={`${choice.label}, ${formatDelta(choice.priceDelta)}`}
+                        style={({ pressed }) => [
+                          styles.addonRow,
+                          checked && styles.addonRowSelected,
+                          pressed && styles.pressed,
+                        ]}
                       >
-                        <View style={[styles.checkbox, checked && styles.checkboxOn]}>
-                          {checked ? (
-                            <Text variant="labelSm" color={colors.onPrimary}>
-                              ✓
-                            </Text>
-                          ) : null}
+                        <View style={styles.flex}>
+                          <Text variant="labelLg" color={colors.textStrong}>
+                            {choice.label}
+                          </Text>
+                          <Text variant="bodySm" color={checked ? colors.primary : colors.textSecondary}>
+                            {formatDelta(choice.priceDelta)}
+                          </Text>
                         </View>
-                        <Text variant="bodyLg" color={colors.textStrong} style={styles.flex}>
-                          {choice.label}
-                        </Text>
-                        <Text variant="bodyLg" color={colors.textSecondary}>
-                          {formatDelta(choice.priceDelta)}
-                        </Text>
+                        <View style={[styles.checkbox, checked && styles.checkboxOn]}>
+                          <Icon name={checked ? 'check' : 'plus'} size={20} color={checked ? colors.onPrimary : colors.primary} />
+                        </View>
                       </Pressable>
                     );
                   })}
@@ -349,14 +352,26 @@ const styles = StyleSheet.create({
   groupHead: { flexDirection: 'row', alignItems: 'baseline', gap: spacing[2] },
   optionRow: { flexDirection: 'row', gap: spacing[3.5] },
 
-  addonRow: { flexDirection: 'row', alignItems: 'center', gap: spacing[4], paddingVertical: spacing[5] },
-  addonDivider: { borderBottomWidth: 1, borderBottomColor: colors.border },
+  addonList: { gap: spacing[3] },
+  addonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[4],
+    minHeight: 76,
+    padding: spacing[4],
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  addonRowSelected: { backgroundColor: colors.primaryTint, borderColor: colors.primary },
   checkbox: {
-    width: 22,
-    height: 22,
-    borderRadius: radius.sm,
+    width: 32,
+    height: 32,
+    borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: colors.borderStrong,
+    borderColor: colors.primary,
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -67,7 +67,7 @@ export function RestaurantHeader({
           </View>
 
           <View style={styles.ratingPill}>
-            <Icon name="star" size={13} color={colors.star} />
+            <Icon name="star" size={16} color={colors.star} />
             <Text variant="body" color={colors.text} style={styles.ratingValue}>
               {merchant.reviewCount > 0 ? merchant.rating.toFixed(1) : 'New'}
             </Text>

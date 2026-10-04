@@ -36,7 +36,7 @@ export function ReviewCard({ review, merchantName }: { review: Review; merchantN
             {review.userName}
           </Text>
           <View style={styles.stars}>
-            <StarRow rating={review.rating} size={10} />
+            <StarRow rating={review.rating} size={16} />
           </View>
         </View>
 

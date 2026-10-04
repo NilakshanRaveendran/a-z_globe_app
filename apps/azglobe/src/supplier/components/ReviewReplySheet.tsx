@@ -147,7 +147,7 @@ export function ReviewReplySheet({ review: open, merchantId, onClose, onSaved }:
             {review ? (
               <View style={styles.quote}>
                 <View style={styles.quoteMeta}>
-                  <StarRow rating={review.rating} size={12} />
+                  <StarRow rating={review.rating} size={16} />
                   <Text variant="captionRegular" color={colors.textMuted}>
                     {formatDate(review.createdAt)}
                   </Text>

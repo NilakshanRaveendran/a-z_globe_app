@@ -24,7 +24,7 @@ export function RatingSummary({ rating, reviewCount, breakdown }: RatingSummaryP
         <Text variant="h1" color={colors.textHeading} style={styles.scoreValue}>
           {rating.toFixed(1)}
         </Text>
-        <StarRow rating={rating} size={14} />
+        <StarRow rating={rating} size={20} />
         <Text variant="bodySm" color={colors.textMuted}>
           {reviewCount} reviews
         </Text>

@@ -1,4 +1,4 @@
-import { Fragment, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import {
   useNavigation,
   useRoute,
@@ -140,6 +140,8 @@ function GroupExperience({
   const [newCount, setNewCount] = useState(0);
   const [showLatest, setShowLatest] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const scrollSurfaceRef = useRef<HTMLDivElement>(null);
+  const scrollHeaderRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const atBottom = useRef(true);
   const initialUnread = useRef(group?.unread ?? 0);
@@ -174,6 +176,17 @@ function GroupExperience({
             .includes(query.trim().toLowerCase()),
       )
     : [];
+  useLayoutEffect(() => {
+    const surface = scrollSurfaceRef.current;
+    const header = scrollHeaderRef.current;
+    if (!surface || !header) return;
+    const measure = () => surface.style.setProperty('--az-chat-header-height', `${header.offsetHeight}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, [page, joined, groupId]);
+
   const latest = () => {
     const list = listRef.current;
     if (list) list.scrollTop = list.scrollHeight;
@@ -745,6 +758,8 @@ function GroupExperience({
   } else
     content = (
       <>
+        <div className="azm-chat-surface" ref={scrollSurfaceRef}>
+        <div className="azm-scroll-header" ref={scrollHeaderRef}>
         {searching ? (
           <header className="azm-header">
             <IconButton
@@ -828,6 +843,7 @@ function GroupExperience({
             />
           </div>
         )}
+        </div>
         <div
           ref={listRef}
           className="azm-scroll azm-timeline"
@@ -845,6 +861,7 @@ function GroupExperience({
           onScroll={() => {
             const el = listRef.current;
             if (el) {
+              if (scrollSurfaceRef.current) scrollSurfaceRef.current.dataset.scrolled = String(el.scrollTop > 1);
               atBottom.current =
                 el.scrollHeight - el.scrollTop - el.clientHeight < 80;
               setShowLatest(!atBottom.current);
@@ -911,6 +928,7 @@ function GroupExperience({
               />
             </Fragment>
           ))}
+        </div>
         </div>
         {showLatest && !selecting && (
           <button

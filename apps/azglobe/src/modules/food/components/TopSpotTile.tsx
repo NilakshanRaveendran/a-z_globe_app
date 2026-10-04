@@ -11,7 +11,7 @@ import type { Merchant } from '../types';
  * "Top Spots Near You" tile on the Order Food landing page.
  *
  * Figma (31:11648): 175.74×131.8 · r14 · scrim #000 65%→10%→0% · caption pad 10
- *   name  Urbanist 700 13/16.25 #FFFFFF centred
+ *   name  Urbanist 700 13/16.25 #FFFFFF left-aligned
  *   meta  star 10 · "4.8" 600 11/16.5 · "·" 40% · "20–30 min" 500 10/15 80%
  *
  * A closed merchant (31:11648, Trinco Blu): the whole tile at 50% opacity and a
@@ -48,11 +48,11 @@ export function TopSpotTile({ merchant, onPress }: { merchant: Merchant; onPress
       ) : null}
 
       <View style={styles.caption}>
-        <Text variant="body" color={colors.textInverse} align="center" numberOfLines={1} style={styles.name}>
+        <Text variant="body" color={colors.textInverse} align="left" numberOfLines={1} style={styles.name}>
           {merchant.name}
         </Text>
         <View style={styles.meta}>
-          <Icon name="star" size={10} color={colors.star} />
+          <Icon name="star" size={16} color={colors.star} />
           <Text variant="labelSm" color={colors.textInverse}>
             {merchant.reviewCount > 0 ? merchant.rating.toFixed(1) : 'New'}
           </Text>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   meta: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     gap: spacing[1],
     paddingTop: spacing[0.5],
   },

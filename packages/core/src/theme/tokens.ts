@@ -141,7 +141,7 @@ export const colors = {
   divider: palette.gray200,
 
   scrim: 'rgba(0,0,0,0.45)',
-  overlay: 'rgba(0,0,0,0.5)',
+  overlay: 'rgba(0,0,0,0.45)',
 
   status: {
     info: palette.blue600,

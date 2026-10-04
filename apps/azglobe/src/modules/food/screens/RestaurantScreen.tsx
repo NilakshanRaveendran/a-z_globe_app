@@ -24,6 +24,7 @@ import { LoadErrorState } from '../components/LoadErrorState';
 import { useActiveOffers, useMenu, useMerchant, useReviews, useSubmitReview } from '../hooks/queries';
 import { findReviewableOrderId } from '../services/reviews';
 import { useAddToCart } from '../hooks/useAddToCart';
+import { formatDayMonth } from '@core/utils/datetime';
 import { discountLabel, offerHeadline } from '../services/promotions';
 import { listMyOrders } from '../services/orders';
 import { closedLabel, dayHoursLabel, hoursSummary, nextOpeningLabel, sameEveryDay, todayKey, WEEK } from '../utils/hours';
@@ -45,8 +46,7 @@ const TABS = [
  * Restaurant page — Figma 17:4787 (Menu), 18:5057 (Reviews), 18:5218 (Info).
  *
  * All three tabs share the hero, title block and tab bar; only the content
- * below changes, which is exactly how the design is structured. The offer
- * banner sits between the title block and the tabs on the Menu tab (17:4787);
+ * below changes. The offer banner stays above Menu, Reviews and Info;
  * a closed restaurant shows a "Closed · opens 7:00 AM" strip there instead and
  * its dishes cannot be added.
  */
@@ -100,9 +100,9 @@ export function RestaurantScreen() {
 
         {!merchant.isOpen ? (
           <ClosedBanner merchant={merchant} />
-        ) : tab === 'menu' ? (
-          <MenuOffer merchant={merchant} />
-        ) : null}
+        ) : (
+          <RestaurantOffer merchant={merchant} />
+        )}
 
         <View style={styles.tabsWrap}>
           <SegmentedTabs tabs={TABS} active={tab} onChange={setTab} />
@@ -147,7 +147,7 @@ function ClosedBanner({ merchant }: { merchant: Merchant }) {
  * (370:3714). Only a real, running promotion shows — the one the cart will
  * actually apply — so no restaurant advertises a discount it does not give.
  */
-function MenuOffer({ merchant }: { merchant: Merchant }) {
+function RestaurantOffer({ merchant }: { merchant: Merchant }) {
   const navigation = useNavigation<Nav>();
   const { data: offers } = useActiveOffers(merchant.id);
   const offer = offers?.[0];
@@ -163,7 +163,7 @@ function MenuOffer({ merchant }: { merchant: Merchant }) {
       onPress={openMenu}
       style={styles.bannerWrap}
     >
-      <OfferCard look={offer.look ?? DEFAULT_LOOK} headline={offerHeadline(offer)} badge={discountLabel(offer)} />
+      <OfferCard look={offer.look ?? DEFAULT_LOOK} headline={offerHeadline(offer, { withDate: false })} subtitle={`Until ${formatDayMonth(offer.validUntil)}`} badge={discountLabel(offer)} />
     </Pressable>
   );
 }

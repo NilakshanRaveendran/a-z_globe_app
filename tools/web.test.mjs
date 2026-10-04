@@ -114,3 +114,15 @@ test('manifest icons exist and match the declared dimensions', async () => {
   const touchIcon = await readFile(new URL('icons/apple-touch-icon.png', publicRoot));
   assert.equal(touchIcon.readUInt32BE(16), 180);
 });
+
+test('status-bar clearance is limited to affected Home Screen web apps', async () => {
+  const source = stripTypeScriptTypes(await readFile(new URL('../apps/azglobe/src/modules/messaging/pwaInsets.ts', import.meta.url), 'utf8'));
+  const { statusBarBlurGap } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+  const ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 Version/27.0 Mobile/15E148 Safari/604.1';
+  assert.equal(statusBarBlurGap({ standalone: true, userAgent: ua }), 20);
+  assert.equal(statusBarBlurGap({ standalone: false, userAgent: ua }), 0);
+  assert.equal(statusBarBlurGap({ userAgent: ua }), 0);
+  assert.equal(statusBarBlurGap({ standalone: true, userAgent: ua.replace('Version/27', 'Version/26') }), 0);
+  assert.equal(statusBarBlurGap({ standalone: true, userAgent: ua.replace('Version/27', 'Version/28') }), 20);
+  assert.equal(statusBarBlurGap({ userAgent: 'Chrome/140.0' }), 0);
+});

@@ -66,11 +66,14 @@ const END = { x: 0.74, y: 0.94 };
 export function OfferCard({
   look,
   headline,
+  subtitle,
   badge,
   size = 'large',
 }: {
   look: OfferLook;
   headline: string;
+  /** Separate validity line below the offer headline. */
+  subtitle?: string;
   /** "20% OFF" pill, top right. Large cards only. */
   badge?: string;
   size?: 'large' | 'compact';
@@ -100,6 +103,7 @@ export function OfferCard({
         <Text style={large ? styles.headlineL : styles.headlineS} numberOfLines={large ? 3 : 2}>
           {headline}
         </Text>
+        {subtitle ? <Text style={large ? styles.subtitleL : styles.subtitleS}>{subtitle}</Text> : null}
       </View>
 
       {large && badge ? (
@@ -146,6 +150,8 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   headlineL: { fontFamily: fontFamily[800], fontSize: 16, lineHeight: 20, color: WHITE },
+  subtitleL: { fontFamily: fontFamily[500], fontSize: 14, lineHeight: 20, color: WHITE, marginTop: 6 },
+  subtitleS: { fontFamily: fontFamily[500], fontSize: 10, lineHeight: 14, color: WHITE, marginTop: 2 },
   // Figma hand-sizes each thumbnail's text box (85 and 116 wide on 352:6743);
   // 116 is the widest, so longer headlines wrap as drawn instead of running on.
   headlineS: { fontFamily: fontFamily[800], fontSize: 10, lineHeight: 12.5, color: WHITE, maxWidth: 116 },

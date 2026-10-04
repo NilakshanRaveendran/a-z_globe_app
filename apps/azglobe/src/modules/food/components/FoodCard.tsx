@@ -74,7 +74,7 @@ export function FoodCard({ item, onPress, onAdd, showMerchant = true, addDisable
         </Text>
 
         <View style={styles.footer}>
-          <StarRow rating={item.rating} size={10} />
+          <StarRow rating={item.rating} size={16} />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={soldOut ? `${item.name} is sold out` : `Add ${item.name} to cart`}
@@ -116,6 +116,8 @@ const styles = StyleSheet.create({
   bodyTight: { paddingTop: spacing[3.5], minHeight: 131 },
   footer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[2],
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: spacing[1.5],

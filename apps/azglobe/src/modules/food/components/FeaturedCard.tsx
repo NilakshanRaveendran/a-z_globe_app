@@ -44,7 +44,7 @@ export function FeaturedCard({ merchant, onPress }: { merchant: Merchant; onPres
           restaurant would look worse than a mediocre one.
         */}
         <View style={styles.ratingPill}>
-          <Icon name="star" size={11} color={colors.star} />
+          <Icon name="star" size={16} color={colors.star} />
           {merchant.reviewCount > 0 ? (
             <>
               <Text variant="labelSm" color={colors.textInverse}>

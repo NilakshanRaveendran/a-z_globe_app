@@ -337,7 +337,7 @@ function RestaurantResult({
           {merchant.cuisines.slice(0, 3).join(' · ') || merchant.tagline}
         </Text>
         <View style={styles.metaRow}>
-          <Icon name="star" size={11} color={colors.star} />
+          <Icon name="star" size={16} color={colors.star} />
           <Text variant="labelSm" color={colors.text}>
             {merchant.reviewCount > 0 ? merchant.rating.toFixed(1) : 'New'}
           </Text>

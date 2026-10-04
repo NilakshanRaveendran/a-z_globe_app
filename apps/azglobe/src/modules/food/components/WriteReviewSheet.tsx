@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Button, StarRow, Text } from '@core/ui';
 import { Sheet } from '@core/ui/Sheet';
 import { colors, radius, spacing, typography } from '@core/theme';
@@ -56,19 +56,14 @@ export function WriteReviewSheet({
   };
 
   return (
-    <Sheet visible={visible} onClose={close}>
-      <View style={styles.body}>
-        <Text variant="h2" color={colors.textHeading}>
-          Write a Review
-        </Text>
+    <Sheet visible={visible} onClose={close} title="Write a Review">
+      <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
         <Text variant="bodyRegular" color={colors.textSecondary} style={styles.subtitle}>
           Share your experience at {merchantName}
         </Text>
 
-        <Text variant="body" color={colors.palette.gray700} style={styles.label}>
-          Your Rating
-        </Text>
         <View style={styles.stars}>
+          <Text variant="labelLg" color={colors.textHeading}>Your Rating</Text>
           <StarRow rating={rating} size={32} gap={spacing[3]} onRate={setRating} />
         </View>
 
@@ -76,6 +71,7 @@ export function WriteReviewSheet({
           Your Review
         </Text>
         <TextInput
+          accessibilityLabel="Your review"
           style={styles.textarea}
           placeholder="Tell others about your experience — food quality, delivery time, packaging…"
           placeholderTextColor={colors.textMuted}
@@ -90,16 +86,16 @@ export function WriteReviewSheet({
         </Text>
 
         <Button label="Submit Review" disabled={rating === 0} loading={saving} onPress={submit} />
-      </View>
+      </ScrollView>
     </Sheet>
   );
 }
 
 const styles = StyleSheet.create({
-  body: { paddingHorizontal: spacing[8], paddingTop: spacing[8] },
+  body: { paddingHorizontal: spacing[6], paddingTop: spacing[4], paddingBottom: spacing[2] },
   subtitle: { paddingTop: spacing[1.5] },
   label: { fontFamily: 'Urbanist_600SemiBold', paddingTop: spacing[8] },
-  stars: { paddingTop: spacing[3.5] },
+  stars: { marginTop: spacing[6], padding: spacing[5], gap: spacing[3], alignItems: 'center', borderRadius: radius.xl, backgroundColor: colors.surfaceSunken, borderWidth: 1, borderColor: colors.border },
   textarea: {
     ...typography.body,
     color: colors.text,

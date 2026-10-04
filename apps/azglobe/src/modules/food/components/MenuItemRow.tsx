@@ -77,7 +77,7 @@ export function MenuItemRow({
               </Text>
             </View>
           ) : (
-            <StarRow rating={item.rating} size={10} />
+            <StarRow rating={item.rating} size={16} />
           )}
         </View>
       </View>

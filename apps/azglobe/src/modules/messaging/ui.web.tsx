@@ -61,6 +61,7 @@ import PictureAsPdfRounded from "@mui/icons-material/PictureAsPdfRounded";
 import AttachFileRounded from "@mui/icons-material/AttachFileRounded";
 import { initials } from "@core/utils/text";
 import "./messaging.css";
+import { statusBarBlurGap } from "./pwaInsets";
 
 const icons = {
   back: ArrowBackRounded,
@@ -317,8 +318,9 @@ export const theme = {
   "--az-regular": fontFamily[400],
 } as CSSProperties;
 export function Frame({ children }: { children: ReactNode }) {
+  const topClearance = typeof navigator === "undefined" ? 0 : statusBarBlurGap(navigator);
   return (
-    <section className="azm azm-frame" style={theme}>
+    <section className="azm azm-frame" style={{ ...theme, "--az-status-bar-clearance": `${topClearance}px` } as CSSProperties}>
       {children}
     </section>
   );

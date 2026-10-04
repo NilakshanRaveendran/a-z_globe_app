@@ -62,55 +62,55 @@ export function HomeScreen() {
 
   return (
     <Screen>
+      <View style={styles.header}>
+        <View style={styles.headerRow}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Delivering to ${deliverTo}. Change address`}
+            onPress={() => setAddressOpen(true)}
+            style={({ pressed }) => [styles.locationButton, pressed && styles.pressed]}
+            hitSlop={6}
+          >
+            <Icon name="mapPin" size={14} color={colors.primary} />
+            <Text variant="bodySm" color={colors.textSecondary} numberOfLines={1} style={styles.locationText}>
+              {deliverTo}
+            </Text>
+            <View style={{ transform: [{ rotate: '90deg' }] }}>
+              <Icon name="chevronRight" size={13} color={colors.textSecondary} />
+            </View>
+          </Pressable>
+
+          <View style={styles.headerActions}>
+            <OrdersBell />
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Profile"
+              onPress={() => navigation.navigate('Tabs', { screen: 'Profile' })}
+              style={({ pressed }) => [styles.avatar, pressed && styles.pressed]}
+            >
+              <Text variant="h2" color={colors.onPrimary} style={styles.avatarInitial}>
+                {user.initial}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <View style={styles.greetingBlock}>
+          <Text variant="h1" color={colors.text} style={styles.greeting}>
+            {greeting}, {user.firstName} 👋
+          </Text>
+          <Text variant="bodyLg" color={colors.textSecondary}>
+            What service do you need today?
+          </Text>
+        </View>
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
         // The tab bar already provides the bottom inset.
         contentInsetAdjustmentBehavior="never"
       >
-        <View style={styles.header}>
-          <View style={styles.headerRow}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Delivering to ${deliverTo}. Change address`}
-              onPress={() => setAddressOpen(true)}
-              style={({ pressed }) => [styles.locationButton, pressed && styles.pressed]}
-              hitSlop={6}
-            >
-              <Icon name="mapPin" size={14} color={colors.primary} />
-              <Text variant="bodySm" color={colors.textSecondary} numberOfLines={1} style={styles.locationText}>
-                {deliverTo}
-              </Text>
-              <View style={{ transform: [{ rotate: '90deg' }] }}>
-                <Icon name="chevronRight" size={13} color={colors.textSecondary} />
-              </View>
-            </Pressable>
-
-            <View style={styles.headerActions}>
-              <OrdersBell />
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Profile"
-                onPress={() => navigation.navigate('Tabs', { screen: 'Profile' })}
-                style={({ pressed }) => [styles.avatar, pressed && styles.pressed]}
-              >
-                <Text variant="h2" color={colors.onPrimary} style={styles.avatarInitial}>
-                  {user.initial}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-
-          <View style={styles.greetingBlock}>
-            <Text variant="h1" color={colors.text} style={styles.greeting}>
-              {greeting}, {user.firstName} 👋
-            </Text>
-            <Text variant="bodyLg" color={colors.textSecondary}>
-              What service do you need today?
-            </Text>
-          </View>
-        </View>
-
         {sectionsFor('above-services').map(({ key, Component }) => (
           <Component key={key} />
         ))}
@@ -162,7 +162,7 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   content: { paddingBottom: spacing[8] },
 
-  header: { backgroundColor: colors.surface },
+  header: { backgroundColor: colors.surface, flexShrink: 0 },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -272,7 +272,7 @@ function RatingSummaryBlock({ summary, loading }: { summary: RatingSummary; load
           {/* "0.0" read as a terrible score; with no reviews there is none. */}
           {loading || !total ? '–' : average.toFixed(1)}
         </Text>
-        <StarRow rating={average} size={14} />
+        <StarRow rating={average} size={20} />
         <Text variant="micro" color={colors.textMuted}>
           {loading ? ' ' : total ? `${total} ${total === 1 ? 'Review' : 'Reviews'}` : 'No reviews yet'}
         </Text>
@@ -290,7 +290,7 @@ function RatingSummaryBlock({ summary, loading }: { summary: RatingSummary; load
               <Text variant="caption" color={colors.textMuted} align="right" style={styles.barDigit}>
                 {star}
               </Text>
-              <Icon name="star" size={10} color={colors.star} />
+              <Icon name="star" size={16} color={colors.star} />
               <View style={styles.track}>
                 {share > 0 ? <View style={[styles.fill, { width: `${share * 100}%` }]} /> : null}
               </View>
@@ -351,7 +351,7 @@ function ReviewCard({
             {review.userName}
           </Text>
           <View style={styles.meta}>
-            <StarRow rating={review.rating} size={12} />
+            <StarRow rating={review.rating} size={16} />
             <Text variant="captionRegular" color={colors.textMuted}>
               {formatDate(review.createdAt)}
             </Text>

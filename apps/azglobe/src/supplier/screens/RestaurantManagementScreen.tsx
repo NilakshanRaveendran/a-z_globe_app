@@ -217,7 +217,7 @@ export function RestaurantManagementScreen() {
                   </View>
 
                   <View style={styles.ratingRow}>
-                    <Icon name="star" size={12} color={colors.star} />
+                    <Icon name="star" size={16} color={colors.star} />
                     <Text variant="label" color={colors.text}>
                       {rating?.total ? rating.average.toFixed(1) : '—'}
                     </Text>

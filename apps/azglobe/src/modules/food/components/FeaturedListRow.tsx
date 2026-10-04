@@ -84,7 +84,7 @@ export function FeaturedListRow({
 
         {badge ? (
           <View style={styles.badgeRow}>
-            <Icon name="star" size={13} color={closed ? colors.textMuted : colors.palette.ink} />
+            <Icon name="star" size={16} color={closed ? colors.textMuted : colors.palette.ink} />
             <Text variant="label" color={closed ? colors.textMuted : colors.palette.ink}>
               {badge}
             </Text>

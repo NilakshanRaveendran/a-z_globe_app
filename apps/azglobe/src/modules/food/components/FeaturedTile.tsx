@@ -48,7 +48,7 @@ export function FeaturedTile({ merchant, onPress }: { merchant: Merchant; onPres
         ) : null}
 
         <View style={styles.ratingPill}>
-          <Icon name="star" size={9} color={colors.star} />
+          <Icon name="star" size={16} color={colors.star} />
           <Text variant="captionBold" color={colors.textInverse}>
             {merchant.reviewCount > 0 ? merchant.rating.toFixed(1) : 'New'}
           </Text>

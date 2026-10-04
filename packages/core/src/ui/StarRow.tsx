@@ -8,7 +8,7 @@ export type StarRowProps = {
    * stars and 4.2 shows four — an average must not round up to five.
    */
   rating: number;
-  /** Figma uses 10px on cards and 20px+ in the review sheet. */
+  /** 16px beside body text; use 20px for summaries and 32px for rating input. */
   size?: number;
   gap?: number;
   /** Makes the row tappable for the Write-a-Review sheet. */
@@ -16,19 +16,19 @@ export type StarRowProps = {
 };
 
 /**
- * Figma: 5 × 10px stars, gap 2, filled #FBBF24 / empty #E5E7EB.
+ * Five stars with a 2px gap, filled #FBBF24 / empty #E5E7EB.
  * The glyph is the designer's own vector exported from Figma. A half star is
  * the empty glyph with the filled one clipped to its left half on top.
  */
-export function StarRow({ rating, size = 10, gap = spacing[0.5], onRate }: StarRowProps) {
+export function StarRow({ rating, size = 16, gap = spacing[0.5], onRate }: StarRowProps) {
   const halves = Math.round(Math.max(0, Math.min(5, rating)) * 2);
   const label = Number.isInteger(rating) ? String(rating) : rating.toFixed(1);
 
   return (
     <View
       style={[styles.row, { gap }]}
-      accessibilityRole={onRate ? 'adjustable' : 'image'}
-      accessibilityLabel={`${label} out of 5 stars`}
+      accessibilityRole={onRate ? undefined : 'image'}
+      accessibilityLabel={onRate ? undefined : `${label} out of 5 stars`}
     >
       {[1, 2, 3, 4, 5].map((i) => {
         const fill = halves >= i * 2 ? 'full' : halves === i * 2 - 1 ? 'half' : 'empty';
@@ -41,13 +41,14 @@ export function StarRow({ rating, size = 10, gap = spacing[0.5], onRate }: StarR
               </View>
             </View>
           ) : (
-            <Icon name="star" size={size} color={fill === 'full' ? colors.star : colors.starEmpty} />
+            <Icon name="star" size={size} color={fill === 'full' ? colors.star : onRate ? colors.textMuted : colors.starEmpty} />
           );
         return onRate ? (
           <Pressable
             key={i}
             accessibilityRole="button"
             accessibilityLabel={`${i} star${i === 1 ? '' : 's'}`}
+            accessibilityState={{ selected: rating === i }}
             onPress={() => onRate(i)}
             hitSlop={6}
           >

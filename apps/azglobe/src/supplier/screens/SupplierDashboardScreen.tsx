@@ -117,7 +117,7 @@ export function SupplierDashboardScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <View style={styles.fixedHeader}>
         <View style={styles.headerTop}>
           <View style={styles.headerActions}>
             <HeaderButton
@@ -148,6 +148,9 @@ export function SupplierDashboardScreen() {
           </Text>
         </View>
 
+      </View>
+
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.block}>
           <StatCards items={businessStats({ orders, rating: avgRating })} />
         </View>
@@ -271,6 +274,7 @@ export function SupplierDashboardScreen() {
 
 const styles = StyleSheet.create({
   scroll: { paddingBottom: spacing[12] },
+  fixedHeader: { flexShrink: 0, backgroundColor: colors.surface },
   shrink: { flexShrink: 1 },
   pressed: { opacity: 0.6 },
   pressedCard: { opacity: 0.85 },

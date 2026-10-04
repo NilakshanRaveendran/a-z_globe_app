@@ -73,7 +73,7 @@ test('sent has one tick, delivered and read have double ticks with distinct styl
 test('starred messages show a small star in the timestamp, unstarred messages do not', () => {
   const r = render({ starred: true });
   const stamp = nodes(r.root).find(n => n.props?.className === 'azm-stamp');
-  assert.equal(nodes(stamp).find(n => n.props?.name === 'starFilled').props.size, 13);
+  assert.equal(nodes(stamp).find(n => n.props?.name === 'starFilled').props.size, 16);
   assert.equal(nodes(render().root).some(n => n.props?.name === 'starFilled'), false);
 });
 

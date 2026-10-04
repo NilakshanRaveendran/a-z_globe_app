@@ -11,6 +11,7 @@ export const Alert = {
   alert(title: string, message?: string, buttons: AlertButton[] = [{ text: 'OK' }]): void {
     const dialog = document.createElement('dialog');
     dialog.setAttribute('aria-label', title);
+    dialog.className = 'az-alert-dialog';
     Object.assign(dialog.style, {
       border: 'none', borderRadius: '20px', padding: '24px 20px 20px',
       width: '340px', maxWidth: 'calc(100vw - 48px)', boxSizing: 'border-box',
@@ -18,7 +19,7 @@ export const Alert = {
       boxShadow: '0px 10px 30px rgba(0,0,0,0.18)',
     });
     const backdrop = document.createElement('style');
-    backdrop.textContent = 'dialog::backdrop { background: rgba(0,0,0,0.5); }';
+    backdrop.textContent = `.az-alert-dialog::backdrop { background: ${colors.scrim}; }`;
     dialog.appendChild(backdrop);
 
     const heading = document.createElement('h2');
@@ -32,7 +33,7 @@ export const Alert = {
       const body = document.createElement('p');
       body.textContent = message;
       Object.assign(body.style, {
-        fontSize: '14px', lineHeight: '21px', margin: '0', color: colors.textSecondary, textAlign: 'center',
+        fontSize: '16px', lineHeight: '24px', margin: '0', color: colors.textSecondary, textAlign: 'center',
       });
       dialog.appendChild(body);
     }

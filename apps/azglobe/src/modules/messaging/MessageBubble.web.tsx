@@ -326,7 +326,7 @@ export function MessageBubble({
           )}
           <div className="azm-stamp">
             {m.edited && !deleted && <span>edited</span>}
-            {starred && !deleted && <span className="azm-starred" aria-label="Starred"><MIcon name="starFilled" size={13} /></span>}
+            {starred && !deleted && <span className="azm-starred" aria-label="Starred"><MIcon name="starFilled" size={16} /></span>}
             <span>{time(m.at)}</span>
             {own && !deleted && (
               <span className={`azm-receipt ${m.status ?? "sent"}`} title={m.status === "read" ? "Read" : m.status === "delivered" ? "Delivered" : m.status === "sending" ? "Sending" : m.status === "failed" ? "Failed to send" : "Sent"} aria-label={m.status ?? "sent"}>

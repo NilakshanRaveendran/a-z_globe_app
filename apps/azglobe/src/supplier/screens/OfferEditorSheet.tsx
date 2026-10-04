@@ -522,7 +522,7 @@ export function OfferEditorSheet({ visible, merchantId, offer, template, onClose
             ) : (
               <>
                 <Field label="Preview">
-                  <OfferCard look={look} headline={offerHeadline(summary)} badge={discountLabel(summary)} />
+                  <OfferCard look={look} headline={offerHeadline(summary, { withDate: false })} subtitle={summary.validUntil ? `Until ${formatDayMonth(summary.validUntil)}` : undefined} badge={discountLabel(summary)} />
                 </Field>
 
                 <Field label="Top Label" count={`${look.label.length}/${LABEL_MAX}`}>

@@ -95,7 +95,7 @@ export function PlaceCard({
               </Text>
             ) : (
               <>
-                <Icon name="star" size={10} color={colors.star} />
+                <Icon name="star" size={16} color={colors.star} />
                 <Text variant="labelSm" color={colors.textInverse}>
                   {rating.toFixed(1)}
                 </Text>
