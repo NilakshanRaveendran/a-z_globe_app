@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     borderRadius: radius['2xl'],
     borderWidth: 0.52,
     borderColor: colors.primaryOutlineStrong,
-    backgroundColor: colors.palette.red25,
+    backgroundColor: colors.primaryTint,
   },
   alertIcon: {
     width: 36,
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: radius.xl,
-    backgroundColor: colors.palette.red25,
+    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },

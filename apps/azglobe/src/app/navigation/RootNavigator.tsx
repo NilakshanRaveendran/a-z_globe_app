@@ -1,6 +1,7 @@
+import { NotificationsScreen } from '@app/screens/NotificationsScreen';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { LaunchScreen } from '@app/components/LaunchScreen';
 import { colors, fontFamily } from '@core/theme';
 import { liveModules } from '@modules/registry';
 import { TabNavigator } from './TabNavigator';
@@ -61,11 +62,7 @@ export function RootNavigator() {
   return (
     <NavigationContainer theme={navTheme}>
       {stage === 'loading' ? (
-        // Explicit background: NavigationContainer does not paint one, so a
-        // transparent loading view shows the black window behind it.
-        <View style={styles.loading}>
-          <ActivityIndicator color={colors.primary} />
-        </View>
+        <LaunchScreen />
       ) : stage === 'account-unknown' ? (
         // Signed in, but we could not read which kind of account this is.
         // Never guess — see AccountUnavailableScreen.
@@ -89,6 +86,7 @@ export function RootNavigator() {
           {liveModules.map((m) => (
             <Stack.Screen key={m.id} name={m.route as 'Food'} component={m.navigator} />
           ))}
+          <Stack.Screen name="Notifications" component={NotificationsScreen} />
           <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
           <Stack.Screen name="EditProfile" component={EditProfileScreen} />
 
@@ -113,12 +111,3 @@ export function RootNavigator() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  loading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.background,
-  },
-});

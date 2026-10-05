@@ -17,6 +17,7 @@ export type FoodStackParamList = {
   OrderPlaced: { orderId: string; orderIds?: string[] };
   /** Live tracking and details for one order — opened from Home, Order Placed and My Orders. */
   OrderTracking: { orderId: string };
+  LiveOrders: undefined;
   /** The customer's past and current orders (Profile → My orders). */
   MyOrders: undefined;
   /**

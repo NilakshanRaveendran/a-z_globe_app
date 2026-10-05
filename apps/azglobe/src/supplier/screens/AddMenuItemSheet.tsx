@@ -621,8 +621,8 @@ const styles = StyleSheet.create({
   photoEmpty: {
     borderWidth: 1.6,
     borderStyle: 'dashed',
-    borderColor: colors.palette.red75,
-    backgroundColor: colors.palette.red25,
+    borderColor: colors.primaryOutline,
+    backgroundColor: colors.primaryTint,
   },
   photoImage: { width: '100%', height: '100%' },
   photoInfo: { flex: 1, minWidth: 0, gap: spacing[1] },

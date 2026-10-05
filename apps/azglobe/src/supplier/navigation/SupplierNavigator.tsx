@@ -1,3 +1,4 @@
+import { NotificationsScreen } from '@app/screens/NotificationsScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
@@ -25,6 +26,7 @@ function BusinessHome() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="SupplierDashboard" component={SupplierDashboardScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="SupplierRestaurants" component={RestaurantManagementScreen} />
       <Stack.Screen name="SupplierRestaurantHub" component={RestaurantHubScreen} />
       <Stack.Screen name="SupplierMenu" component={MenuManagementScreen} />

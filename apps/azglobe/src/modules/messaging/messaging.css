@@ -174,7 +174,7 @@
   justify-content: center;
   gap: 8px;
   font: 1.0625rem/1.47 var(--az-bold) !important;
-  box-shadow: 0 4px 12px rgba(212, 43, 43, 0.22);
+  box-shadow: 0 4px 12px rgba(0, 80, 66, 0.22);
   transition:
     transform 0.12s,
     box-shadow 0.12s;
@@ -569,10 +569,15 @@
   font-size: 0.875rem;
 }
 .azm-wa-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   background: white;
   padding-bottom: 88px;
 }
 .azm .azm-wa-row {
+  min-height: 88px;
+  flex-shrink: 0;
   position: relative;
   display: flex;
   align-items: center;
@@ -680,6 +685,10 @@
   color: var(--az-faint);
 }
 .azm-wa-join {
+  align-self: center;
+  justify-content: center;
+  min-height: 40px;
+  box-sizing: border-box;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -712,7 +721,7 @@
   place-items: center;
   background: var(--az-red);
   color: white;
-  box-shadow: 0 6px 16px rgba(212, 43, 43, 0.35);
+  box-shadow: 0 6px 16px rgba(0, 80, 66, 0.35);
   z-index: 3;
 }
 
@@ -1061,7 +1070,7 @@
   border-color: var(--az-red);
   color: white;
   border-radius: 18px 18px 6px 18px;
-  box-shadow: 0 2px 6px rgba(212, 43, 43, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 80, 66, 0.2);
 }
 .azm-message.own .azm-bubble small,
 .azm-message.own .azm-stamp {
@@ -1598,7 +1607,7 @@
   height: 44px;
   background: var(--az-red);
   color: white;
-  box-shadow: 0 4px 10px rgba(212, 43, 43, 0.25);
+  box-shadow: 0 4px 10px rgba(0, 80, 66, 0.25);
   transition:
     background 0.2s,
     transform 0.2s;
@@ -1740,8 +1749,8 @@
 }
 /* One tint per kind, so the grid reads at a glance. */
 .azm-attachment-grid [data-kind="media"] svg {
-  background: #fee2e2;
-  color: #d42b2b;
+  background: var(--az-tint);
+  color: var(--az-red);
 }
 .azm-attachment-grid [data-kind="camera"] svg {
   background: #ede9fe;

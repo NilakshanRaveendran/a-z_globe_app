@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cellSelected: { backgroundColor: colors.primary },
-  cellToday: { backgroundColor: colors.palette.red25 },
+  cellToday: { backgroundColor: colors.primaryTint },
   dayNumber: { fontFamily: fontFamily[600] },
   dot: { width: 4, height: 4, marginTop: 1, borderRadius: radius.pill, backgroundColor: colors.primary },
   disabled: { opacity: 0.4 },

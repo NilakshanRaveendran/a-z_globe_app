@@ -207,17 +207,16 @@ export function MessagingHome({ onBack }: { onBack?: () => void }) {
                         {g.count.toLocaleString()} members · {g.category}
                       </span>
                     )}
-                    {!joined ? (
-                      <span className="azm-wa-join"><MIcon name="add" size={16} />Join</span>
-                    ) : g.muted ? (
+                    {joined && g.muted ? (
                       <span className="azm-wa-muted" aria-label="Muted">
                         <MIcon name="muted" size={16} />
                       </span>
-                    ) : unread ? (
+                    ) : joined && unread ? (
                       <span className="azm-wa-badge">{g.unread > 99 ? "99+" : g.unread}</span>
                     ) : null}
                   </span>
                 </span>
+                {!joined && <span className="azm-wa-join"><MIcon name="add" size={16} />Join</span>}
               </button>
             );
           })

@@ -11,7 +11,7 @@ import { useSession } from '@app/providers/SessionProvider';
 import type { RootStackParamList } from '@app/navigation/types';
 import { listOwnedRestaurants } from '../services/restaurants';
 import { ACTIVE_STATUSES, listMerchantOrders } from '../services/orders';
-import { averageRating, businessStats, loadRatings, StatCards } from '../components/StatCards';
+import { businessStats, StatCards } from '../components/StatCards';
 
 /**
  * Provider dashboard — Figma 385:3033.
@@ -27,7 +27,7 @@ import { averageRating, businessStats, loadRatings, StatCards } from '../compone
  *   title    "Business Dashboard" 700 24/36 — always, not "<name>'s Dashboard"
  *            as Figma has it, since a business account isn't one person · "Manage your services in here."
  *            500 14/21 #6B7280 · pad 12/16/16.5 · 0.54px #E5E7EB rule
- *   stats    three cards — Orders Today · Revenue · Avg Rating (StatCards)
+ *   stats    two cards — Orders Today · Revenue (StatCards)
  *   heading  "Your Services" 700 16/24
  *   eyebrow  ACTIVE SERVICES / AVAILABLE TO ACTIVATE 700 11/16.5 ls0.55
  *            #9CA3AF uppercase, inset 4
@@ -56,18 +56,13 @@ export function SupplierDashboardScreen() {
 
   const [restaurants, setRestaurants] = useState<Merchant[] | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [avgRating, setAvgRating] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     const owned = await listOwnedRestaurants(user.uid).catch(() => []);
     setRestaurants(owned);
     // Today's numbers span every restaurant this account runs.
-    const [perShop, ratings] = await Promise.all([
-      Promise.all(owned.map((m) => listMerchantOrders(m.id).catch(() => []))),
-      loadRatings(owned),
-    ]);
+    const perShop = await Promise.all(owned.map((m) => listMerchantOrders(m.id).catch(() => [])));
     setOrders(perShop.flat());
-    setAvgRating(averageRating(ratings.values()));
   }, [user.uid]);
 
   useFocusEffect(
@@ -91,15 +86,7 @@ export function SupplierDashboardScreen() {
   const awaiting = orders.filter((o) => ACTIVE_STATUSES.includes(o.status)).length;
 
   const openRestaurants = () => navigation.navigate('SupplierRestaurants');
-  const openNotifications = () =>
-    awaiting
-      ? navigation.getParent()?.navigate('Orders')
-      : navigation.navigate('ComingSoon', {
-          title: 'Notifications',
-          message:
-            'Push and email alerts for new orders are coming. Until then, new orders appear on the Orders tab, and this bell shows a dot while orders are waiting.',
-          actionLabel: 'Back to Dashboard',
-        });
+  const openNotifications = () => navigation.navigate('Notifications');
 
   // The service toggle is service-level (Figma draws the same "on" toggle on
   // "Book a Hotel · 4 options"), not a restaurant's open/closed switch: with two
@@ -152,7 +139,7 @@ export function SupplierDashboardScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.block}>
-          <StatCards items={businessStats({ orders, rating: avgRating })} />
+          <StatCards items={businessStats({ orders })} />
         </View>
 
         <View style={styles.block}>

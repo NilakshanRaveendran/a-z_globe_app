@@ -168,8 +168,8 @@ export function SupplierProfileScreen() {
             onPress={switchAccount}
             style={({ pressed }) => [styles.row, pressed && styles.pressed]}
           >
-            <Icon name="person" size={20} color={colors.text} />
-            <Text variant="settingsTitle" color={colors.text}>
+            <Icon name="person" size={20} color={colors.primaryAccent} />
+            <Text variant="settingsTitle" color={colors.primaryAccent}>
               Switch to personal account
             </Text>
           </Pressable>
@@ -181,7 +181,7 @@ export function SupplierProfileScreen() {
             onPress={confirmSignOut}
             style={({ pressed }) => [styles.row, styles.rowBare, pressed && styles.pressed]}
           >
-            <Text variant="settingsTitle" color={colors.primary}>
+            <Text variant="settingsTitle" color={colors.status.danger}>
               Sign out
             </Text>
           </Pressable>

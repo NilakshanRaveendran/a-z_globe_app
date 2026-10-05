@@ -96,15 +96,16 @@ const palette = {
 
 // ── Semantic colours ───────────────────────────────────────────────────────
 export const colors = {
-  primary: palette.red600,
-  primaryTint: palette.red50,
-  primaryDark: palette.red700,
+  primary: '#005042',
+  primaryAccent: '#06C167',
+  primaryTint: '#E8F7EF',
+  primaryDark: '#003D33',
   onPrimary: palette.white,
   /** 12% brand-red hairline — the dish tag on a provider review card (385:6610). */
-  primaryHairline: 'rgba(212,43,43,0.12)',
+  primaryHairline: 'rgba(0,80,66,0.12)',
   /** Menu card outline / its button border — Figma 176:2923 (#D42B2B at 15% / 7%). */
-  primaryOutline: 'rgba(212,43,43,0.15)',
-  primaryOutlineSoft: 'rgba(212,43,43,0.07)',
+  primaryOutline: 'rgba(0,80,66,0.15)',
+  primaryOutlineSoft: 'rgba(0,80,66,0.07)',
   /** Frosted pills over imagery — "Change Cover" (394:3361), the map pin label (394:2800). */
   glassDark: 'rgba(0,0,0,0.25)',
   glassLight: 'rgba(255,255,255,0.8)',
@@ -114,8 +115,8 @@ export const colors = {
    * frosted "Open" pill / ⋮ button over a restaurant cover (#FFFFFF at 20%,
    * 385:3356).
    */
-  primaryOutlineMd: 'rgba(212,43,43,0.18)',
-  primaryOutlineStrong: 'rgba(212,43,43,0.2)',
+  primaryOutlineMd: 'rgba(0,80,66,0.18)',
+  primaryOutlineStrong: 'rgba(0,80,66,0.2)',
   glassFrost: 'rgba(255,255,255,0.2)',
 
   star: palette.amber400,
@@ -156,7 +157,7 @@ export const colors = {
 // ── Gradients ──────────────────────────────────────────────────────────────
 // Tuples feed straight into <LinearGradient colors={...} />.
 export const gradients = {
-  offerBanner: [palette.red600, palette.orange500] as const,
+  offerBanner: ['#005042', '#06C167'] as const,
   amber: [palette.amber500, palette.orange600] as const,
   amberSoft: [palette.amber300, palette.amber500] as const,
   green: ['#A8E063', '#56AB2F'] as const,
@@ -177,7 +178,7 @@ export const gradients = {
   imageScrim: ['rgba(0,0,0,0.80)', 'rgba(0,0,0,0.20)', 'rgba(0,0,0,0)'] as const,
   imageScrimSoft: ['rgba(0,0,0,0.65)', 'rgba(0,0,0,0.10)', 'rgba(0,0,0,0)'] as const,
   /** Restaurant Management card cover with no photo yet — 166° (385:3354). */
-  restaurantCover: [palette.red600, '#FF8A65'] as const,
+  restaurantCover: ['#005042', '#06C167'] as const,
   /**
    * Restaurant Management card cover scrim (385:3843): darkens the top for the
    * "Open" pill, then fades the photo into the white card body. Pair with
@@ -203,7 +204,7 @@ export const gradients = {
    * running from the top-left corner steeply down (start 0,0 → end .45,1.55).
    * Pair with `buildingTypeArtStops`.
    */
-  buildingTypeArt: [palette.red600, palette.red700, palette.black] as const,
+  buildingTypeArt: ['#005042', '#003D33', palette.black] as const,
   buildingTypeArtStops: [0, 0.4615, 1] as const,
 } as const;
 
@@ -351,7 +352,7 @@ export const shadows = {
   },
   /** Provider menu cards — a red-tinted lift (176:2923). Figma: 0 2 8 #D42B2B@7% */
   menuCard: {
-    boxShadow: '0px 2px 8px 0px rgba(212,43,43,0.07)',
+    boxShadow: '0px 2px 8px 0px rgba(0,80,66,0.07)',
   },
   /** Bottom sheets — Add New Item (463:2991). Figma: 0 -4 12 12% */
   sheet: {

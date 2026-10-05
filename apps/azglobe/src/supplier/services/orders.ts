@@ -744,6 +744,6 @@ export const STATUS_STYLE: Record<OrderStatus, { label: string; color: string; t
   },
   picked_up: { label: 'Picked up', color: colors.palette.blue600, tint: colors.palette.sky50 },
   delivered: { label: 'Delivered', color: colors.success, tint: colors.palette.green25 },
-  cancelled: { label: 'Cancelled', color: colors.primary, tint: colors.palette.red100 },
+  cancelled: { label: 'Cancelled', color: colors.status.danger, tint: colors.palette.red100 },
   refunded: { label: 'Refunded', color: colors.textSecondary, tint: colors.surfaceAlt },
 };

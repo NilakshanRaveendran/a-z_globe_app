@@ -70,8 +70,7 @@ export function averageRating(summaries: Iterable<RatingSummary>): number | null
 }
 
 /**
- * The three cards both provider screens show — Orders Today · Revenue ·
- * Avg Rating — with the Figma glyph and tint for each.
+ * Orders Today and Revenue, plus Avg Rating when a restaurant rating is supplied.
  *
  * Pass the orders (what `listMerchantOrders(id)` returns — everything active
  * plus everything placed today) and the counting is done here, the one way
@@ -80,13 +79,13 @@ export function averageRating(summaries: Iterable<RatingSummary>): number | null
  * accepted and not cancelled or refunded — never one still 'new'. Pre-counted
  * figures are still accepted.
  *
- * `rating` is null when nothing has been reviewed: showing 0.0 would read as a
+ * Omit `rating` on the dashboard. It is null when nothing has been reviewed: showing 0.0 would read as a
  * bad score rather than an absent one.
  */
 export function businessStats(
   input:
-    | { orders: Order[]; rating: number | null; now?: number }
-    | { ordersToday: number; revenue: number; rating: number | null }
+    | { orders: Order[]; rating?: number | null; now?: number }
+    | { ordersToday: number; revenue: number; rating?: number | null }
 ): Stat[] {
   const { ordersToday, revenue } = 'orders' in input ? orderStats(input.orders, input.now) : input;
   const { rating } = input;
@@ -96,7 +95,7 @@ export function businessStats(
       label: 'Orders Today',
       icon: 'box',
       iconColor: colors.primary,
-      tint: colors.palette.red25,
+      tint: colors.primaryTint,
     },
     {
       value: compactMoney(revenue),
@@ -105,14 +104,14 @@ export function businessStats(
       iconColor: colors.palette.navy800,
       tint: colors.palette.blue25,
     },
-    {
+    ...(rating === undefined ? [] : [{
       value: rating === null ? '—' : rating.toFixed(1),
       label: 'Avg Rating',
-      icon: 'star',
+      icon: 'star' as const,
       iconColor: colors.star,
       iconSize: 14,
       tint: colors.palette.amber50,
-    },
+    }]),
   ];
 }
 

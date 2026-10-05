@@ -162,7 +162,7 @@ export const artwork = {
  * everywhere in a chat.
  */
 const TONES = [
-  ["#FEE2E2", "#D42B2B"],
+  [colors.primaryTint, colors.primary],
   ["#EDE9FE", "#7C3AED"],
   ["#DCFCE7", "#16A34A"],
   ["#FFEDD5", "#EA580C"],

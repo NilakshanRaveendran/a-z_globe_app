@@ -8,12 +8,13 @@ import { useSession } from '@app/providers/SessionProvider';
 
 const storage = createStorage({ id: 'azglobe.notificationPrefs' });
 
-type Prefs = { orders: boolean; offers: boolean };
-const DEFAULTS: Prefs = { orders: true, offers: true };
+type Prefs = { orders: boolean; offers: boolean; groups: boolean };
+const DEFAULTS: Prefs = { orders: true, offers: true, groups: true };
 
 const ROWS: Array<{ key: keyof Prefs; title: string; subtitle: string }> = [
-  { key: 'orders', title: 'Order updates', subtitle: 'When the restaurant accepts, prepares and sends your order' },
-  { key: 'offers', title: 'Offers & promotions', subtitle: 'New deals and promo codes from restaurants near you' },
+  { key: 'orders', title: 'Order updates', subtitle: 'Acceptance, pickup, completion, cancellation and refund updates' },
+  { key: 'groups', title: 'Group membership', subtitle: 'When you join a group or your membership is approved' },
+  { key: 'offers', title: 'Offers & promotions', subtitle: 'New deals and promo codes from listed restaurants' },
 ];
 
 function readPrefs(uid: string): Prefs {
@@ -75,8 +76,7 @@ export function NotificationSettingsScreen() {
           </View>
         ))}
         <Text variant="bodySm" color={colors.textMuted} style={styles.note}>
-          Notifications arrive through the A-Z Globe mobile app. These choices are saved on
-          this device.
+          These choices control new items added to your inbox on this device. Existing notifications stay in your history.
         </Text>
       </ScrollView>
     </Screen>

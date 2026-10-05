@@ -1,3 +1,4 @@
+import { notificationPrefs, saveInbox } from "@app/notifications/inbox";
 import { useSyncExternalStore } from "react";
 import { seedState, type MessagingState, type Identity } from "./model";
 
@@ -45,6 +46,16 @@ function makeStore(user: Identity) {
       const next = fn(state);
       // A rejected write must not be presented as a successfully saved message.
       localStorage.setItem(key, JSON.stringify(next));
+      if (notificationPrefs(user.id).groups) {
+        const added = next.groups.filter(group => group.members.some(member => member.id === user.id)
+          && !state.groups.find(previous => previous.id === group.id)?.members.some(member => member.id === user.id)
+          && group.creator !== user.id);
+        saveInbox(`${user.provider ? 'supplier' : 'customer'}:${user.id}`, added.map(group => ({
+          id: `group:${group.id}:membership:${Date.now()}`, kind: 'groups', at: Date.now(),
+          title: 'Group membership confirmed', body: `You are now a member of ${group.name}.`,
+          target: { type: 'group', groupId: group.id },
+        })));
+      }
       state = next;
       listeners.forEach((listener) => listener());
     },

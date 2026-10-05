@@ -9,6 +9,7 @@ import { CartScreen } from '../screens/CartScreen';
 import { CheckoutScreen } from '../screens/CheckoutScreen';
 import { OrderPlacedScreen } from '../screens/OrderPlacedScreen';
 import { OrderTrackingScreen } from '../screens/OrderTrackingScreen';
+import { LiveOrdersScreen } from '../screens/LiveOrdersScreen';
 import { MyOrdersScreen } from '../screens/MyOrdersScreen';
 import { AddressInfoScreen } from '../screens/AddressInfoScreen';
 import { BuildingTypeScreen } from '../screens/BuildingTypeScreen';
@@ -41,6 +42,7 @@ export function FoodNavigator() {
         options={{ gestureEnabled: false }}
       />
       <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} />
+      <Stack.Screen name="LiveOrders" component={LiveOrdersScreen} />
       <Stack.Screen name="MyOrders" component={MyOrdersScreen} />
       <Stack.Screen name="AddressInfo" component={AddressInfoScreen} />
       <Stack.Screen name="BuildingType" component={BuildingTypeScreen} />

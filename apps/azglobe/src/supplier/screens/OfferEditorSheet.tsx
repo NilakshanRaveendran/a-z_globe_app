@@ -775,7 +775,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   optionSmall: { height: 40 },
-  optionOn: { backgroundColor: colors.palette.red25, borderColor: colors.primary },
+  optionOn: { backgroundColor: colors.primaryTint, borderColor: colors.primary },
   optionOff: { backgroundColor: colors.surfaceSunken, borderColor: colors.border },
   optionText: { fontFamily: fontFamily[700] },
   appliesTo: { gap: spacing[3.5] },
@@ -851,7 +851,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   itemRule: { borderBottomWidth: HAIRLINE, borderBottomColor: colors.surfaceAlt },
-  itemRowOn: { backgroundColor: colors.palette.red10 },
+  itemRowOn: { backgroundColor: colors.primaryTint },
   itemName: { fontFamily: fontFamily[600] },
   checkbox: {
     width: 20,
@@ -907,7 +907,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[3],
     gap: spacing[1.5],
   },
-  artTileOn: { backgroundColor: colors.palette.red25, borderColor: colors.primary },
+  artTileOn: { backgroundColor: colors.primaryTint, borderColor: colors.primary },
   artLabel: { fontFamily: fontFamily[500], fontSize: 12, lineHeight: 18, color: colors.textSecondary },
   artLabelOn: { color: colors.primary },
 });

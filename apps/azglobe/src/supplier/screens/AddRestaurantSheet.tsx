@@ -1,3 +1,4 @@
+import { SupplierTimeField } from '../components/SupplierTimeField';
 import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -373,34 +374,8 @@ export function AddRestaurantSheet({ visible, supplierUid, onClose, onCreated }:
             ) : step === 2 ? (
               <>
                 <View style={styles.row}>
-                  <SupplierField
-                    label="Opening Time"
-                    required
-                    labelStyle={styles.eyebrow}
-                    containerStyle={styles.rowHalf}
-                    style={styles.timeInput}
-                    invalid={flag('openTime')}
-                    value={openTime}
-                    onChangeText={setOpenTime}
-                    onBlur={() => setOpenTime((t) => normaliseTime(t) ?? t)}
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    placeholder="7:00 AM"
-                  />
-                  <SupplierField
-                    label="Closing Time"
-                    required
-                    labelStyle={styles.eyebrow}
-                    containerStyle={styles.rowHalf}
-                    style={styles.timeInput}
-                    invalid={flag('closeTime')}
-                    value={closeTime}
-                    onChangeText={setCloseTime}
-                    onBlur={() => setCloseTime((t) => normaliseTime(t) ?? t)}
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    placeholder="10:00 PM"
-                  />
+                  <SupplierTimeField label="Opening Time" value={openTime} onChange={setOpenTime} invalid={flag('openTime')} />
+                  <SupplierTimeField label="Closing Time" value={closeTime} onChange={setCloseTime} invalid={flag('closeTime')} />
                 </View>
                 {fieldError('openTime') || fieldError('closeTime') ? (
                   <Text variant="bodySm" color={colors.primary} style={styles.rowNote} accessibilityLiveRegion="polite">

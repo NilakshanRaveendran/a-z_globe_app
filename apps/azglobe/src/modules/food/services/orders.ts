@@ -270,30 +270,16 @@ function buildOrderPayload(input: PlaceOrderInput, uid: string, phone: string) {
 
 // ── Reading orders ────────────────────────────────────────────────────────
 
-/**
- * The signed-in customer's most recent order that is still in progress.
- *
- * The Home tracker remembers its order in on-device storage, which a reinstall,
- * a new phone or signing in again wipes — the customer would lose sight of an
- * order that is still on its way. Home calls this when it has no pointer; one
- * small indexed read (userId, createdAt desc) recovers it.
- */
-export async function findActiveOrder(): Promise<Order | null> {
-  if (!isFirebaseReady()) {
-    return demoMyOrders().find((o) => !isTerminalStatus(o.status)) ?? null;
-  }
+/** Recover every in-progress order, including orders from earlier checkouts. */
+export async function findActiveOrders(): Promise<Order[]> {
+  if (!isFirebaseReady()) return demoMyOrders().filter((o) => !isTerminalStatus(o.status));
   const uid = getAuth(getApp()).currentUser?.uid;
-  if (!uid) return null;
+  if (!uid) return [];
   const { rows } = await readCollection<Order>('orders', {
-    where: [['userId', '==', uid]],
-    orderBy: { field: 'createdAt', direction: 'desc' },
-    limit: 5,
+    where: [['userId', '==', uid], ['status', 'in', ['new', 'accepted', 'preparing', 'ready_for_pickup', 'picked_up']]],
   });
-  return (
-    rows
-      .map((o) => normalizeOrder(o))
-      .find((o): o is Order => o !== null && !isTerminalStatus(o.status)) ?? null
-  );
+  return rows.map(normalizeOrder).filter((o): o is Order => !!o && !isLocalId(o.id) && !isTerminalStatus(o.status))
+    .sort((a, b) => b.createdAt - a.createdAt);
 }
 
 /** How many of the customer's orders My Orders lists. */
@@ -360,8 +346,8 @@ const DEMO_POLL_MS = 2000;
 
 /**
  * Live order tracking. In Firebase mode this is a realtime listener on the one
- * order document — the caller must detach it on blur so at most one stream is
- * ever open. In demo mode it re-reads the shared demo store every two seconds
+ * order document — the caller must detach it on blur. Home subscribes once
+ * per tracked restaurant order. In demo mode it re-reads the shared demo store every two seconds
  * and on `storage` events from other tabs, so a status the business moves
  * shows up on the customer's tracker without a reload (audit C3).
  *

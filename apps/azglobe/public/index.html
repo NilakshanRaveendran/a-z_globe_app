@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#D42B2B" />
+    <meta name="theme-color" content="#005042" />
     <meta name="description" content="A-Z Globe food ordering and local services." />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -21,10 +21,19 @@
       /* iOS zooms into any field under 16px; react-native-web's atomic classes
          would otherwise win over a plain rule. */
       input, textarea, select { font-size: max(16px, 1em) !important; }
+      #az-launch { position: fixed; inset: 0; max-width: 480px; margin: auto; display: grid; place-items: center; background: #FFFFFF; z-index: 9999; opacity: 1; transition: opacity 220ms ease-out; }
+      #az-launch img { width: 180px; height: 180px; animation: az-logo-enter 650ms cubic-bezier(.2,.7,.2,1) both; }
+      #az-launch::after { content: ''; position: absolute; top: calc(50% + 124px); width: 48px; height: 3px; border-radius: 2px; background: #005042; animation: az-line-enter 650ms ease-out both; }
+      @keyframes az-logo-enter { from { opacity: .4; transform: translateY(10px) scale(.92); } to { opacity: 1; transform: none; } }
+      @keyframes az-line-enter { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+      #az-launch.ready { opacity: 0; pointer-events: none; }
+      @media (prefers-reduced-motion: reduce) { #az-launch { transition: none; } #az-launch img, #az-launch::after { animation: none; } }
     </style>
   </head>
   <body>
     <noscript>Enable JavaScript to open A-Z Globe.</noscript>
     <div id="root"></div>
+    <div id="az-launch" role="status" aria-label="Loading A-Z Globe"><img src="/splash-logo.png" alt="A-Z Globe" /></div>
+    <noscript><style>#az-launch { display: none; }</style></noscript>
   </body>
 </html>

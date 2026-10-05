@@ -42,7 +42,7 @@ const depsUrl = moduleUrl(`
     if (JSON.stringify(change.timeline.slice(0, -1)) !== JSON.stringify(previous.timeline)) throw new Error('rewritten timeline');
     orders.set(id, { ...previous, ...change }); emit();
   };
-  export const colors = { palette: new Proxy({}, { get: () => '#000' }) };
+  export const colors = { status: { danger: '#D42B2B' }, palette: new Proxy({}, { get: () => '#000' }) };
   export const startOfDay = now => new Date(now).setHours(0, 0, 0, 0);
   export const normalizeOrder = order => order;
   export const readDemoMerchantOrders = id => [...orders.values()].filter(o => o.merchantId === id);

@@ -381,9 +381,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[0.5],
     borderRadius: radius.pill,
-    backgroundColor: colors.palette.red25,
+    backgroundColor: colors.primaryTint,
     borderWidth: 0.51,
-    borderColor: 'rgba(212,43,43,0.15)',
+    borderColor: colors.primaryOutline,
   },
   discountText: { fontFamily: fontFamily[800], fontSize: 11, lineHeight: 16.5, color: colors.primary },
   footer: {

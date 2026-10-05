@@ -155,8 +155,8 @@ export function ProfileScreen() {
             onPress={switchToBusiness}
             style={({ pressed }) => [styles.actionRow, styles.actionDivider, pressed && styles.pressed]}
           >
-            <Icon name="store" size={20} color={colors.primary} />
-            <Text variant="settingsTitle" color={colors.primary} style={styles.flex}>
+            <Icon name="store" size={20} color={colors.primaryAccent} />
+            <Text variant="settingsTitle" color={colors.primaryAccent} style={styles.flex}>
               Switch to business account
             </Text>
           </Pressable>
@@ -166,7 +166,7 @@ export function ProfileScreen() {
             onPress={confirmSignOut}
             style={({ pressed }) => [styles.actionRow, pressed && styles.pressed]}
           >
-            <Text variant="settingsTitle" color={colors.primary}>
+            <Text variant="settingsTitle" color={colors.status.danger}>
               Sign out
             </Text>
           </Pressable>

@@ -4,8 +4,8 @@ import { colors, radius, spacing } from '@core/theme';
 import type { Review } from '../types';
 import { initials } from '@core/utils/text';
 
-const AVATAR_TINTS = ['#FEE2E2', '#EDE9FE', '#DCFCE7', '#FFEDD5', '#DBEAFE'];
-const AVATAR_INK = ['#D42B2B', '#7C3AED', '#16A34A', '#EA580C', '#2563EB'];
+const AVATAR_TINTS = [colors.primaryTint, '#EDE9FE', '#DCFCE7', '#FFEDD5', '#DBEAFE'];
+const AVATAR_INK = [colors.primary, '#7C3AED', '#16A34A', '#EA580C', '#2563EB'];
 
 /**
  * A single review — Figma 18:5057.

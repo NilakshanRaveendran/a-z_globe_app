@@ -133,6 +133,10 @@ export function TrackOrderCard({
   // never also open tracking.
   const body = (
     <View style={styles.section}>
+      {compact ? <View style={styles.info}>
+        <Text variant="h4" color={colors.textStrong}>{order.merchantName}</Text>
+        <Text variant="bodySm" color={colors.textSecondary}>{order.orderType === 'pickup' ? 'Takeaway' : 'Delivery'} · Ref {order.ref}</Text>
+      </View> : null}
       <View style={styles.head}>
         <View style={styles.flex}>
           <Text

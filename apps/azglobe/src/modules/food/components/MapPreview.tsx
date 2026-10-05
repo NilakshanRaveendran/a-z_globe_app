@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[2],
     borderRadius: radius['2xl'],
     borderWidth: 0.54,
-    borderColor: colors.palette.red75,
+    borderColor: colors.primaryOutline,
     backgroundColor: colors.surface,
     ...shadows.floating,
   },

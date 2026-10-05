@@ -62,6 +62,10 @@ export function CartContent({ onBack, onBrowse, onCheckout, onAddress, inTab = f
   const { addresses, selected: address, select } = useAddresses();
   const pricing = useCartPricing(address);
   const { groups } = pricing;
+  const [expandedRestaurant, setExpandedRestaurant] = useState<string | null | undefined>(undefined);
+  const expandedId = expandedRestaurant === undefined || (expandedRestaurant !== null && !groups.some(g => g.merchantId === expandedRestaurant))
+    ? (groups.length === 1 ? groups[0]?.merchantId : null)
+    : expandedRestaurant;
   const [code, setCode] = useState('');
   const [promoError, setPromoError] = useState<string | null>(null);
   const [applying, setApplying] = useState(false);
@@ -135,6 +139,8 @@ export function CartContent({ onBack, onBrowse, onCheckout, onAddress, inTab = f
           <RestaurantCard
             key={g.merchantId}
             group={g}
+            expanded={expandedId === g.merchantId}
+            onToggle={() => setExpandedRestaurant(expandedId === g.merchantId ? null : g.merchantId)}
             onFulfilment={(f) => setFulfilment(g.merchantId, f)}
             onChangeAddress={() => setAddressOpen(true)}
             onPin={() => address && onAddress({ addressId: address.id, useLocation: true })}
@@ -305,12 +311,16 @@ export function CartContent({ onBack, onBrowse, onCheckout, onAddress, inTab = f
 /** One restaurant's share of the cart: its dishes, Delivery / Takeaway and any offer. */
 function RestaurantCard({
   group,
+  expanded,
+  onToggle,
   onFulfilment,
   onChangeAddress,
   onPin,
   onAddAddress,
 }: {
   group: PricedGroup;
+  expanded: boolean;
+  onToggle: () => void;
   onFulfilment: (f: 'delivery' | 'pickup') => void;
   onChangeAddress: () => void;
   onPin: () => void;
@@ -324,7 +334,7 @@ function RestaurantCard({
       : 0;
   return (
     <Card style={styles.block}>
-      <View style={styles.groupHead}>
+      <Pressable style={styles.groupHead} onPress={onToggle} accessibilityRole="button" accessibilityLabel={`${group.merchantName}, ${group.itemCount} items, ${formatMoney(group.subtotal)}. ${expanded ? 'Hide' : 'Show'} dishes`} accessibilityState={{ expanded }}>
         <View style={styles.addressIcon}>
           <Icon name="store" size={16} color={colors.primary} />
         </View>
@@ -333,10 +343,11 @@ function RestaurantCard({
             {group.merchantName}
           </Text>
           <Text variant="bodySm" color={colors.textSecondary}>
-            {group.itemCount} item{group.itemCount === 1 ? '' : 's'} · {formatMoney(group.subtotal)}
+            {group.itemCount} item{group.itemCount === 1 ? '' : 's'} · {formatMoney(group.subtotal)} · {group.fulfilment === 'pickup' ? 'Takeaway' : 'Delivery'}
           </Text>
         </View>
-      </View>
+        <View style={{ transform: [{ rotate: expanded ? '270deg' : '90deg' }] }}><Icon name="chevronRight" size={20} color={colors.primary} /></View>
+      </Pressable>
 
       {group.closed || group.missing ? (
         <View accessibilityRole="alert" style={styles.notice}>
@@ -349,6 +360,7 @@ function RestaurantCard({
         </View>
       ) : null}
 
+      {expanded ? <View style={styles.restaurantBody}>
       {group.lines.map((line) => (
         <LineRow key={line.lineId} line={line} promo={promotion.promo} />
       ))}
@@ -378,6 +390,7 @@ function RestaurantCard({
           </Text>
         </View>
       ) : null}
+      </View> : null}
     </Card>
   );
 }
@@ -457,7 +470,8 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
 
   block: { gap: spacing[4] },
-  groupHead: { flexDirection: 'row', alignItems: 'center', gap: spacing[4] },
+  restaurantBody: { gap: spacing[4] },
+  groupHead: { minHeight: 52, flexDirection: 'row', alignItems: 'center', gap: spacing[4] },
 
   line: {
     flexDirection: 'row',

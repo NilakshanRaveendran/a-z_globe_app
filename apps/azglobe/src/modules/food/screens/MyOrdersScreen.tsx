@@ -23,7 +23,7 @@ const STATUS_LABEL: Record<OrderStatus, { label: string; color: string; tint: st
   ready_for_pickup: { label: 'Ready', color: colors.palette.orange600, tint: colors.palette.orange100 },
   picked_up: { label: 'On the way', color: colors.palette.blue600, tint: colors.palette.sky50 },
   delivered: { label: 'Delivered', color: colors.palette.green700, tint: colors.palette.green25 },
-  cancelled: { label: 'Cancelled', color: colors.primary, tint: colors.palette.red100 },
+  cancelled: { label: 'Cancelled', color: colors.status.danger, tint: colors.palette.red100 },
   refunded: { label: 'Refunded', color: colors.textSecondary, tint: colors.surfaceAlt },
 };
 

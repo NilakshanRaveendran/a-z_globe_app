@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.palette.red500,
+    backgroundColor: colors.primaryAccent,
     borderWidth: 1,
     borderColor: colors.surface,
   },

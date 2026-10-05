@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     borderWidth: HAIRLINE,
     borderColor: colors.primaryHairline,
-    backgroundColor: colors.palette.red25,
+    backgroundColor: colors.primaryTint,
   },
   reviewText: { fontFamily: fontFamily[400], paddingHorizontal: spacing[5], paddingBottom: spacing[4] },
   replyRow: {

@@ -89,7 +89,7 @@ export function CheckoutScreen() {
   const [utensils, setUtensils] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const setActiveOrderId = useActiveOrder((s) => s.setOrderId);
+  const addActiveOrderIds = useActiveOrder((s) => s.addOrderIds);
   const [payOpen, setPayOpen] = useState(false);
   const [addressOpen, setAddressOpen] = useState(false);
   const [paymentId, setPaymentId] = useState(PAYMENT_METHODS[0]!.id);
@@ -192,7 +192,7 @@ export function CheckoutScreen() {
           const id = await placeGroup(g);
           done.push(id);
           // Tracked on Home at once — even if a later restaurant refuses.
-          if (done.length === 1) setActiveOrderId(id);
+          addActiveOrderIds([id]);
           // Out of the cart as soon as it is placed, so a retry only re-sends the rest.
           clear([g.merchantId]);
         } catch (e) {
@@ -201,7 +201,6 @@ export function CheckoutScreen() {
           return;
         }
       }
-      setActiveOrderId(done[0] ?? null);
       navigation.replace('OrderPlaced', { orderId: done[0]!, ...(done.length > 1 ? { orderIds: done } : {}) });
     } finally {
       setPlaced(done);

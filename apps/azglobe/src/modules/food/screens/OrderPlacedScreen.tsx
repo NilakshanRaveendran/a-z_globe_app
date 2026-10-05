@@ -148,10 +148,10 @@ export function OrderPlacedScreen() {
             label={many ? 'Track orders' : 'Track order'}
             variant="secondary"
             // Tracking sits on top of Order Food, so back from it lands there —
-            // never on the emptied cart. Several orders open My Orders.
+            // never on the emptied cart. Several orders open the live overview.
             onPress={() =>
               many
-                ? navigation.reset({ index: 1, routes: [{ name: 'FoodLanding' }, { name: 'MyOrders' }] })
+                ? navigation.reset({ index: 1, routes: [{ name: 'FoodLanding' }, { name: 'LiveOrders' }] })
                 : track(params.orderId)
             }
             fullWidth={false}

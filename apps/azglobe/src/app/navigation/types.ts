@@ -36,6 +36,7 @@ export type RootStackParamList = {
    */
   ComingSoon: { title: string; message?: string; actionLabel?: string };
   /** Profile → Notifications: the customer's notification preferences. */
+  Notifications: undefined;
   NotificationSettings: undefined;
   /** The identity row on either profile: personal details, or the business's. */
   EditProfile: undefined;
