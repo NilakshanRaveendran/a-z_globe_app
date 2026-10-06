@@ -3,6 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Icon, Text } from '@core/ui';
 import { colors, SCREEN_PADDING, spacing, radius, shadows } from '@core/theme';
+import { ReviewPrompt, TrackOrderCard } from './TrackOrderCard';
+import { useReviewPrompted } from '../store/activeOrder';
 import { useLiveOrders } from '../hooks/useLiveOrders';
 import { isTerminalStatus } from '../types';
 import type { RootStackParamList } from '@app/navigation/types';
@@ -11,7 +13,15 @@ import type { RootStackParamList } from '@app/navigation/types';
 export function ActiveOrderSection() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const orders = useLiveOrders();
+  const single = orders.length === 1 ? orders[0] : undefined;
+  const prompted = useReviewPrompted(single?.id);
   if (!orders.length) return null;
+  if (single) return <TrackOrderCard
+    compact
+    order={single}
+    onPress={() => navigation.navigate('Food', { screen: 'OrderTracking', params: { orderId: single.id } })}
+    footer={single.status === 'delivered' && !prompted ? <ReviewPrompt order={single} /> : null}
+  />;
   const active = orders.filter(order => !isTerminalStatus(order.status));
   const names = [...new Set(orders.map(order => order.merchantName))].join(' · ');
   const ready = active.filter(order => order.status === 'ready_for_pickup').length;
@@ -26,13 +36,13 @@ export function ActiveOrderSection() {
       <View style={styles.row}>
         <View style={styles.icon}><Icon name="store" size={24} color={colors.primary} /></View>
         <View style={styles.flex}>
-          <Text variant="h4">{orders.length === 1 ? 'Your order' : `${orders.length} restaurant orders`}</Text>
+          <Text variant="h4">{`${orders.length} restaurant orders`}</Text>
           <Text variant="bodySm" color={colors.textSecondary} numberOfLines={2}>{names}</Text>
         </View>
         <View style={styles.badge}><View style={styles.dot} /><Text variant="labelMd" color={colors.primary}>Live</Text></View>
       </View>
       <Text variant="bodyLg" color={colors.textStrong}>{status}</Text>
-      <View style={styles.footer}><Text variant="labelLg" color={colors.primary}>View live {orders.length === 1 ? 'order' : 'orders'}</Text><Icon name="chevronRight" size={20} color={colors.primary} /></View>
+      <View style={styles.footer}><Text variant="labelLg" color={colors.primary}>View live orders</Text><Icon name="chevronRight" size={20} color={colors.primary} /></View>
     </Pressable>
   </View>;
 }

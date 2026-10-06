@@ -119,7 +119,8 @@ export type OptionGroup = {
   /** Shown as "(Optional)" beside the label when false. */
   choices: OptionChoice[];
   /**
-   * Which choice starts selected for a required single-choice group. Figma
+   * Which choice starts selected for a single-choice group. Required groups
+   * fall back to their first choice when absent; optional groups start empty. Figma
    * (116:3078) preselects Regular and Medium — without this the app would
    * silently default to whichever choice happens to be listed first.
    */

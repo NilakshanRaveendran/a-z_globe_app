@@ -27,6 +27,14 @@ export function useAddToCart() {
         return;
       }
 
+      const missing = item.optionGroups.find(group => group.required && (choice
+        ? !choice.options.some(option => option.groupKey === group.key)
+        : group.type === 'multi'));
+      if (missing) {
+        if (!choice) navigation.navigate('Food', { screen: 'ItemDetail', params: { merchantId: item.merchantId, menuItemId: item.id } });
+        showToast(`Choose ${missing.label} before adding this dish.`, { tone: 'error' });
+        return;
+      }
       if (choice) add(item, choice.options, choice.qty);
       else addFromMenuItem(item);
       showToast(`${item.name} added to cart`, {

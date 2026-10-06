@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
@@ -103,7 +104,9 @@ export function MenuManagementScreen() {
     }
   };
 
+  const queryClient = useQueryClient();
   const onSaved = ({ kind, name, category: saved }: MenuSaveResult) => {
+    void queryClient.invalidateQueries({ queryKey: ['food'] });
     setSheetOpen(false);
     showToast(kind === 'added' ? `${name} added to the menu` : kind === 'updated' ? `${name} saved` : `${name} deleted`);
     // Show the dish that was just added, whichever filter was on.

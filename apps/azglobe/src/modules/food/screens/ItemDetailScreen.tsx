@@ -61,7 +61,7 @@ export function ItemDetailScreen() {
     if (!item) return {};
     const defaults: Record<string, string[]> = {};
     for (const group of item.optionGroups) {
-      if (group.type === 'single' && group.required) {
+      if (group.type === 'single' && (group.required || group.defaultChoiceId)) {
         const preset =
           group.choices.find((c) => c.id === group.defaultChoiceId) ?? group.choices[0];
         if (preset) defaults[group.key] = [preset.id];
@@ -145,7 +145,7 @@ export function ItemDetailScreen() {
   const toggle = (group: OptionGroup, choiceId: string) =>
     setChoices((prev) => {
       const current = prev[group.key] ?? selection[group.key] ?? [];
-      if (group.type === 'single') return { ...prev, [group.key]: [choiceId] };
+      if (group.type === 'single') return { ...prev, [group.key]: !group.required && current.includes(choiceId) ? [] : [choiceId] };
       return {
         ...prev,
         [group.key]: current.includes(choiceId)

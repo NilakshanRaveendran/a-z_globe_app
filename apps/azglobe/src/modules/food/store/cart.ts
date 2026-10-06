@@ -136,7 +136,7 @@ export const useCart = create<CartState>()(
 
       addFromMenuItem: (item) => {
         const defaults: SelectedOption[] = item.optionGroups
-          .filter((g) => g.required && g.type === 'single')
+          .filter((g) => g.type === 'single' && (g.required || g.defaultChoiceId))
           .flatMap((g) => {
             const choice = g.choices.find((c) => c.id === g.defaultChoiceId) ?? g.choices[0];
             return choice

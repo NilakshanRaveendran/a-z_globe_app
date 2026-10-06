@@ -36,6 +36,7 @@ export type NewMenuItem = {
   price: number;
   category: string;
   image: string;
+  optionGroups?: MenuItem['optionGroups'];
 };
 
 /**
@@ -103,7 +104,7 @@ function buildItem(
     rating: 0,
     isBestseller: false,
     available: true,
-    optionGroups: [],
+    optionGroups: input.optionGroups ?? [],
   };
 }
 
@@ -168,6 +169,7 @@ export async function updateMenuItem(
     price: input.price,
     category: input.category.trim(),
     image: input.image,
+    ...(input.optionGroups !== undefined ? { optionGroups: input.optionGroups } : {}),
   };
   if (!isFirebaseReady()) {
     await editDemoMenu(merchantId, (items) =>

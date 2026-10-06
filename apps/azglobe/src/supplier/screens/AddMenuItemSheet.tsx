@@ -16,6 +16,8 @@ import { Icon, Text } from '@core/ui';
 import { Alert } from '@core/ui/alert';
 import { resolveImage, type FoodImageKey } from '@modules/food/data/images';
 import type { MenuItem } from '@modules/food/types';
+import { MenuOptionsEditor } from '../components/MenuOptionsEditor';
+import { draftOptions, parseOptions, type DraftOptionGroup } from '../services/menuOptions';
 import { SupplierField } from '../components/SupplierField';
 import {
   categoryKey,
@@ -154,6 +156,7 @@ export function AddMenuItemSheet({
   const [error, setError] = useState<string | null>(null);
   const [attempted, setAttempted] = useState(false);
 
+  const [optionGroups, setOptionGroups] = useState<DraftOptionGroup[]>([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -171,7 +174,7 @@ export function AddMenuItemSheet({
 
   // What the form held when it opened, to tell whether closing loses anything.
   const initial = useRef('');
-  const snapshot = (form: { name: string; description: string; price: string; category: string; image: string }) =>
+  const snapshot = (form: { name: string; description: string; price: string; category: string; image: string; optionGroups: DraftOptionGroup[] }) =>
     JSON.stringify(form);
 
   // Load the form each time the sheet opens: blank to add, the dish to edit.
@@ -183,8 +186,10 @@ export function AddMenuItemSheet({
       price: item ? (Number.isInteger(item.price) ? String(item.price) : item.price.toFixed(2)) : '',
       category: item?.category ?? initialCategory ?? '',
       image: item?.image ?? '',
+      optionGroups: draftOptions(item?.optionGroups ?? []),
     };
     initial.current = snapshot(form);
+    setOptionGroups(form.optionGroups);
     setName(form.name);
     setDescription(form.description);
     setPrice(form.price);
@@ -205,7 +210,7 @@ export function AddMenuItemSheet({
     price: Number.isNaN(priceValue),
   };
   const valid = !missing.image && !missing.name && !missing.price;
-  const dirty = snapshot({ name, description, price, category, image }) !== initial.current;
+  const dirty = snapshot({ name, description, price, category, image, optionGroups }) !== initial.current;
 
   // The scrim, ✕ and Android back all come here.
   const close = () => {
@@ -235,6 +240,8 @@ export function AddMenuItemSheet({
       setError('Add a photo, a name and a price to continue.');
       return;
     }
+    let savedOptions;
+    try { savedOptions = parseOptions(optionGroups); } catch (error) { setError((error as Error).message); return; }
     setBusy(true);
     setError(null);
     const input = {
@@ -243,6 +250,7 @@ export function AddMenuItemSheet({
       price: Math.round(priceValue * 100) / 100,
       category: selectedCategory,
       image,
+      optionGroups: savedOptions,
     };
     try {
       if (item) await updateMenuItem(merchantId, item.id, input);
@@ -518,6 +526,7 @@ export function AddMenuItemSheet({
               </View>
             </View>
 
+            {visible ? <MenuOptionsEditor key={item?.id ?? "new"} groups={optionGroups} onChange={setOptionGroups} disabled={busy} merchantId={merchantId} dishName={name} basePrice={price} /> : null}
           </ScrollView>
 
           <View style={[styles.footer, { paddingBottom: spacing[8] + insets.bottom }]}>
